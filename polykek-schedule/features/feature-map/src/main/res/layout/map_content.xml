@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lessonLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_background_items">
+
+    <FrameLayout
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/stroke_width"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:background="@color/grey_50"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/opposingTitle"
+        style="@style/Small.Label.Style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_huge"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        tools:text="10:00-11:30" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/Bold.Label.Style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_big"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/opposingTitle"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        tools:text="Технологии программирования" />
+
+    <TextView
+        android:id="@+id/subTitle1"
+        style="@style/Small.Label.Style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_big"
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:layout_marginEnd="@dimen/margin_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/opposingTitle"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        tools:text="Лекции" />
+
+    <TextView
+        android:id="@+id/subTitle2"
+        style="@style/Small.Label.Style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_big"
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:text="@string/schedule_fragment_voldemort"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/opposingTitle"
+        app:layout_constraintTop_toBottomOf="@+id/subTitle1"
+        tools:text="Глухих Михаил Игоревич" />
+
+    <TextView
+        android:id="@+id/subTitle3"
+        style="@style/Small.Label.Style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_big"
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:text="@string/schedule_fragment_chamber_of_Secret"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/opposingTitle"
+        app:layout_constraintTop_toBottomOf="@+id/subTitle2"
+        tools:text="Главное здание, ауд. 237" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

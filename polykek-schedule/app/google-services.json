@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "907954740508",
+    "firebase_url": "https://polykek-1.firebaseio.com",
+    "project_id": "polykek-1",
+    "storage_bucket": "polykek-1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:907954740508:android:ee456e8affd98e92",
+        "android_client_info": {
+          "package_name": "argument.twins.com.polykekschedule"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "907954740508-4hh835hk8n3g1mgsflntlqlms3hbgepi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD88RMCBJOpXEAn7cC4_Sz07PZMOyjXlAU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "907954740508-4hh835hk8n3g1mgsflntlqlms3hbgepi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

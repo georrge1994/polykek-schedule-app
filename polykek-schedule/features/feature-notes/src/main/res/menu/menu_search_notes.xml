@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_white_rectangle"
+        android:fontFamily="sans-serif"
+        android:icon="@drawable/ic_search_24dp"
+        android:letterSpacing="0.01"
+        android:lineSpacingExtra="10.1sp"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/small_label_style_text_size"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="ifRoom"
+        tools:ignore="MenuTitle" />
+
+    <item
+        android:id="@+id/addNote"
+        android:icon="@drawable/ic_baseline_event_note_24"
+        app:showAsAction="always"
+        tools:ignore="MenuTitle" />
+
+    <item
+        android:id="@+id/removeNotes"
+        android:icon="@drawable/ic_baseline_delete_forever_24"
+        android:visible="false"
+        app:showAsAction="always"
+        tools:ignore="MenuTitle" />
+</menu>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/main_theme_color_2</color>
+    <color name="colorPrimaryDark">@color/main_theme_color_2</color>
+    <color name="main_theme_color_2">#21a649</color>
+    <color name="colorAccent">@color/white</color>
+
+    <color name="transparent">@android:color/transparent</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="textColor">@color/grey_500</color>
+    <color name="disableColor">@color/grey_100</color>
+    <color name="labelColor">@color/grey_200</color>
+    <color name="tabDisableColor">@color/grey_200</color>
+
+    <color name="grey_50">#F0F0F0</color>
+    <color name="grey_85">#D5D5D5</color>
+    <color name="grey_100">#c0c0c0</color>
+    <color name="grey_100_15">#27C0C0C0</color>
+    <color name="grey_120">#b0b0b0</color>
+    <color name="grey_200">#707070</color>
+    <color name="grey_200_5">#0D707070</color>
+    <color name="grey_200_20">#33707070</color>
+    <color name="grey_500">#222222</color>
+
+    <color name="light_green">#D8FBD9</color>
+</resources>

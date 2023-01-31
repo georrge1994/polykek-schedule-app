@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.android.feature.feedback.fragments.FeedbackFragment">
+
+        <include
+            android:id="@+id/toolbarLayout"
+            layout="@layout/toolbar" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/textField"
+            style="@style/BaseTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/feedback_edit_text_height"
+            android:layout_marginStart="@dimen/margin_middle"
+            android:layout_marginTop="@dimen/margin_big"
+            android:layout_marginEnd="@dimen/margin_middle"
+            android:background="@color/grey_50"
+            android:gravity="top|start"
+            android:hint="@string/feedback_fragment_describe_a_task"
+            android:inputType="textMultiLine|textAutoCorrect|textCapSentences"
+            android:lines="8"
+            android:maxLines="10"
+            android:minHeight="@dimen/feedback_edit_text_height"
+            android:minLines="6"
+            android:padding="@dimen/margin_small"
+            android:scrollbars="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarLayout"
+            tools:text="My application does not work on android 7.0. When I open it it falls" />
+
+        <TextView
+            android:id="@+id/textView1"
+            style="@style/BaseTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_big"
+            android:layout_marginTop="@dimen/margin_big"
+            android:text="@string/feedback_fragment_please_select_type"
+            android:textColor="@color/grey_200"
+            app:layout_constraintBottom_toTopOf="@+id/radioBtnGroup"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textField" />
+
+        <RadioGroup
+            android:id="@+id/radioBtnGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/submit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textField">
+
+            <RadioButton
+                android:id="@+id/bugRadioBtn"
+                style="@style/BaseTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/feedback_radio_btn_horizontal_margin"
+                android:layout_marginTop="@dimen/feedback_radio_btn_vertical_margin"
+                android:layout_marginEnd="@dimen/feedback_radio_btn_horizontal_margin"
+                android:layout_marginBottom="@dimen/feedback_radio_btn_vertical_margin"
+                android:checked="true"
+                android:padding="@dimen/feedback_radio_btn_padding"
+                android:text="@string/feedback_fragment_bug"
+                android:textColor="@color/grey_200" />
+
+            <RadioButton
+                android:id="@+id/ideaRadioBtn"
+                style="@style/BaseTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/feedback_radio_btn_horizontal_margin"
+                android:layout_marginTop="@dimen/feedback_radio_btn_vertical_margin"
+                android:layout_marginEnd="@dimen/feedback_radio_btn_horizontal_margin"
+                android:layout_marginBottom="@dimen/feedback_radio_btn_vertical_margin"
+                android:padding="@dimen/feedback_radio_btn_padding"
+                android:text="@string/feedback_fragment_idea"
+                android:textColor="@color/grey_200" />
+
+            <RadioButton
+                android:id="@+id/otherRadioBtn"
+                style="@style/BaseTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/feedback_radio_btn_horizontal_margin"
+                android:layout_marginTop="@dimen/feedback_radio_btn_vertical_margin"
+                android:layout_marginEnd="@dimen/feedback_radio_btn_horizontal_margin"
+                android:layout_marginBottom="@dimen/feedback_radio_btn_vertical_margin"
+                android:padding="@dimen/feedback_radio_btn_padding"
+                android:text="@string/feedback_fragment_other"
+                android:textColor="@color/grey_200" />
+        </RadioGroup>
+
+        <com.android.core.ui.view.custom.BtnWithLoadingAnimation
+            android:id="@+id/submit"
+            style="@style/Feedback.Button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/feedback_button_height"
+            android:layout_marginStart="@dimen/padding_middle"
+            android:layout_marginEnd="@dimen/padding_middle"
+            android:layout_marginBottom="@dimen/padding_big"
+            android:text="@string/feedback_fragment_submit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.core.widget.NestedScrollView>

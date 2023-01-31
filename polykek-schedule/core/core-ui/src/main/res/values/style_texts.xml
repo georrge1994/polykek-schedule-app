@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BaseTextStyle">
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">@dimen/_13ssp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="LabelStyle" parent="BaseTextStyle">
+        <item name="android:textColor">@color/labelColor</item>
+        <item name="android:textSize">@dimen/_13ssp</item>
+    </style>
+
+    <style name="Small.Label.Style" parent="LabelStyle">
+        <item name="android:textColor">@color/labelColor</item>
+        <item name="android:textSize">@dimen/small_label_style_text_size</item>
+    </style>
+
+    <style name="Bold.Label.Style" parent="BaseTextStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/bold_label_style_text_size</item>
+    </style>
+</resources>

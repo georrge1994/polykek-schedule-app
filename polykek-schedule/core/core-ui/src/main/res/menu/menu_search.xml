@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/rounded_white_rectangle"
+        android:fontFamily="sans-serif"
+        android:icon="@drawable/ic_search_24dp"
+        android:letterSpacing="0.01"
+        android:lineSpacingExtra="10.1sp"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/small_label_style_text_size"
+        android:textStyle="normal"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="ifRoom"
+        tools:ignore="MenuTitle" />
+</menu>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/schedule_navigation"
+        android:contentDescription="@string/navigation_menu_schedule"
+        android:icon="@drawable/ic_schedule_black_24dp"
+        android:title="@string/navigation_menu_schedule" />
+
+    <item
+        android:id="@+id/notes_navigation"
+        android:enabled="true"
+        android:contentDescription="@string/navigation_menu_notes"
+        android:icon="@drawable/ic_event_note_black_24dp"
+        android:title="@string/navigation_menu_notes" />
+
+    <item
+        android:id="@+id/map_navigation"
+        android:enabled="true"
+        android:contentDescription="@string/navigation_menu_map"
+        android:icon="@drawable/ic_location_on_black_24dp"
+        android:title="@string/navigation_menu_map"/>
+
+    <item
+        android:id="@+id/professors_navigation"
+        android:enabled="true"
+        android:contentDescription="@string/navigation_menu_teachers"
+        android:icon="@drawable/ic_baseline_people_24"
+        android:title="@string/navigation_menu_teachers" />
+</menu>

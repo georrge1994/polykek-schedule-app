@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbarLayout"
+            layout="@layout/toolbar_white_background" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/noteHeader"
+            style="@style/BaseTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:background="@color/grey_50"
+            android:gravity="top|start"
+            android:hint="@string/notes_fragment_title"
+            android:inputType="textCapSentences|textAutoCorrect|textCapSentences"
+            android:padding="@dimen/padding_big"
+            android:scrollbars="vertical"
+            android:textStyle="bold"
+            tools:text="Header" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/noteBody"
+            style="@style/BaseTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:background="@color/grey_50"
+            android:gravity="top|start"
+            android:hint="@string/notes_fragment_body"
+            android:inputType="textMultiLine|textAutoCorrect|textCapSentences"
+            android:minHeight="@dimen/notes_body_height"
+            android:padding="@dimen/padding_big"
+            android:scrollbars="vertical"
+            tools:text="Important message" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.core.widget.NestedScrollView>

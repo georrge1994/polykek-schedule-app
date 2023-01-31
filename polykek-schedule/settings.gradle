@@ -1,0 +1,28 @@
+include ':app'
+
+// Core.
+include ':core:core-ui'
+include ':core:core-room-api'
+include ':core:core-retrofit-api'
+include ':core:core-retrofit-impl'
+include ':core:schedule-controller-api'
+include ':core:schedule-controller-impl'
+
+// Features.
+include ':features:feature-welcome'
+include ':features:feature-schools'
+include ':features:feature-groups'
+include ':features:feature-main-screen'
+include ':features:feature-schedule'
+include ':features:feature-notes'
+include ':features:feature-map'
+include ':features:feature-buildings'
+include ':features:feature-professors'
+include ':features:feature-faq'
+include ':features:feature-feedback'
+
+// Shared modules.
+include ':others:test-support'
+include ':others:shared-code'
+include ':others:module-injector'
+include ':others:common-models'

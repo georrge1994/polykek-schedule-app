@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.core.ui.view.custom.PolytechToolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ToolbarStyle.Week.Schedule"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/portrait_bottom_bar_height"
+    android:background="@color/colorPrimary">
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/previousBtn"
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        android:layout_gravity="start|center_vertical"
+        android:background="@drawable/shadow_background"
+        app:srcCompat="@drawable/ic_keyboard_arrow_left_white_32dp"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/nextBtn"
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        android:layout_gravity="end|center_vertical"
+        android:background="@drawable/shadow_background"
+        app:srcCompat="@drawable/ic_keyboard_arrow_right_white_32dp"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/datesWrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:background="@drawable/shadow_background"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small">
+
+        <TextView
+            android:id="@+id/weekName"
+            style="@style/BaseTextStyle.Toolbar.SmallTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_tiny"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_tiny"
+            tools:text="@string/schedule_fragment_odd_week" />
+
+        <TextView
+            android:id="@+id/date"
+            style="@style/Small.Label.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:textColor="@color/white"
+            tools:text="12.08.2018" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</com.android.core.ui.view.custom.PolytechToolbar>

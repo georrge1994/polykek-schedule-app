@@ -1,0 +1,117 @@
+<resources>
+    <string name="app_name">Расписание Политех</string>
+
+    <string name="general_word_searching">Поиск…</string>
+
+    <string name="welcome_screen_message_0">Быстрый доступ к расписанию</string>
+    <string name="welcome_screen_message_1">Заметки к предметам</string>
+    <string name="welcome_screen_message_2">Навигация по кампусу</string>
+    <string name="welcome_screen_message_3">Расписание преподавателей</string>
+    <string name="welcome_screen_student">Студент</string>
+    <string name="welcome_screen_professor">Преподаватель</string>
+
+    <string name="role_fragment_choice_role">Кто вы?</string>
+
+    <string name="school_fragment_list_of_schools">Институты</string>
+
+    <string name="groups_fragment_other">Другие</string>
+    <string name="groups_fragment_bachelor">Бакалавры</string>
+    <string name="groups_fragment_master">Магистры</string>
+    <string name="groups_fragment_group_list_is_empty">Список групп пуст</string>
+    <string name="group_fragment_curse">Курс %1$d</string>
+
+    <string name="schedule_fragment_week">Неделя</string>
+    <string name="schedule_fragment_odd_week">I неделя</string>
+    <string name="schedule_fragment_even_week">II неделя</string>
+    <string name="schedule_fragment_auditorium">каб. %1$d</string>
+    <string name="schedule_fragment_no_lessons">Вам не нужно идти на пары, если их нет</string>
+    <string name="schedule_fragment_voldemort">Тот-кого-нельзя-называть</string>
+    <string name="schedule_fragment_chamber_of_Secret">Тайная комната</string>
+    <string name="schedule_choose_group">Выберите группу</string>
+
+    <string name="notes_fragment_notes">Заметки</string>
+    <string name="notes_fragment_tab_title_by_lessons">По предметам</string>
+    <string name="notes_fragment_tab_title_own_notes">Собственные</string>
+    <string name="notes_fragment_list_is_empty">Список заметок пуст</string>
+    <string name="notes_fragment_title">Заголовок</string>
+    <string name="notes_fragment_body">Описание</string>
+    <string name="notes_fragment_own_note">Моя заметка</string>
+    <string name="notes_fragment_delete">Удалить</string>
+
+    <string name="map_fragment_one_or_more_addresses_are_not_known">Один или более адресов не удалось найти на карте</string>
+    <string name="map_fragment_search_building">Поиск по зданиям…</string>
+    <string name="map_buildings_list_of_building">Здания Политеха</string>
+    <string name="map_buildings_list_of_building_is_empty">Список зданий пуст</string>
+
+    <string name="professors_fragment_title">Преподаватели</string>
+    <string name="professors_fragment_list_is_empty">Не нашлось ни одного преподавателя на выбранной неделе</string>
+    <string name="professors_fragment_schedule_of">Расписание %1$s</string>
+    <string name="professors_fragment_no_lessons">На этой неделе у преподавателя нет пар</string>
+    <string name="professors_search_fragment_no_professors">Преподаватели не найдены</string>
+    <string name="professors_search_fragment_manual_text">Введите имя преподавателя и нажмите поиск</string>
+    <string name="professors_search_fragment_enter_name">Введите имя</string>
+    <string name="professors_search_fragment_search">Поиск по преподавателям</string>
+    <string name="professors_search_wrong_length_of_name">Довольно короткое имя</string>
+
+    <string name="bottom_sheet_fragment_groups_list_is_empty">Список групп пуст</string>
+    <string name="bottom_sheet_fragment_add_group">Добавить группу</string>
+    <string name="bottom_sheet_fragment_add_professor">Добавить преподавателя</string>
+    <string name="bottom_sheet_fragment_report_schedule_error">Сообщить об ошибке в расписании</string>
+
+    <string name="faq_fragment_title">Ликбез</string>
+    <string name="faq_fragment_send_feedback">Отправить сообщение</string>
+    <string name="faq_fragment_question_1_title">Почему я не вижу пар?</string>
+    <string name="faq_fragment_question_1_description">В приложение встроена простая система кэширования, но данные запрашиваются с серверов Политеха. Если сервер возвращает пустой объект, кэш обновляется и расписание пропадает. Более продвинутая система кэширования могла бы решить эту проблему, но она потребует больше времени на разработку, и породит другую проблему - рассинхронизацию данных с официальным расписанием.</string>
+    <string name="faq_fragment_question_2_title">Может ли приложение показывать расписание неверно?</string>
+    <string name="faq_fragment_question_2_description">Такой проблемы быть не должно. Если же вы все-таки столкнулись с этим, отправьте мне сообщение с номером группы, датой и названием пары - я проверю и сделаю фикс в ближайшем обновлении.</string>
+    <string name="faq_fragment_question_3_title">Как удалить выбранную группу?</string>
+    <string name="faq_fragment_question_3_description">Для удаления группы нужно выполнить swipe налево (последнюю группу удалить нельзя)</string>
+    <string name="faq_fragment_question_4_title">Почему вкладка преподавателей показывает не всех преподавателей?</string>
+    <string name="faq_fragment_question_4_description">На последней вкладке видны преподаватели на текущую неделю. Этот список формируется на основании недельных пар. Для отображения расписания преподавателя, не попавшего в этот список, вы можете воспользоваться поиском по преподавателям. </string>
+    <string name="faq_fragment_question_5_title">Что делать, если я нашел ошибку?</string>
+    <string name="faq_fragment_question_5_description">Отправьте мне сообщение с подробным описанием проблемы (см. верхний правый угл).</string>
+    <string name="faq_fragment_question_6_title">Кто разработал приложение и зачем?</string>
+    <string name="faq_fragment_question_6_description">Авторы приложения \"Раписание СПбПУ\" - Георгий и Татьяна Чеботаревы. Данное приложение является pet-проектом для отработки приемов android-разработки.</string>
+
+    <string name="feedback_fragment_title">Отправить отзыв</string>
+    <string name="feedback_fragment_wrong_length_of_message">Короткое сообщение не информативно (введите более 20 знаков)</string>
+    <string name="feedback_fragment_message_sent_successfully">Отзыв успешно отправлен</string>
+    <string name="feedback_fragment_message_was_not_sent">Ошибка. Сообщение не было доставлено</string>
+    <string name="feedback_fragment_bug">Ошибка</string>
+    <string name="feedback_fragment_idea">Предложение</string>
+    <string name="feedback_fragment_other">Иное</string>
+    <string name="feedback_fragment_submit">Отправить</string>
+    <string name="feedback_fragment_describe_a_task">Подробно опишите вашу проблему, либо идею</string>
+    <string name="feedback_fragment_please_select_type">Пожалуйста, выберите тип сообщения:</string>
+
+    <string name="navigation_menu_teachers">Преподы</string>
+    <string name="navigation_menu_schedule">Расписание</string>
+    <string name="navigation_menu_notes">Заметки</string>
+    <string name="navigation_menu_map">Карта</string>
+
+    <string name="in_app_review_thank_you">Спасибо ♡</string>
+
+    <string name="update_app_restart">Перезапустить</string>
+    <string name="update_app_downloading_was_completed">Обновление скачено</string>
+    <string name="update_app_installation_was_completed">Обновление завершено</string>
+
+    <string name="error_in_the_schedule_subject">%1$s - ошибка в расписании</string>
+    <string name="error_in_the_schedule_selection_message">Отправить письмо с помощью…</string>
+
+    <string name="fcm_notification_text">В приложении поселился дух Петра. Периодически он будет вас посещать, но ему нужно больше полномочий. Разрешить духу приходить?</string>
+    <string name="fcm_notification_yes">Да, пускай приходит</string>
+    <string name="fcm_notification_no">Ох, чур меня!</string>
+    <string name="fcm_notification_spirit_leaves">Дух Петра Вас не потревожит</string>
+    <string name="fcm_notification_spirit_time_to_time">Время от времени дух Петра будет к вам заглядывать</string>
+    <string name="fcm_notification_channel_name">Канал уведомления духов</string>
+    <string name="fcm_notification_channel_description">Канал для взаимодействия с разработчиками</string>
+
+    <string-array name="schedule_fragment_day_abbreviations">
+        <item>Пн</item>
+        <item>Вт</item>
+        <item>Ср</item>
+        <item>Чт</item>
+        <item>Пт</item>
+        <item>Сб</item>
+    </string-array>
+</resources>

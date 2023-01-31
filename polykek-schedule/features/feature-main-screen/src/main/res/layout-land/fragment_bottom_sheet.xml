@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/groupToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_group_toolbar_height_landscape"
+        app:behavior_peekHeight="@dimen/main_group_toolbar_peek_height"
+        app:gestureInsetBottomIgnored="true"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/stroke_width"
+            android:background="@color/grey_50"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/groupName"
+            style="@style/BaseTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/main_group_toolbar_peek_height"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/moreBtn"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:background="@drawable/shadow_background"
+            android:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/groupName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/groupName"
+            app:srcCompat="@drawable/ic_more_vertical_grey_24dp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/savedGroups"
+            android:name="com.android.feature.main.screen.saved.fragments.SavedItemsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/grey_50"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupName"
+            tools:layout="@layout/fragment_saved_items" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/removeNote"
+        android:icon="@drawable/ic_baseline_delete_forever_24"
+        android:textColor="@color/grey_500"
+        android:title="@string/notes_fragment_delete"
+        tools:ignore="MenuTitle" />
+</menu>

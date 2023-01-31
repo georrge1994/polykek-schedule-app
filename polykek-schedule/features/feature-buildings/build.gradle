@@ -1,0 +1,119 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'com.android.feature.buildings'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 33
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    // That's excluding the second module for the androidTestImplementation configuration.
+    configurations {
+        androidTestImplementation { exclude group: 'io.mockk', module: 'mockk-agent-jvm' }
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+        // Hide warnings.
+        freeCompilerArgs += [
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-opt-in=kotlinx.coroutines.ObsoleteCoroutinesApi",
+                "-opt-in=kotlinx.coroutines.FlowPreview"
+        ]
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation "androidx.legacy:legacy-support-v4:$legacySupportV4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+
+    // Ktx.
+    implementation "androidx.core:core-ktx:$coreKtxVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleKtxVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleKtxVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleKtxVersion"
+    implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+
+    // Material design.
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
+
+    // Dagger.
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    kapt("org.jetbrains.kotlinx:kotlinx-metadata-jvm:$daggerSupportedKotlinMetaDataVersion")
+
+    // Retrofit.
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2Version"
+
+    // Navigation.
+    implementation("com.github.terrakok:cicerone:$ciceroneVersion")
+
+    // Other helpful libs.
+    implementation "com.codesgood:justifiedtextview:$justifiedtextviewVersion"
+    implementation "com.github.kirich1409:viewbindingpropertydelegate-noreflection:$bindingDelegateVersion"
+    implementation "com.intuit.sdp:sdp-android:$sdpAndSspVersion"
+    implementation "com.intuit.ssp:ssp-android:$sdpAndSspVersion"
+
+    // *************** JUnit tests libs *******************
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    testImplementation "com.google.truth:truth:$truthVersion"
+    testImplementation "io.mockk:mockk:$mokkVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "androidx.test:core:$testCoreVersion"
+    testImplementation "androidx.room:room-testing:$roomVersion"
+    // Helper for other arch dependencies, including JUnit test rules that can be used with LiveData.
+    testImplementation "androidx.arch.core:core-testing:$coreTestingVersion"
+    // For retrofit api testing.
+    testImplementation "com.squareup.okhttp3:mockwebserver:$mockWebServerVersion"
+    testImplementation "org.json:json:$testJsonVersion"
+
+    // *************** Android JUnit tests *******************
+    androidTestImplementation "androidx.arch.core:core-testing:$coreTestingVersion"
+    androidTestImplementation "androidx.test:rules:$rulesVersion"
+    androidTestImplementation "androidx.test:runner:$testRunnerVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    androidTestImplementation "io.mockk:mockk-android:$mokkVersion"
+    androidTestImplementation "androidx.work:work-testing:$workRuntimeKtxVersion"
+
+    // ********************* Modules *************************
+    // Core.
+    implementation project(coreUiApiModule)
+    implementation project(coreRetrofitApiModule)
+
+    // Shared modules.
+    implementation project(sharedCodeModule)
+    implementation project(commonModelsModule)
+    implementation project(moduleInjectorModule)
+    androidTestImplementation project(testSupportModule)
+    testImplementation project(testSupportModule)
+}

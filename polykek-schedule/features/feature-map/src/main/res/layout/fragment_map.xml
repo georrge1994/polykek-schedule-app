@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.android.feature.map.fragments.MapFragment">
+
+    <com.yandex.mapkit.mapview.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:movable="true" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/toolbar"
+        android:name="com.android.feature.map.fragments.MapToolbarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_middle"
+        android:layout_marginTop="@dimen/map_margin_big"
+        android:layout_marginEnd="@dimen/margin_middle" />
+
+    <FrameLayout
+        android:layout_width="@dimen/map_control_block_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:layout_margin="@dimen/padding_middle"
+        android:layout_marginBottom="@dimen/map_margin_big"
+        android:background="@drawable/white_rounded_background">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/previousBtn"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_gravity="start|center_vertical"
+            android:background="@drawable/shadow_background"
+            app:icon="@drawable/ic_keyboard_arrow_left_white_32dp"
+            app:iconGravity="end"
+            app:iconTint="@color/selector_shadow_dark"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dayAbbr"
+            style="@style/BaseTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/grey_200" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/nextBtn"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_gravity="end|center_vertical"
+            android:background="@drawable/shadow_background"
+            app:icon="@drawable/ic_keyboard_arrow_right_white_32dp"
+            app:iconGravity="start"
+            app:iconTint="@color/selector_shadow_dark"
+            tools:ignore="SpeakableTextPresentCheck" />
+    </FrameLayout>
+</FrameLayout>

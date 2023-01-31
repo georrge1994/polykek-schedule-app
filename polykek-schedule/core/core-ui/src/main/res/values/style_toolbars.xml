@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ToolbarStyle" parent="AppTheme">
+        <item name="android:textSize">@dimen/_13ssp</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="ToolbarStyle.Week.Schedule" parent="ToolbarStyle">
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetRight">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+    </style>
+
+    <style name="ToolbarStyle.White.Background" parent="AppTheme">
+        <item name="android:textSize">@dimen/_13ssp</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColor">@color/grey_500</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+    </style>
+
+    <style name="BaseTextStyle.Toolbar" parent="BaseTextStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="BaseTextStyle.Toolbar.SmallTitle" parent="BaseTextStyle.Toolbar">
+        <item name="android:textSize">@dimen/_13ssp</item>
+    </style>
+</resources>

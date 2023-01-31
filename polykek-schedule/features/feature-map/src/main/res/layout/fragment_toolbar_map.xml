@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.core.ui.view.custom.PolytechToolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mapToolbar"
+    style="@style/ToolbarStyle.Week.Schedule"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/white_rounded_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/focusBtn"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:background="@drawable/shadow_background"
+            app:layout_constraintBottom_toBottomOf="@+id/searchBtn"
+            app:layout_constraintEnd_toStartOf="@+id/searchBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/searchBtn"
+            app:srcCompat="@drawable/ic_baseline_filter_center_focus_32"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/searchBtn"
+            style="@style/BuildSearchButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_size"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="@string/map_fragment_search_building"
+            app:layout_constraintBottom_toTopOf="@+id/contentLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/focusBtn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/contentLayout"
+            layout="@layout/map_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchBtn" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.android.core.ui.view.custom.PolytechToolbar>

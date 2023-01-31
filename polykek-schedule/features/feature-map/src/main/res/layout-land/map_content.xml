@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lessonLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_background_items"
+    android:paddingStart="0dp"
+    android:paddingEnd="@dimen/padding_small">
+
+    <TextView
+        android:id="@+id/opposingTitle"
+        style="@style/Small.Label.Style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_big"
+        android:lines="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="10:00-11:30" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/Bold.Label.Style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:lines="1"
+        android:paddingStart="@dimen/margin_small"
+        android:paddingEnd="@dimen/margin_small"
+        app:layout_constraintStart_toEndOf="@+id/opposingTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Технологии программирования" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title">
+
+        <TextView
+            android:id="@+id/subTitle1"
+            style="@style/Small.Label.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            tools:text="Тестирование" />
+
+        <TextView
+            style="@style/Small.Label.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_small"
+            android:text="-"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/subTitle2"
+            style="@style/Small.Label.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:text="@string/schedule_fragment_chamber_of_Secret"
+            tools:text="Главное здание, ауд. 237" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/subTitle3"
+        style="@style/Small.Label.Style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:layout_marginBottom="@dimen/margin_tiny"
+        android:maxLines="1"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small"
+        android:text="@string/schedule_fragment_voldemort"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        tools:text="Глухих Михаил Игоревич" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

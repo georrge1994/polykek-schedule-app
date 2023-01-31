@@ -1,0 +1,120 @@
+<resources>
+    <string name="app_name">Schedule Polytech</string>
+    <!--    <string name="provider_path" translatable="false">argument.twins.com.polykekschedule.provider</string>-->
+
+    <string name="general_word_searching">Searching…</string>
+
+    <string name="welcome_screen_message_0">Quick access to schedule</string>
+    <string name="welcome_screen_message_1">Notes for subjects</string>
+    <string name="welcome_screen_message_2">Campus navigation</string>
+    <string name="welcome_screen_message_3">Professor schedule</string>
+    <string name="welcome_screen_student">Student</string>
+    <string name="welcome_screen_professor">Professor</string>
+
+    <string name="role_fragment_choice_role">Who are you?</string>
+
+    <string name="school_fragment_list_of_schools">Institutes</string>
+
+    <string name="groups_fragment_other">Other</string>
+    <string name="groups_fragment_bachelor">Bachelor</string>
+    <string name="groups_fragment_master">Master</string>
+    <string name="groups_fragment_group_list_is_empty">List of groups is empty</string>
+    <string name="group_fragment_curse">Year %1$d</string>
+
+    <string name="schedule_fragment_week">Week</string>
+    <string name="schedule_fragment_odd_week">I week</string>
+    <string name="schedule_fragment_even_week">II week</string>
+    <string name="schedule_fragment_auditorium">room %1$d</string>
+    <string name="schedule_fragment_no_lessons">You do not have to go to lessons if they do not exist</string>
+    <string name="schedule_fragment_voldemort">He-Who-Must-Not-Be-Named</string>
+    <string name="schedule_fragment_chamber_of_Secret">Chamber of Secret</string>
+    <string name="schedule_choose_group">Choose group</string>
+
+    <string name="notes_fragment_notes">Notes</string>
+    <string name="notes_fragment_tab_title_by_lessons">By subject</string>
+    <string name="notes_fragment_tab_title_own_notes">Own notes</string>
+    <string name="notes_fragment_list_is_empty">List of notes\n is empty</string>
+    <string name="notes_fragment_title">Title</string>
+    <string name="notes_fragment_body">Body</string>
+    <string name="notes_fragment_own_note">Own note</string>
+    <string name="notes_fragment_delete">Delete note</string>
+
+    <string name="map_fragment_one_or_more_addresses_are_not_known">One or more addresses aren\'t known</string>
+    <string name="map_fragment_search_building">Search building…</string>
+    <string name="map_buildings_list_of_building">List of buildings</string>
+    <string name="map_buildings_list_of_building_is_empty">List of buildings\n is empty</string>
+
+    <string name="professors_fragment_title">Professors</string>
+    <string name="professors_fragment_list_is_empty">There is no any professor for the selected week</string>
+    <string name="professors_fragment_schedule_of">Schedule of %1$s</string>
+    <string name="professors_fragment_no_lessons">The professor has no lessons on this week</string>
+
+    <string name="professors_search_fragment_no_professors">No professors found</string>
+    <string name="professors_search_fragment_manual_text">Enter professor\'s name and tap search</string>
+    <string name="professors_search_fragment_enter_name">Enter name</string>
+    <string name="professors_search_fragment_search">Search by professors</string>
+    <string name="professors_search_wrong_length_of_name">Pretty short name</string>
+
+    <string name="bottom_sheet_fragment_groups_list_is_empty">List of groups\n is empty</string>
+    <string name="bottom_sheet_fragment_add_group">Add group</string>
+    <string name="bottom_sheet_fragment_add_professor">Add professor</string>
+    <string name="bottom_sheet_fragment_report_schedule_error">Report a schedule error</string>
+
+    <string name="faq_fragment_title">F.A.Q</string>
+    <string name="faq_fragment_send_feedback">Send feedback</string>
+    <string name="faq_fragment_question_1_title">Why don\'t I see lessons?</string>
+    <string name="faq_fragment_question_1_description">There is a simple cache system inside app, but all data are received from Polytech servers. If server returns empty object cache will be updated and schedule will gone. More advanced cache system can solve this problem, but this will require more time for developing.</string>
+    <string name="faq_fragment_question_2_title">Can the application show the schedule incorrectly?</string>
+    <string name="faq_fragment_question_2_description">It should not be. But if you faced with such problem you can send me a message with group number, date and subject name. I will check this issue and make a fix in next version.</string>
+    <string name="faq_fragment_question_3_title">How can I delete a group?</string>
+    <string name="faq_fragment_question_3_description">For deleting selected groups you need to swipe left. (Last group can\'t be deleted)</string>
+    <string name="faq_fragment_question_4_title">Why doesn\'t tab with list of professors show all professors?</string>
+    <string name="faq_fragment_question_4_description">Last tab displays professors for current week by classes you have. To display a schedule of particular professor which is not in this list you can use search by professors.</string>
+    <string name="faq_fragment_question_5_title">What if I have found a bug?</string>
+    <string name="faq_fragment_question_5_description">Send me message (button in upper right corner).</string>
+    <string name="faq_fragment_question_6_title">Who has developed this app and why?</string>
+    <string name="faq_fragment_question_6_description">The authors of application are Georgiy and Tatiana Chebotarev. This is a pet-project for training android skills.</string>
+
+    <string name="feedback_fragment_title">FeedBack</string>
+    <string name="feedback_fragment_wrong_length_of_message">A short message is not informative (enter more than 20 characters)</string>
+    <string name="feedback_fragment_message_sent_successfully">Feedback message is sent successfully</string>
+    <string name="feedback_fragment_message_was_not_sent">Error. Feedback message wasn\'t sent</string>
+    <string name="feedback_fragment_bug">Bug/Error</string>
+    <string name="feedback_fragment_idea">Idea/Suggestion</string>
+    <string name="feedback_fragment_other">Other</string>
+    <string name="feedback_fragment_submit">Submit</string>
+    <string name="feedback_fragment_describe_a_task">Describe your problem or idea</string>
+    <string name="feedback_fragment_please_select_type">Please select a type of message:</string>
+
+    <string name="navigation_menu_teachers">Teachers</string>
+    <string name="navigation_menu_schedule">Schedule</string>
+    <string name="navigation_menu_notes">Notes</string>
+    <string name="navigation_menu_map">Map</string>
+
+    <string name="in_app_review_thank_you">Thank you ♡</string>
+
+    <string name="update_app_restart">Restart</string>
+    <string name="update_app_downloading_was_completed">An update has just been downloaded</string>
+    <string name="update_app_installation_was_completed">Installation was completed</string>
+
+    <string name="error_in_the_schedule_email" translatable="false">ruz@spbstu.ru</string>
+    <string name="error_in_the_schedule_subject">%1$s - mistake in the schedule</string>
+    <string name="error_in_the_schedule_selection_message">Send mail using…</string>
+
+    <string name="fcm_notification_text">The spirit of Peter settled in the app. Time to time he will visit you, but he needs more powers. Allow spirit to come?</string>
+    <string name="fcm_notification_yes">Yes, sure</string>
+    <string name="fcm_notification_no">No, thanks</string>
+    <string name="fcm_notification_spirit_leaves">Spirit of Peter will not disturb you</string>
+    <string name="fcm_notification_spirit_time_to_time">Time to time spirit of Peter will visit you</string>
+    <string name="fcm_notification_channel_name">Spirit\'s notification channel</string>
+    <string name="fcm_notification_channel_description">Channel for communicating with developers</string>
+
+    <string-array name="schedule_fragment_day_abbreviations">
+        <item>Mo</item>
+        <item>Tu</item>
+        <item>We</item>
+        <item>Th</item>
+        <item>Fr</item>
+        <item>Sa</item>
+    </string-array>
+</resources>

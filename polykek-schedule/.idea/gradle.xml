@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="1.8" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/core-retrofit-api" />
+            <option value="$PROJECT_DIR$/core/core-retrofit-impl" />
+            <option value="$PROJECT_DIR$/core/core-room-api" />
+            <option value="$PROJECT_DIR$/core/core-ui" />
+            <option value="$PROJECT_DIR$/core/schedule-controller-api" />
+            <option value="$PROJECT_DIR$/core/schedule-controller-impl" />
+            <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/feature-buildings" />
+            <option value="$PROJECT_DIR$/features/feature-faq" />
+            <option value="$PROJECT_DIR$/features/feature-feedback" />
+            <option value="$PROJECT_DIR$/features/feature-groups" />
+            <option value="$PROJECT_DIR$/features/feature-main-screen" />
+            <option value="$PROJECT_DIR$/features/feature-map" />
+            <option value="$PROJECT_DIR$/features/feature-notes" />
+            <option value="$PROJECT_DIR$/features/feature-professors" />
+            <option value="$PROJECT_DIR$/features/feature-schedule" />
+            <option value="$PROJECT_DIR$/features/feature-schools" />
+            <option value="$PROJECT_DIR$/features/feature-welcome" />
+            <option value="$PROJECT_DIR$/others" />
+            <option value="$PROJECT_DIR$/others/common-models" />
+            <option value="$PROJECT_DIR$/others/module-injector" />
+            <option value="$PROJECT_DIR$/others/shared-code" />
+            <option value="$PROJECT_DIR$/others/test-support" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

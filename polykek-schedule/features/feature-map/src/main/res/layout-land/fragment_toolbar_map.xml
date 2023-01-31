@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.core.ui.view.custom.PolytechToolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mapToolbar"
+    style="@style/ToolbarStyle.Week.Schedule"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/white_rounded_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/focusBtn"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:background="@drawable/shadow_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_filter_center_focus_32" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/searchBtn"
+            style="@style/BuildSearchButton"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:background="@drawable/shadow_background"
+            app:icon="@drawable/ic_baseline_search_32"
+            app:iconTint="@color/grey_200"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/focusBtn"
+            app:layout_constraintTop_toBottomOf="@+id/focusBtn" />
+
+        <include
+            android:id="@+id/contentLayout"
+            layout="@layout/map_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/focusBtn"
+            app:layout_constraintTop_toTopOf="@+id/focusBtn" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.android.core.ui.view.custom.PolytechToolbar>

@@ -1,0 +1,89 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- system overrides -->
+    <dimen name="design_bottom_navigation_item_max_width" tools:override="true">1000dp</dimen>
+    <dimen name="design_bottom_navigation_active_item_max_width" tools:override="true">1000dp</dimen>
+
+    <!-- General -->
+    <dimen name="small_label_style_text_size">@dimen/_11ssp</dimen>
+    <dimen name="bold_label_style_text_size">@dimen/_13ssp</dimen>
+
+    <dimen name="default_corner_radius">@dimen/_6sdp</dimen>
+    <dimen name="app_elevation">@dimen/_2sdp</dimen>
+    <dimen name="stroke_width">@dimen/_1sdp</dimen>
+    <dimen name="button_size">@dimen/_42sdp</dimen>
+
+    <dimen name="item_line_spacing_extra">@dimen/_6sdp</dimen>
+    <dimen name="item_layout_padding_vertical">@dimen/_11sdp</dimen>
+    <dimen name="item_layout_padding_horizontal">@dimen/_13sdp</dimen>
+
+    <!-- General - margins -->
+    <dimen name="margin_huge">@dimen/_28sdp</dimen>
+    <dimen name="margin_big">@dimen/_14sdp</dimen>
+    <dimen name="margin_middle">@dimen/_11sdp</dimen>
+    <dimen name="margin_small">@dimen/_7sdp</dimen>
+    <dimen name="margin_tiny">@dimen/_4sdp</dimen>
+    <dimen name="margin_item_big">@dimen/_6sdp</dimen>
+    <dimen name="margin_item_middle">@dimen/_5sdp</dimen>
+    <dimen name="margin_item_small">@dimen/_4sdp</dimen>
+    <dimen name="margin_item_tiny">@dimen/_3sdp</dimen>
+
+    <!-- General - paddings -->
+    <dimen name="padding_huge">@dimen/_28sdp</dimen>
+    <dimen name="padding_big">@dimen/_14sdp</dimen>
+    <dimen name="padding_middle">@dimen/_11sdp</dimen>
+    <dimen name="padding_small">@dimen/_7sdp</dimen>
+    <dimen name="padding_tiny">@dimen/_4sdp</dimen>
+    <dimen name="padding_item_big">@dimen/_4sdp</dimen>
+    <dimen name="padding_item_middle">@dimen/_3sdp</dimen>
+    <dimen name="padding_item_small">@dimen/_2sdp</dimen>
+
+    <!-- Choose role -->
+    <dimen name="choose_role_text_size">@dimen/_19ssp</dimen>
+
+    <!-- Feedback -->
+    <dimen name="feedback_edit_text_height">@dimen/_174sdp</dimen>
+    <dimen name="feedback_space_between_blocks">@dimen/_16sdp</dimen>
+    <dimen name="feedback_radio_btn_vertical_margin">@dimen/_2sdp</dimen>
+    <dimen name="feedback_radio_btn_horizontal_margin">@dimen/_9sdp</dimen>
+    <dimen name="feedback_radio_btn_padding">@dimen/_4sdp</dimen>
+    <dimen name="feedback_button_height">@dimen/_65sdp</dimen>
+
+    <!-- Groups -->
+    <dimen name="group_item_width">@dimen/_144sdp</dimen>
+
+    <!-- Main -->
+    <dimen name="main_group_toolbar_peek_height">@dimen/_37sdp</dimen>
+    <!-- Main - portrait -->
+    <dimen name="portrait_bottom_bar_height">@dimen/_46sdp</dimen>
+    <dimen name="portrait_sum_height_bottom_bar_and_sheet_peak_height">@dimen/_83sdp</dimen>
+    <dimen name="main_group_toolbar_height_portrait">@dimen/_261sdp</dimen>
+    <!-- Main - landscape -->
+    <dimen name="landscape_search_plate_height">@dimen/_32sdp</dimen>
+    <dimen name="landscape_tab_layout_height">@dimen/_32sdp</dimen>
+    <dimen name="main_group_toolbar_height_landscape">@dimen/_218sdp</dimen>
+
+    <!-- Map -->
+    <dimen name="map_margin_big">@dimen/_20sdp</dimen>
+    <dimen name="map_control_block_width">@dimen/_80sdp</dimen>
+
+    <!-- Notes -->
+    <dimen name="notes_body_height">@dimen/_174sdp</dimen>
+
+    <!-- Week -->
+    <dimen name="week_tab_layout">@dimen/_35sdp</dimen>
+
+    <!-- Welcome -->
+    <dimen name="welcome_padding_tine">@dimen/_1sdp</dimen>
+    <dimen name="welcome_margin_big">@dimen/_21sdp</dimen>
+    <dimen name="welcome_shoot_width">@dimen/_255sdp</dimen>
+
+    <!-- Saved items -->
+    <dimen name="saved_items_icon_elevation">@dimen/_3sdp</dimen>
+
+    <!-- Toolbar -->
+    <dimen name="landscape_toolbar_height">@dimen/_35sdp</dimen>
+
+    <!-- Notification dialog -->
+    <dimen name="notification_dialog_button_width">@dimen/_160sdp</dimen>
+    <dimen name="notification_dialog_button_text_size">@dimen/_10ssp</dimen>
+</resources>
