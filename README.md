@@ -1,21 +1,29 @@
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://play.google.com/store/apps/details?id=argument.twins.com.polykekschedule">
+    <img src="images/logo.webp" alt="Logo" width="80" height="80">
+  </a>
 
-# Polykek-schedule-app
+  <a href="https://english.spbstu.ru">
+    <h3 align="center">Schedule application for Peter the Great St.Petersburg Polytechnic University</h3>
+  </a>
+</div>
+
+# About project
 This app was developed specially for students and professors of St. Petersburg Polytechnic University. It provides quick access to the schedule, group and department searches, campus navigation and also allows to make some notes. The project started in 2018, is maintained and regularly updated. This application is not an official application of the university, but has over 5 thousand users who use app almost every day.
-
-## License
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) 
 
 ## Demonstrating some features
 <table>
     <tr>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/raw/master/gifs/1_welcome_navigation.gif" width="256"/>
+            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/1_welcome_navigation.gif" width="256"/>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/raw/master/gifs/2_group_search.gif" width="256"/>
+            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/2_group_search.gif" width="256"/>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/raw/master/gifs/3_independed_tab_navigation.gif" width="256"/>
+            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/3_independed_tab_navigation.gif" width="256"/>
         </td>
     </tr>
     <tr>
@@ -31,13 +39,13 @@ This app was developed specially for students and professors of St. Petersburg P
     </tr>
     <tr>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/raw/master/gifs/4_yandex_map_kit.gif" width="256"/>
+            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/4_yandex_map_kit.gif" width="256"/>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/raw/master/gifs/5_snow_animation.gif" width="256"/>
+            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/5_snow_animation.gif" width="256"/>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/raw/master/gifs/6_heartfall_animation.gif" width="256"/>
+            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/6_heartfall_animation.gif" width="256"/>
         </td>
     </tr>
     <tr>
@@ -53,13 +61,13 @@ This app was developed specially for students and professors of St. Petersburg P
     </tr>
 	    <tr>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/raw/master/gifs/7_harry_potter_feature.gif" width="256"/>
+            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/7_harry_potter_feature.gif" width="256"/>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/raw/master/gifs/8_switching_between_selected_items.gif" width="256"/>
+            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/8_switching_between_selected_items.gif" width="256"/>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/raw/master/gifs/9_smooth_animation.gif" width="256"/>
+            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/9_smooth_animation.gif" width="256"/>
         </td>
     </tr>
     <tr>
@@ -75,7 +83,7 @@ This app was developed specially for students and professors of St. Petersburg P
     </tr>
 </table>
 
-##Arhitecture and main technologies
+## Arhitecture and main technologies
 + Kotlin
 + Coroutines
 + Clear arhitecture (MVVM without databingins - just directly liveData)
@@ -88,7 +96,7 @@ This app was developed specially for students and professors of St. Petersburg P
 + Clear and careful coding (median size of fragments, usecases and viewmodels is 100 lines)
 + Obfuscated prod-version
 
-##Frameworks
+## Frameworks
 + Dagger
 + Room
 + Retrofit
@@ -101,6 +109,10 @@ This app was developed specially for students and professors of St. Petersburg P
 ## 🚀 About Me
 I'm an Android developer with 5.5 years of experience. This is my pet project. You can judge me by his code. This application is not "dress app", I always use the same careful style for developing.
 
-## 🔗 Links
+## 🔗 Contacts
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/)
+
 [![telegram](https://img.shields.io/badge/-telegram-red?color=white&logo=telegram)](https://t.me/georrge1994)
+
+## License
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) 
