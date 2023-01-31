@@ -89,6 +89,9 @@ This application was developed specially for students and professors of St. Pete
         <td>
             <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/8_switching_between_selected_items.gif" width="256"/>
         </td>
+        <td>
+            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/9_smooth_animation.gif" width="256"/>
+        </td>
     </tr>
     <tr>
         <td>
@@ -96,6 +99,9 @@ This application was developed specially for students and professors of St. Pete
         </td>
         <td>
             Update all content by switching between groups
+        </td>
+        <td>
+            Just smooth animation =)
         </td>
     </tr>
 </table>
