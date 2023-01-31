@@ -8,32 +8,32 @@
 </div>
 
 # About project
-This application was developed specially for students and professors of St. Petersburg Polytechnic University. It provides quick access to schedule, group and department searches, campus navigation and also allows to make some notes. The project started in 2018, is maintained and regularly updated. This application is not the official application of the university, but has over 5 thousand users who use app almost every day.
+This application was developed specially for students and professors of St. Petersburg Polytechnic University. It provides quick access to schedule, group and department searches, campus navigation and also allows making some notes. The project was started in 2018, is maintained and regularly updated. This application is not the official application of the university, but has over 5 thousand users who use the app almost every day.
 
-## Arhitecture and main technologies
+## Architecture and main technologies
 + Kotlin
 + Coroutines
-+ Clear arhitecture (MVVM without databingins - just directly liveData)
++ Clear architecture (MVVM without dataBinding - just directly liveData)
 + Single activity app
-+ Multi-module-arhitecture with auto-clearing unused components from RAM (mechanism based on soft-references)
++ Multi-module-architecture with auto-clearing unused components from RAM (mechanism based on soft-references)
 + Unit tests for every each useCase, viewModel, repository + tests for room migrations and interceptors
-+ Optimized UI (no xml-inlfating for recycler view items - only native views)
++ Optimized UI (no xml-inflating for recycler view items - only native views)
 + Supports landscape mode
-+ kDoc for everything (used the own plugin for Android studio <a href="https://plugins.jetbrains.com/plugin/17719-advance-kotlin-documentation-generator">
++ kDoc for everything (used an own plugin for Android studio <a href="https://plugins.jetbrains.com/plugin/17719-advance-kotlin-documentation-generator">
 		<b>Advance Kotlin Documentation Generator</b>
 	</a>)
-+ Clear and careful coding (median size of fragments, usecases and viewmodels is 100 lines)
++ Clear and careful coding (median size of fragments, useCases and viewModels is 100 lines)
 + Obfuscation for prod-version
 
-## Used follow frameworks
+## Used the follow frameworks
 + Dagger
 + Room
 + Retrofit
 + Yandex-map-kit
 + Mockito
-+ Cicerone (powerfull framework for navigation. Very helpful for multi-module-arhitecture)
-+ Firebase messaging (used for Peter spirit ;) Time to time I send students some messages and congragulations)
-+ Crashlytic
++ Cicerone (powerful framework for navigation. Very helpful for multi-module-architecture)
++ Firebase messaging (used for Peter spirit ;) Time to time, I send students some messages and congratulations)
++ Crashlytics
 
 
 ## Demonstrating some features
@@ -79,7 +79,7 @@ This application was developed specially for students and professors of St. Pete
             Animated snow for winter holidays
         </td>
         <td>
-            Animated heartfall for the Love days
+            Animated "heartfall" for the Love days
         </td>
     </tr>
 	    <tr>
