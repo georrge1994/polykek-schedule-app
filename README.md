@@ -2,13 +2,39 @@
 <br />
 <div align="center">
 	<a href="https://english.spbstu.ru">
-		<img src="images/logo.webp" alt="Logo" width="256" height="256">
+		<img src="images/logo.webp" alt="Logo" width="128" height="128">
 	</a>
-	<h3 align="center">Schedule application for Peter the Great St.Petersburg Polytechnic University</h3>
+	<h2 align="center">Schedule application for Peter the Great St.Petersburg Polytechnic University</h2>
 </div>
 
 # About project
-This app was developed specially for students and professors of St. Petersburg Polytechnic University. It provides quick access to the schedule, group and department searches, campus navigation and also allows to make some notes. The project started in 2018, is maintained and regularly updated. This application is not an official application of the university, but has over 5 thousand users who use app almost every day.
+This application was developed specially for students and professors of St. Petersburg Polytechnic University. It provides quick access to schedule, group and department searches, campus navigation and also allows to make some notes. The project started in 2018, is maintained and regularly updated. This application is not the official application of the university, but has over 5 thousand users who use app almost every day.
+
+## Arhitecture and main technologies
++ Kotlin
++ Coroutines
++ Clear arhitecture (MVVM without databingins - just directly liveData)
++ Single activity app
++ Multi-module-arhitecture with auto-clearing unused components from RAM (mechanism based on soft-references)
++ Unit tests for every each useCase, viewModel, repository + tests for room migrations and interceptors
++ Optimized UI (no xml-inlfating for recycler view items - only native views)
++ Supports landscape mode
++ kDoc for everything (used the own plugin for Android studio <a href="https://plugins.jetbrains.com/plugin/17719-advance-kotlin-documentation-generator">
+		<b>Advance Kotlin Documentation Generator</b>
+	</a>)
++ Clear and careful coding (median size of fragments, usecases and viewmodels is 100 lines)
++ Obfuscation for prod-version
+
+## Used follow frameworks
++ Dagger
++ Room
++ Retrofit
++ Yandex-map-kit
++ Mockito
++ Cicerone (powerfull framework for navigation. Very helpful for multi-module-arhitecture)
++ Firebase messaging (used for Peter spirit ;) Time to time I send students some messages and congragulations)
++ Crashlytic
+
 
 ## Demonstrating some features
 <table>
@@ -25,13 +51,13 @@ This app was developed specially for students and professors of St. Petersburg P
     </tr>
     <tr>
         <td>
-            Smooth navigation between screens.
+            Smooth navigation between screens
         </td>
         <td>
-            Animated searchbar.
+            Animated search bar
         </td>
         <td>
-            Independent tab navigation
+            Independent navigation by tabs
         </td>
     </tr>
     <tr>
@@ -47,13 +73,13 @@ This app was developed specially for students and professors of St. Petersburg P
     </tr>
     <tr>
         <td>
-            Navigation with help Yandex-map-kit.
+            Campus navigation with help Yandex-map-kit
         </td>
         <td>
-            Animated snow - shows on the winter holidays.
+            Animated snow for winter holidays
         </td>
         <td>
-            Animated heartfall - shows on the Valentine's Day
+            Animated heartfall for the Love days
         </td>
     </tr>
 	    <tr>
@@ -63,45 +89,16 @@ This app was developed specially for students and professors of St. Petersburg P
         <td>
             <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/8_switching_between_selected_items.gif" width="256"/>
         </td>
-        <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/9_smooth_animation.gif" width="256"/>
-        </td>
     </tr>
     <tr>
         <td>
-            1st April joke - changes all lessons to Harry Potter lessons.
+            1-st April joke. Changes all items to items from Harry Potter universe
         </td>
         <td>
-            Simple switching between groups and professors.
-        </td>
-        <td>
-            Just smooth animation =)
+            Update all content by switching between groups
         </td>
     </tr>
 </table>
-
-## Arhitecture and main technologies
-+ Kotlin
-+ Coroutines
-+ Clear arhitecture (MVVM without databingins - just directly liveData)
-+ Single activity app
-+ Multi-module-arhitecture with auto-clearing unused modules from RAM by GC (used mechanism based on soft-references)
-+ Unit tests for every each useCase, viewModel, repository + tests for room migrations and interceptors
-+ Optimized UI (no xml-inlfating for recycler view items - only native views)
-+ Supports landscape mode
-+ kDoc for everything (used the own plugin for Android studio https://plugins.jetbrains.com/plugin/17719-advance-kotlin-documentation-generator)
-+ Clear and careful coding (median size of fragments, usecases and viewmodels is 100 lines)
-+ Obfuscated prod-version
-
-## Frameworks
-+ Dagger
-+ Room
-+ Retrofit
-+ Yandex-map-kit
-+ Mockito
-+ Cicerone - powerfull framework for navigation. Very helpful for multi-module-arhitecture
-+ Firebase messaging - used for spirit of Peter. Time to time I send users some messages or congragulations ;)
-+ Crashlytic
 
 ## Links
 <a href="https://play.google.com/store/apps/details?id=argument.twins.com.polykekschedule"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height=60px /></a>
