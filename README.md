@@ -40,13 +40,19 @@ This application was developed specially for students and professors of St. Pete
 <table>
     <tr>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/1_welcome_navigation.gif" width="256"/>
+			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/1_welcome_navigation.gif">
+				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/1_welcome_navigation.gif" width="256"/>
+			</a>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/2_group_search.gif" width="256"/>
+			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/2_group_search.gif">
+				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/2_group_search.gif" width="256"/>
+			</a>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/3_independed_tab_navigation.gif" width="256"/>
+			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/3_independed_tab_navigation.gif">
+				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/3_independed_tab_navigation.gif" width="256"/>
+			</a>
         </td>
     </tr>
     <tr>
@@ -62,13 +68,19 @@ This application was developed specially for students and professors of St. Pete
     </tr>
     <tr>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/4_yandex_map_kit.gif" width="256"/>
+			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/4_yandex_map_kit.gif">
+				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/4_yandex_map_kit.gif" width="256"/>
+			</a>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/5_snow_animation.gif" width="256"/>
+			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/5_snow_animation.gif">
+				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/5_snow_animation.gif" width="256"/>
+			</a>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/6_heartfall_animation.gif" width="256"/>
+			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/6_heartfall_animation.gif">
+				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/6_heartfall_animation.gif" width="256"/>
+			</a>
         </td>
     </tr>
     <tr>
@@ -84,13 +96,19 @@ This application was developed specially for students and professors of St. Pete
     </tr>
 	    <tr>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/7_harry_potter_feature.gif" width="256"/>
+			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/7_harry_potter_feature.gif">
+				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/7_harry_potter_feature.gif" width="256"/>
+			</a>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/8_switching_between_selected_items.gif" width="256"/>
+			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/8_switching_between_selected_items.gif">
+				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/8_switching_between_selected_items.gif" width="256"/>
+			</a>
         </td>
         <td>
-            <img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/9_smooth_animation.gif" width="256"/>
+			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/9_smooth_animation.gif">
+				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/9_smooth_animation.gif" width="256"/>
+			</a>
         </td>
     </tr>
     <tr>
