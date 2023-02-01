@@ -32,7 +32,7 @@ This application was developed specially for students and professors of St. Pete
 + Yandex-map-kit
 + Mockito
 + Cicerone (powerful framework for navigation. Very helpful for multi-module-architecture)
-+ Firebase messaging (used for Peter spirit ;) Time to time, I send students some messages and congratulations)
++ Firebase messaging (used for "Spirit of Peter": time to time, I send to students some funny messages or congratulations ;)
 + Crashlytics
 
 
