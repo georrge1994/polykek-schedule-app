@@ -1,5 +1,5 @@
 <!-- PROJECT LOGO -->
-<br />
+<a href="https://play.google.com/store/apps/details?id=argument.twins.com.polykekschedule"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height=60px /></a>
 <div align="center">
 	<a href="https://english.spbstu.ru">
 		<img src="images/logo.webp" alt="Logo" width="128" height="128">
@@ -107,7 +107,8 @@ This application was developed specially for students and professors of St. Pete
 </table>
 
 ## Links
-<a href="https://play.google.com/store/apps/details?id=argument.twins.com.polykekschedule"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height=60px /></a>
+<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs">High quality gifs</a>
+
 
 ## 🚀 About Me
 I'm an Android developer with 5.5 years of experience. This is my pet project. You can judge me by his code. This application is not "dress app", I always use the same careful style for developing.
