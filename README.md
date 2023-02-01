@@ -129,7 +129,7 @@ This application was developed specially for students and professors of St. Pete
 
 
 ## 🚀 About Me
-I'm an Android developer with 5.5 years of experience. This is my pet project. You can judge me by his code. This application is not "dress app", I always use the same careful style for developing.
+I'm an Android developer with 5.5 years of experience. This is my pet project. You can judge me by this code. This application is not "dress app", I always use the same careful style for developing.
 
 ## 🔗 Contacts
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/georgiy-chebotarev/)
