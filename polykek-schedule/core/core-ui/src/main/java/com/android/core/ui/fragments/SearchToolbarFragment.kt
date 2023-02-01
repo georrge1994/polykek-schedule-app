@@ -77,7 +77,7 @@ abstract class SearchToolbarFragment<T : SearchViewModel>(private val clazz: KCl
      */
     private fun initSearch(menu: Menu) {
         val searchMenuItem = menu.findItem(R.id.search)
-        val searchView = searchMenuItem.actionView as SearchView
+        val searchView = searchMenuItem.actionView as SearchView? ?: return
         val searchAutoComplete = searchView.findViewById<SearchView.SearchAutoComplete>(R.id.search_src_text)
         val searchCloseIcon = searchView.findViewById<ImageView>(R.id.search_close_btn)
         val searchPlate = searchView.findViewById<View>(R.id.search_plate)

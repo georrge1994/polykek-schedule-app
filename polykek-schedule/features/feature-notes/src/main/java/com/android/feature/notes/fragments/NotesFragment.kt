@@ -12,6 +12,7 @@ import com.android.feature.notes.adapters.viewPager.NotesViewPagerAdapter
 import com.android.feature.notes.dagger.NotesComponentHolder
 import com.android.feature.notes.databinding.FragmentNotesBinding
 import com.android.feature.notes.viewModels.NotesViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.ui.ZoomOutPageTransformer
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -37,6 +38,8 @@ internal class NotesFragment : SearchToolbarFragment<NotesViewModel>(NotesViewMo
     }
 
     private val unSelectItemsObserver = Observer<Boolean> { activity?.invalidateOptionsMenu() }
+
+    override fun getComponent(): IModuleComponent = NotesComponentHolder.getComponent()
 
     override fun injectToComponent() = NotesComponentHolder.getComponent().inject(this)
 

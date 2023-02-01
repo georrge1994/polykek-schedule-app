@@ -60,7 +60,7 @@ class ProfessorsModule {
         @Named(SCHEDULE_CONTROLLER_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForScheduleController: DynamicProvider<IScheduleControllerModuleDependencies>,
         @Named(FAQ_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForFaq: DynamicProvider<IFaqModuleDependencies>,
         @Named(SCHEDULE_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForSchedule: DynamicProvider<IScheduleModuleDependencies>,
-        @Named(MAIN_SCREEN_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForMainScreen: DynamicProvider<IMainScreenModuleDependencies>,
+        @Named(MAIN_SCREEN_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForMainScreen: dagger.Lazy<DynamicProvider<IMainScreenModuleDependencies>>,
         savedItemsRoomRepository: ISavedItemsRoomRepository
     ) = DynamicProvider {
         ProfessorsModuleDependenciesHolder(
@@ -73,7 +73,7 @@ class ProfessorsModule {
                     get() = getProfessorsNavigationActions(
                         dynamicDependencyProviderForFaq,
                         dynamicDependencyProviderForSchedule,
-                        dynamicDependencyProviderForMainScreen
+                        dynamicDependencyProviderForMainScreen.get()
                     )
                 override val teacherToProfessorConvertor: ITeacherToProfessorConvertor
                     get() = scheduleControllerModuleApi.teacherToProfessorConvertor

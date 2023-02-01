@@ -13,6 +13,7 @@ import com.android.feature.schedule.base.fragments.BaseScheduleFragment
 import com.android.feature.schedule.databinding.FragmentProfessorScheduleBinding
 import com.android.feature.schedule.professor.adapters.ProfessorLessonsRecyclerViewAdapter
 import com.android.feature.schedule.professor.viewModels.ProfessorsScheduleViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 
 private const val PROFESSOR_ID = "PROFESSOR_ID"
 private const val PROFESSOR_TITLE = "PROFESSOR"
@@ -33,6 +34,8 @@ internal class ProfessorScheduleFragment : BaseScheduleFragment<ProfessorsSchedu
     private val lessonsIsEmptyObserver = Observer<Boolean> { viewBinding.lessonsListIsEmpty.isVisible = it }
 
     private val loadingObserver = Observer<Boolean> { viewBinding.animation.root.isVisible = it }
+
+    override fun getComponent(): IModuleComponent = ScheduleComponentHolder.getComponent()
 
     override fun injectToComponent() = ScheduleComponentHolder.getComponent().inject(this)
 

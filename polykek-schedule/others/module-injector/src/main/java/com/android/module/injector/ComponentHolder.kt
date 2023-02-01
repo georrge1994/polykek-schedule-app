@@ -15,6 +15,7 @@ abstract class ComponentHolder<T : IModuleApi, R : IModuleDependencies> {
      * To avoid memory leaking it have exactly to be a provider of dependencies. In result you can get them without
      * storing directly link here and help GC to make his work.
      */
+    @Volatile
     protected var dependenciesProvider: DynamicProvider<R>? = null
 
     /**

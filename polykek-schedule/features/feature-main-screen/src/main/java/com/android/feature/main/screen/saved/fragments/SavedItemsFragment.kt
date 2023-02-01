@@ -22,6 +22,7 @@ import com.android.feature.main.screen.menu.viewModels.BottomAnimationViewModel
 import com.android.feature.main.screen.saved.adapters.ISaveItemMenuActions
 import com.android.feature.main.screen.saved.adapters.SavedItemsRecyclerViewAdapter
 import com.android.feature.main.screen.saved.viewModels.SavedItemsViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import javax.inject.Inject
 
@@ -67,6 +68,8 @@ internal class SavedItemsFragment : NavigationFragment() {
     private val savedItemsObserver = Observer<List<Any>> { adapter.updateItems(it) }
 
     private val isEmptyObserver = Observer<Boolean> { viewBinding.isEmpty.isVisible = it }
+
+    override fun getComponent(): IModuleComponent = MainScreenComponentHolder.getComponent()
 
     override fun injectToComponent() = MainScreenComponentHolder.getComponent().inject(this)
 

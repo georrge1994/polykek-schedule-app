@@ -15,6 +15,7 @@ import com.android.core.ui.navigation.polytechCicirone.PolytechFragmentScreen
 import com.android.feature.main.screen.R
 import com.android.feature.main.screen.dagger.IMainScreenNavigationActions
 import com.android.feature.main.screen.dagger.MainScreenComponentHolder
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Navigator
 import com.github.terrakok.cicerone.Router
@@ -47,6 +48,8 @@ internal class TabContainerFragment : BaseFragment(), IRouterProvider {
             router.exit()
         }
     }
+
+    override fun getComponent(): IModuleComponent = MainScreenComponentHolder.getComponent()
 
     override fun injectToComponent() = MainScreenComponentHolder.getComponent().inject(this)
 

@@ -13,6 +13,7 @@ import com.android.feature.welcome.R
 import com.android.feature.welcome.dagger.IWelcomeNavigationActions
 import com.android.feature.welcome.dagger.WelcomeComponentHolder
 import com.android.feature.welcome.databinding.FragmentChooseRoleBinding
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import javax.inject.Inject
 
 /**
@@ -29,6 +30,8 @@ internal class ChooseRoleFragment : NavigationFragment() {
     private val studentClickListener = View.OnClickListener { showSchools() }
 
     private val professorClickListener = View.OnClickListener { showProfessorSearch() }
+
+    override fun getComponent(): IModuleComponent = WelcomeComponentHolder.getComponent()
 
     override fun injectToComponent() = WelcomeComponentHolder.getComponent().inject(this)
 

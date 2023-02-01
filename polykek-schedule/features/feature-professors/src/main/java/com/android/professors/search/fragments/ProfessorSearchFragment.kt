@@ -17,6 +17,7 @@ import com.android.core.ui.navigation.polytechCicirone.AnimationType
 import com.android.core.ui.navigation.polytechCicirone.PolytechFragmentScreen
 import com.android.feature.professors.R
 import com.android.feature.professors.databinding.FragmentProfessorSearchBinding
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.professors.base.adapters.IProfessorActions
 import com.android.professors.base.adapters.ProfessorRecyclerViewAdapter
 import com.android.professors.base.dagger.IProfessorsNavigationActions
@@ -62,6 +63,8 @@ internal class ProfessorSearchFragment : ToolbarFragment() {
     private val messageIdObserver = Observer<Int> { viewBinding.message.text = getString(it) }
 
     private val loadingObserver = Observer<Boolean> { viewBinding.animation.root.isVisible = it }
+
+    override fun getComponent(): IModuleComponent = ProfessorsComponentHolder.getComponent()
 
     override fun injectToComponent() = ProfessorsComponentHolder.getComponent().inject(this)
 
@@ -120,7 +123,7 @@ internal class ProfessorSearchFragment : ToolbarFragment() {
         }
         ScheduleMode.NEW_ITEM -> {
             viewModel.saveSelectedItem(professor)
-            mainRouter.backTo(
+            mainRouter.newRootScreen(
                 PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.FROM_LEFT_TO_RIGHT) {
                     professorsNavigationActions.getMainScreen()
                 }

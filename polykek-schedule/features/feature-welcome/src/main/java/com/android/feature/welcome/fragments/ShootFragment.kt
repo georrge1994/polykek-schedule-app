@@ -11,6 +11,7 @@ import com.android.feature.welcome.R
 import com.android.feature.welcome.dagger.WelcomeComponentHolder
 import com.android.feature.welcome.databinding.FragmentShootBinding
 import com.android.feature.welcome.viewModels.WelcomeViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createSharedViewModelWithParentFragment
 
 private const val FRAGMENT_ID = "FRAGMENT_ID"
@@ -23,6 +24,8 @@ private const val FRAGMENT_ID = "FRAGMENT_ID"
 internal class ShootFragment : BaseFragment() {
     private val viewBinding by viewBinding(FragmentShootBinding::bind)
     private lateinit var welcomeViewModel: WelcomeViewModel
+
+    override fun getComponent(): IModuleComponent = WelcomeComponentHolder.getComponent()
 
     override fun injectToComponent() = WelcomeComponentHolder.getComponent().inject(this)
 

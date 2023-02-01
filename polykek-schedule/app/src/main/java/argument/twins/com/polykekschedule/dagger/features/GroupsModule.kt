@@ -42,7 +42,7 @@ class GroupsModule {
         savedItemsRoomRepository: ISavedItemsRoomRepository, // This is from app module.
         @Named(CORE_UI_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForCoreUi: DynamicProvider<ICoreUiModuleDependencies>,
         @Named(CORE_RETROFIT_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForCoreRetrofit: DynamicProvider<ICoreRetrofitDependencies>,
-        @Named(MAIN_SCREEN_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForMainScreen: DynamicProvider<IMainScreenModuleDependencies>
+        @Named(MAIN_SCREEN_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForMainScreen: dagger.Lazy<DynamicProvider<IMainScreenModuleDependencies>>
     ) = DynamicProvider {
         GroupsModuleDependenciesHolder(
             CoreUiComponentHolder.initAndGet(dynamicDependencyProviderForCoreUi),
@@ -50,7 +50,7 @@ class GroupsModule {
         ) { dependencyHolder, coreUiModuleApi, coreRetrofitModuleApi ->
             object : IGroupsModuleDependencies {
                 override val groupsNavigationActions: IGroupsNavigationActions
-                    get() = getGroupsInnerNavigation(dynamicDependencyProviderForMainScreen)
+                    get() = getGroupsInnerNavigation(dynamicDependencyProviderForMainScreen.get())
                 override val savedItemsRoomRepository: ISavedItemsRoomRepository
                     get() = savedItemsRoomRepository
                 override val retrofit: Retrofit

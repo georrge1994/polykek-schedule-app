@@ -11,6 +11,7 @@ import com.android.feature.faq.dagger.FaqComponentHolder
 import com.android.feature.faq.dagger.IFaqNavigationActions
 import com.android.feature.faq.databinding.FragmentFAQBinding
 import com.android.feature.faq.viewModels.FaqViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import javax.inject.Inject
 
@@ -26,6 +27,8 @@ internal class FaqFragment : ToolbarFragment() {
 
     @Inject
     lateinit var faqInnerNavigation: IFaqNavigationActions
+
+    override fun getComponent(): IModuleComponent = FaqComponentHolder.getComponent()
 
     override fun injectToComponent() = FaqComponentHolder.getComponent().inject(this)
 

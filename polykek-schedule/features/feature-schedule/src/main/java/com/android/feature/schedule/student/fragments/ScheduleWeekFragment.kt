@@ -14,6 +14,7 @@ import com.android.feature.schedule.base.fragments.BaseScheduleFragment
 import com.android.feature.schedule.databinding.FragmentWeekBinding
 import com.android.feature.schedule.student.adapters.viewpager.ScheduleViewPagerAdapter
 import com.android.feature.schedule.student.viewModels.ScheduleWeekViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.ui.ZoomOutPageTransformer
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -43,6 +44,8 @@ internal class ScheduleWeekFragment : BaseScheduleFragment<ScheduleWeekViewModel
     private val dayTitleObserver = Observer<String> { viewBinding.scheduleToolbar.date.text = it }
 
     private val loadingObserver = Observer<Boolean> { viewBinding.animation.root.isVisible = it }
+
+    override fun getComponent(): IModuleComponent = ScheduleComponentHolder.getComponent()
 
     override fun injectToComponent() = ScheduleComponentHolder.getComponent().inject(this)
 

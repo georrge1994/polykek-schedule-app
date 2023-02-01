@@ -12,10 +12,12 @@ import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.core.ui.fragments.BaseFragment
 import com.android.feature.main.screen.R
+import com.android.feature.main.screen.dagger.MainScreenComponent
 import com.android.feature.main.screen.dagger.MainScreenComponentHolder
 import com.android.feature.main.screen.databinding.FragmentBottomSheetBinding
 import com.android.feature.main.screen.menu.viewModels.BottomAnimationViewModel
 import com.android.feature.main.screen.menu.wrappers.OwnBottomSheetCallback
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import com.android.shared.code.utils.syntaxSugar.isPortraitMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -66,6 +68,8 @@ internal class BottomSheetFragment : BaseFragment() {
     private val slideBottomPositionObserver = Observer<Pair<Float, Float>> {
         viewBinding.moreBtn.alpha = 0f
     }
+
+    override fun getComponent(): IModuleComponent = MainScreenComponentHolder.getComponent()
 
     override fun injectToComponent() = MainScreenComponentHolder.getComponent().inject(this)
 

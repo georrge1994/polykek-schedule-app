@@ -13,6 +13,7 @@ import com.android.feature.welcome.adapter.WelcomeViewPagerAdapter
 import com.android.feature.welcome.dagger.WelcomeComponentHolder
 import com.android.feature.welcome.databinding.FragmentWelcomeBinding
 import com.android.feature.welcome.viewModels.WelcomeViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -32,6 +33,8 @@ internal class WelcomeFragment : VerticalFragment() {
             viewBinding.message.text = getString(welcomeViewModel.getLabelResId(position))
         }
     }
+
+    override fun getComponent(): IModuleComponent = WelcomeComponentHolder.getComponent()
 
     override fun injectToComponent() = WelcomeComponentHolder.getComponent().inject(this)
 

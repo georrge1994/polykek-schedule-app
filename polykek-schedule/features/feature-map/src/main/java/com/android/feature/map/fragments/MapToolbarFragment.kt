@@ -17,6 +17,7 @@ import com.android.feature.map.databinding.FragmentToolbarMapBinding
 import com.android.feature.map.models.Content
 import com.android.feature.map.useCases.ContentAnimationUiUseCase
 import com.android.feature.map.viewModels.MapViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createSharedViewModelWithParentFragment
 import javax.inject.Inject
 
@@ -46,6 +47,8 @@ internal class MapToolbarFragment : NavigationFragment() {
             contentAnimationUiUseCase.hideContent(viewBinding.mapToolbar, viewBinding.contentLayout.root)
         }
     }
+
+    override fun getComponent(): IModuleComponent = MapComponentHolder.getComponent()
 
     override fun injectToComponent() = MapComponentHolder.getComponent().inject(this)
 

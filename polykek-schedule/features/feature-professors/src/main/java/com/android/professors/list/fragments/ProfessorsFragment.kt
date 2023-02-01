@@ -12,6 +12,7 @@ import com.android.core.ui.models.getScheduleModeBundle
 import com.android.core.ui.navigation.polytechCicirone.PolytechFragmentScreen
 import com.android.feature.professors.R
 import com.android.feature.professors.databinding.FragmentProfessorsBinding
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.professors.base.adapters.IProfessorActions
 import com.android.professors.base.adapters.ProfessorRecyclerViewAdapter
 import com.android.professors.base.dagger.IProfessorsNavigationActions
@@ -43,6 +44,8 @@ internal class ProfessorsFragment : ToolbarFragment() {
     private val buildingsObserver = Observer<List<Professor>?> { adapter.updateItems(it) }
 
     private val listIsEmptyObserver = Observer<Boolean> { fragmentProfessorsBinding.listIsEmpty.isVisible = it }
+
+    override fun getComponent(): IModuleComponent = ProfessorsComponentHolder.getComponent()
 
     override fun injectToComponent() = ProfessorsComponentHolder.getComponent().inject(this)
 

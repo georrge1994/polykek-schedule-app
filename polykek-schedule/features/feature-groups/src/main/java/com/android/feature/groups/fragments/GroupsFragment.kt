@@ -16,6 +16,7 @@ import com.android.feature.groups.adapters.viewpager.GroupsViewPagerAdapter
 import com.android.feature.groups.dagger.GroupsComponentHolder
 import com.android.feature.groups.databinding.FragmentGroupsBinding
 import com.android.feature.groups.viewModels.GroupViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.ui.ZoomOutPageTransformer
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -35,6 +36,8 @@ internal class GroupsFragment : SearchToolbarFragment<GroupViewModel>(GroupViewM
     private var schoolId: String? = null
 
     private val loadingObserver = Observer<Boolean> { viewBinding.animation.root.isVisible = it }
+
+    override fun getComponent(): IModuleComponent = GroupsComponentHolder.getComponent()
 
     override fun injectToComponent() = GroupsComponentHolder.getComponent().inject(this)
 

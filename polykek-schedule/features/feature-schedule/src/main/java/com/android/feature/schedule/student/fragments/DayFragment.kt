@@ -17,6 +17,7 @@ import com.android.feature.schedule.base.dagger.ScheduleComponentHolder
 import com.android.feature.schedule.databinding.FragmentDayBinding
 import com.android.feature.schedule.student.adapters.recycler.LessonsRecyclerViewAdapter
 import com.android.feature.schedule.student.viewModels.ScheduleWeekViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createSharedViewModelWithParentFragment
 import javax.inject.Inject
 
@@ -51,6 +52,8 @@ internal class DayFragment : NavigationFragment() {
             )
         }
     }
+
+    override fun getComponent(): IModuleComponent = ScheduleComponentHolder.getComponent()
 
     override fun injectToComponent() = ScheduleComponentHolder.getComponent().inject(this)
 

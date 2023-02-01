@@ -47,25 +47,25 @@ class MainScreenModule {
     @Singleton
     @Named(MAIN_SCREEN_DYNAMIC_DEPENDENCIES_PROVIDER)
     fun provideDynamicDependencyProviderForMainScreen(
-        @Named(CORE_UI_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForCoreUi: dagger.Lazy<DynamicProvider<ICoreUiModuleDependencies>>,
-        @Named(SCHEDULE_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForSchedule: dagger.Lazy<DynamicProvider<IScheduleModuleDependencies>>,
-        @Named(NOTES_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForNotes: dagger.Lazy<DynamicProvider<INotesModuleDependencies>>,
-        @Named(MAP_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForMap: dagger.Lazy<DynamicProvider<IMapModuleDependencies>>,
-        @Named(PROFESSORS_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForProfessors: dagger.Lazy<DynamicProvider<IProfessorsModuleDependencies>>,
-        @Named(SCHOOLS_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForSchools: dagger.Lazy<DynamicProvider<ISchoolsModuleDependencies>>,
+        @Named(CORE_UI_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForCoreUi: DynamicProvider<ICoreUiModuleDependencies>,
+        @Named(SCHEDULE_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForSchedule: DynamicProvider<IScheduleModuleDependencies>,
+        @Named(NOTES_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForNotes: DynamicProvider<INotesModuleDependencies>,
+        @Named(MAP_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForMap: DynamicProvider<IMapModuleDependencies>,
+        @Named(PROFESSORS_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForProfessors: DynamicProvider<IProfessorsModuleDependencies>,
+        @Named(SCHOOLS_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForSchools: DynamicProvider<ISchoolsModuleDependencies>,
         savedItemsRoomRepository: SavedItemsRoomRepository  // There is from app module.
     ) = DynamicProvider {
         MainScreenModuleDependenciesHolder(
-            CoreUiComponentHolder.initAndGet(dynamicDependencyProviderForCoreUi.get())
+            CoreUiComponentHolder.initAndGet(dynamicDependencyProviderForCoreUi)
         ) { dependencyHolder, coreUiModuleApi ->
             object : IMainScreenModuleDependencies {
                 override val mainScreenNavigationActions: IMainScreenNavigationActions
                     get() = getIMainScreenNavigationActions(
-                        dynamicDependencyProviderForSchedule.get(),
-                        dynamicDependencyProviderForNotes.get(),
-                        dynamicDependencyProviderForMap.get(),
-                        dynamicDependencyProviderForProfessors.get(),
-                        dynamicDependencyProviderForSchools.get()
+                        dynamicDependencyProviderForSchedule,
+                        dynamicDependencyProviderForNotes,
+                        dynamicDependencyProviderForMap,
+                        dynamicDependencyProviderForProfessors,
+                        dynamicDependencyProviderForSchools
                     )
                 override val savedItemsRoomRepository: ISavedItemsRoomRepository
                     get() = savedItemsRoomRepository

@@ -48,10 +48,11 @@
 # Will return to it later. Until all secondary modules will be without obfuscation.
 -keep class com.android.** { *; }
 
-# Google review.
+# Google view.
 -keep class com.google.android.play.core.common.PlayCoreDialogWrapperActivity
 -keep class com.google.android.play.core.review.** { *; }
 -keep class com.google.android.play.core.tasks.** { *; }
+-keep class androidx.appcompat.widget.SearchView { *; }
 
 # Google gms ()
 -keepnames class com.google.android.gms.** {*;}

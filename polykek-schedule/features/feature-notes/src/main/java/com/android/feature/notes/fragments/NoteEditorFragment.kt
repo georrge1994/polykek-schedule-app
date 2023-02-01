@@ -10,6 +10,7 @@ import com.android.feature.notes.R
 import com.android.feature.notes.dagger.NotesComponentHolder
 import com.android.feature.notes.databinding.FragmentNoteEditorBinding
 import com.android.feature.notes.viewModels.NoteEditorViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import com.android.shared.code.utils.syntaxSugar.hideSoftwareKeyboard
 
@@ -35,6 +36,8 @@ internal class NoteEditorFragment : CameraFragment() {
         viewBinding.noteBody.setText(note.body)
         viewBinding.toolbarLayout.toolbar.updateToolbar(note.name, true)
     }
+
+    override fun getComponent(): IModuleComponent = NotesComponentHolder.getComponent()
 
     override fun injectToComponent() = NotesComponentHolder.getComponent().inject(this)
 

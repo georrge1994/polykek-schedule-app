@@ -19,6 +19,7 @@ import com.android.feature.map.models.YandexMapItem
 import com.android.feature.map.repositories.MapKitInitializer
 import com.android.feature.map.useCases.MapActionsUiUseCase
 import com.android.feature.map.viewModels.MapViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.BoundingBox
@@ -75,6 +76,8 @@ internal class MapFragment : BaseFragment() {
             mapActionsUiUseCase.addPlaceMark(context, viewBinding.mapView.map, it, circleMapObjectTapListener)
         }
     }
+
+    override fun getComponent(): IModuleComponent = MapComponentHolder.getComponent()
 
     override fun injectToComponent() = MapComponentHolder.getComponent().inject(this)
 

@@ -17,6 +17,7 @@ import com.android.feature.notes.dagger.NotesComponentHolder
 import com.android.feature.notes.databinding.FragmentNoteListBinding
 import com.android.feature.notes.models.NotesTabTypes
 import com.android.feature.notes.viewModels.NotesViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createSharedViewModelWithParentFragment
 
 private const val NOTE_TAB_TYPE = "NOTE_TAB_TYPE"
@@ -54,6 +55,8 @@ internal class NoteListFragment : NavigationFragment() {
     private val noteListIsEmptyObserver = Observer<Boolean> { viewBinding.listIsEmpty.isVisible = it }
 
     private val selectionModeStateObserver = Observer<Boolean> { adapter.updateSelectionMode(it) }
+
+    override fun getComponent(): IModuleComponent = NotesComponentHolder.getComponent()
 
     override fun injectToComponent() = NotesComponentHolder.getComponent().inject(this)
 

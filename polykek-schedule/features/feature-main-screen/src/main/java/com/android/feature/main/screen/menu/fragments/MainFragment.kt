@@ -12,6 +12,7 @@ import com.android.feature.main.screen.R
 import com.android.feature.main.screen.dagger.MainScreenComponentHolder
 import com.android.feature.main.screen.databinding.FragmentMainBinding
 import com.android.feature.main.screen.menu.viewModels.BottomAnimationViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import com.android.shared.code.utils.syntaxSugar.isPortraitMode
 import com.google.android.material.navigation.NavigationBarView
@@ -41,6 +42,8 @@ internal class MainFragment : NavigationFragment() {
         viewBinding.bottomNavigationView.alpha = 0f
         viewBinding.bottomNavigationView.visibility = View.INVISIBLE
     }
+
+    override fun getComponent(): IModuleComponent = MainScreenComponentHolder.getComponent()
 
     override fun injectToComponent() = MainScreenComponentHolder.getComponent().inject(this)
 

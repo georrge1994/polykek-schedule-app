@@ -19,6 +19,7 @@ import com.android.feature.schools.dagger.SchoolsComponentHolder
 import com.android.feature.schools.databinding.FragmentSchoolsBinding
 import com.android.feature.schools.models.School
 import com.android.feature.schools.viewModels.SchoolViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import javax.inject.Inject
 
@@ -44,6 +45,8 @@ internal class SchoolsFragment : ToolbarFragment() {
     private val schoolsObserver = Observer<List<School>?> { adapter.updateItems(it) }
 
     private val isLoadingObserver = Observer<Boolean> { viewBinding.animation.root.isVisible = it }
+
+    override fun getComponent(): IModuleComponent = SchoolsComponentHolder.getComponent()
 
     override fun injectToComponent() = SchoolsComponentHolder.getComponent().inject(this)
 

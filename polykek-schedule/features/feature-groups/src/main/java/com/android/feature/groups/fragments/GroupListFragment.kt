@@ -11,6 +11,7 @@ import com.android.core.ui.fragments.NavigationFragment
 import com.android.core.ui.models.ScheduleMode
 import com.android.core.ui.models.getScheduleMode
 import com.android.core.ui.models.getScheduleModeBundle
+import com.android.core.ui.navigation.polytechCicirone.AnimationType
 import com.android.core.ui.navigation.polytechCicirone.PolytechFragmentScreen
 import com.android.feature.groups.R
 import com.android.feature.groups.adapters.recycler.GroupsRecyclerViewAdapter
@@ -21,6 +22,7 @@ import com.android.feature.groups.databinding.FragmentGroupsListBinding
 import com.android.feature.groups.models.Group
 import com.android.feature.groups.models.GroupType
 import com.android.feature.groups.viewModels.GroupViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createSharedViewModelWithParentFragment
 import javax.inject.Inject
 
@@ -53,6 +55,8 @@ internal class GroupListFragment : NavigationFragment() {
         adapter.updateItems(items)
     }
 
+    override fun getComponent(): IModuleComponent = GroupsComponentHolder.getComponent()
+
     override fun injectToComponent() = GroupsComponentHolder.getComponent().inject(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,8 +88,8 @@ internal class GroupListFragment : NavigationFragment() {
             }
         )
     } else {
-        mainRouter.backTo(
-            PolytechFragmentScreen {
+        mainRouter.newRootScreen(
+            PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.FROM_LEFT_TO_RIGHT) {
                 groupsNavigationActions.getMainFragment()
             }
         )

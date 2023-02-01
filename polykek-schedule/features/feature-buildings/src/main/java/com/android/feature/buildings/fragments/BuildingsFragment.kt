@@ -18,6 +18,7 @@ import com.android.feature.buildings.adapters.IBuildingActions
 import com.android.feature.buildings.dagger.BuildingsComponentHolder
 import com.android.feature.buildings.databinding.FragmentBuildingsBinding
 import com.android.feature.buildings.viewModels.BuildingViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 
 /**
  * List of all Polytech's buildings.
@@ -39,6 +40,8 @@ internal class BuildingsFragment : SearchToolbarFragment<BuildingViewModel>(Buil
     private val isListEmptyObserver = Observer<Boolean> { viewBinding.listIsEmpty.isVisible = it }
 
     private val isLoadingObserver = Observer<Boolean> { viewBinding.animation.root.isVisible = it }
+
+    override fun getComponent(): IModuleComponent = BuildingsComponentHolder.getComponent()
 
     override fun injectToComponent() = BuildingsComponentHolder.getComponent().inject(this)
 

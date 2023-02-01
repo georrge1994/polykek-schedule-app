@@ -29,9 +29,12 @@ class SmallFeaturesUiUseCase @Inject constructor(
      * @param activity Activity
      */
     fun checkSmallFeatures(activity: AppCompatActivity) {
-        inAppReviewUiUseCase.checkAndSuggestToRateIfNeed(activity)
-        if (!Build.MODEL.contains("Nexus 5X"))
+        // Hard fix for https://issuetracker.google.com/issues/200437477.
+        if (!Build.MODEL.contains("Nexus 5X")) {
+            inAppReviewUiUseCase.checkAndSuggestToRateIfNeed(activity)
             appUpdateUiUseCase.checkAppUpdates(activity)
+        }
+
         loveDayUiUseCase.checkLoveDay(activity)
     }
 

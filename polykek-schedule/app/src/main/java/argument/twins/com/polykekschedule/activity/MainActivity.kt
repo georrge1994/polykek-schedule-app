@@ -1,5 +1,6 @@
 package argument.twins.com.polykekschedule.activity
 
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -67,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.messageFromBus.observe(this, messageFromBusObserver)
 
         if (savedInstanceState == null) {
-            initStartScreen(!viewModel.isItemSelected)
+            initStartScreen()
             if (viewModel.isItemSelected)
                 smallFeaturesUiUseCase.askNotificationPermissionForFMS(this)
         }
@@ -90,15 +91,13 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Init default screen.
-     *
-     * @param isFirstLaunch Is first launch
      */
-    private fun initStartScreen(isFirstLaunch: Boolean) = ciceroneHolder.getMainCicerone().router.navigateTo(
+    private fun initStartScreen() = ciceroneHolder.getMainCicerone().router.navigateTo(
         PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
-            if (isFirstLaunch)
-                WelcomeComponentHolder.initAndGet(dynamicDependencyProviderForWelcome).getWelcomeFragment()
-            else
+            if (viewModel.isItemSelected)
                 MainScreenComponentHolder.initAndGet(dynamicDependencyProviderForMainScreen).getMainFragment()
+            else
+                WelcomeComponentHolder.initAndGet(dynamicDependencyProviderForWelcome).getWelcomeFragment()
         }
     )
 

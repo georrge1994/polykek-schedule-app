@@ -12,6 +12,7 @@ import com.android.feature.feedback.dagger.FeedbackComponentHolder
 import com.android.feature.feedback.databinding.FragmentFeedbackBinding
 import com.android.feature.feedback.models.FeedbackType
 import com.android.feature.feedback.viewModels.FeedbackViewModel
+import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import com.android.shared.code.utils.syntaxSugar.hideSoftwareKeyboard
 
@@ -31,6 +32,8 @@ internal class FeedbackFragment : ToolbarFragment() {
     private val resetNavigationObserver = Observer<Boolean> { mainRouter.exit() }
 
     private val isAnimatingObserver = Observer<Boolean> { viewBinding.submit.changeAnimationState(it) }
+
+    override fun getComponent(): IModuleComponent = FeedbackComponentHolder.getComponent()
 
     override fun injectToComponent() = FeedbackComponentHolder.getComponent().inject(this)
 
