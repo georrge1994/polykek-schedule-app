@@ -3,9 +3,7 @@ package argument.twins.com.polykekschedule
 import android.app.Application
 import argument.twins.com.polykekschedule.dagger.AppComponent
 import argument.twins.com.polykekschedule.dagger.DaggerAppComponent
-import argument.twins.com.polykekschedule.dagger.core.SCHEDULE_CONTROLLER_DYNAMIC_DEPENDENCIES_PROVIDER
-import com.android.module.injector.dependenciesHolders.DynamicProvider
-import com.android.schedule.controller.impl.dagger.IScheduleControllerModuleDependencies
+import argument.twins.com.polykekschedule.dagger.collector.IDynamicDependenciesProviderFactory
 import com.android.schedule.controller.impl.dagger.ScheduleControllerComponentHolder
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -13,7 +11,6 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * App.
@@ -25,8 +22,7 @@ class App : Application(), HasAndroidInjector {
     lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
     @Inject
-    @Named(SCHEDULE_CONTROLLER_DYNAMIC_DEPENDENCIES_PROVIDER)
-    lateinit var dynamicDependencyProviderForScheduleController: DynamicProvider<IScheduleControllerModuleDependencies>
+    lateinit var dynamicDependenciesProviderFactories: Set<@JvmSuppressWildcards IDynamicDependenciesProviderFactory>
 
     override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
@@ -36,10 +32,11 @@ class App : Application(), HasAndroidInjector {
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
         appComponent = DaggerAppComponent.builder().application(this).build()
         appComponent.inject(this)
-
+        // Init all dynamic dependencies providers.
+        dynamicDependenciesProviderFactories.forEach { it.initDynamicDependenciesProvider() }
         // In the init block the ScheduleController requests a schedule for today. In the result the request will be sent before activity
         // and viewModels creation.
-        ScheduleControllerComponentHolder.initAndGet(dynamicDependencyProviderForScheduleController).scheduleController.hashCode()
+        ScheduleControllerComponentHolder.getApi().scheduleController.hashCode()
     }
 
     companion object {

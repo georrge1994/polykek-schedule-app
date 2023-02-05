@@ -1,40 +1,33 @@
 package argument.twins.com.polykekschedule.dagger.core
 
 import android.app.Application
-import com.android.core.retrofit.api.ICoreRetrofitModuleApi
+import argument.twins.com.polykekschedule.dagger.collector.DynamicDependenciesProviderFactory
 import com.android.core.retrofit.impl.dagger.CoreRetrofitComponentHolder
 import com.android.core.retrofit.impl.dagger.ICoreRetrofitDependencies
 import com.android.module.injector.dependenciesHolders.DependencyHolder0
 import com.android.module.injector.dependenciesHolders.DynamicProvider
 import com.android.module.injector.dependenciesHolders.IBaseDependencyHolder
 import com.android.module.injector.moduleMarkers.IModuleDependencies
-import dagger.Module
-import dagger.Provides
-import retrofit2.Retrofit
-import javax.inject.Named
-import javax.inject.Singleton
-
-internal const val CORE_RETROFIT_DYNAMIC_DEPENDENCIES_PROVIDER = "CORE_RETROFIT_DYNAMIC_DEPENDENCIES_PROVIDER"
+import javax.inject.Inject
 
 /**
- * Core retrofit module.
+ * Core retrofit dynamic provider factory.
  *
- * @constructor Create empty constructor for core retrofit module
+ * @property application Application object to get context
+ * @constructor Create [CoreRetrofitDynamicProviderFactory]
  */
-@Module
-class CoreRetrofitModule {
+class CoreRetrofitDynamicProviderFactory @Inject constructor(
+    private val application: Application
+) : DynamicDependenciesProviderFactory<CoreRetrofitComponentHolder, ICoreRetrofitDependencies>(CoreRetrofitComponentHolder) {
     private class CoreRetrofitDependencyHolder(
         override val block: (IBaseDependencyHolder<ICoreRetrofitDependencies>) -> ICoreRetrofitDependencies
     ) : DependencyHolder0<ICoreRetrofitDependencies>()
 
-    @Provides
-    @Singleton
-    @Named(CORE_RETROFIT_DYNAMIC_DEPENDENCIES_PROVIDER)
-    fun provideCoreRetrofitDynamicDependenciesProvider(application: Application): DynamicProvider<ICoreRetrofitDependencies> = DynamicProvider {
+    override fun getDynamicProvider(): DynamicProvider<ICoreRetrofitDependencies> = DynamicProvider {
         CoreRetrofitDependencyHolder { dependencyHolder ->
             object : ICoreRetrofitDependencies {
                 override val application: Application
-                    get() = application
+                    get() = this@CoreRetrofitDynamicProviderFactory.application
                 override val dependencyHolder: IBaseDependencyHolder<out IModuleDependencies>
                     get() = dependencyHolder
             }

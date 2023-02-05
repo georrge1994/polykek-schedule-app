@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import com.android.shared.code.utils.markers.IUseCase
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import javax.inject.Inject
 
 /**
@@ -29,12 +30,16 @@ class SmallFeaturesUiUseCase @Inject constructor(
      * @param activity Activity
      */
     fun checkSmallFeatures(activity: AppCompatActivity) {
-        // Hard fix for https://issuetracker.google.com/issues/200437477.
-        if (!Build.MODEL.contains("Nexus 5X")) {
+        try {
+            // Hard solution for https://issuetracker.google.com/issues/200437477.
             inAppReviewUiUseCase.checkAndSuggestToRateIfNeed(activity)
             appUpdateUiUseCase.checkAppUpdates(activity)
+        } catch (e : Exception) {
+            with(FirebaseCrashlytics.getInstance()) {
+                setUserId(Build.DEVICE)
+                recordException(e)
+            }
         }
-
         loveDayUiUseCase.checkLoveDay(activity)
     }
 

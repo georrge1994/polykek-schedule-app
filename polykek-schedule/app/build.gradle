@@ -13,8 +13,8 @@ android {
         applicationId "argument.twins.com.polykekschedule"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 38
-        versionName "2.2.6"
+        versionCode 39
+        versionName "2.2.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -82,6 +82,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleKtxVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleKtxVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+    implementation "androidx.activity:activity-ktx:$activityKtxVersion"
 
     // Material design.
     implementation "com.google.android.material:material:$materialVersion"

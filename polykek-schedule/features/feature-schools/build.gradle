@@ -56,6 +56,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleKtxVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleKtxVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+    implementation "androidx.activity:activity-ktx:$activityKtxVersion"
 
     // Material design.
     implementation "com.google.android.material:material:$materialVersion"

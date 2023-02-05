@@ -1,6 +1,5 @@
 package argument.twins.com.polykekschedule.activity
 
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -10,25 +9,17 @@ import argument.twins.com.polykekschedule.App
 import argument.twins.com.polykekschedule.R
 import argument.twins.com.polykekschedule.activity.useCases.SmallFeaturesUiUseCase
 import argument.twins.com.polykekschedule.activity.viewModels.MainActivityViewModel
-import argument.twins.com.polykekschedule.dagger.features.MAIN_SCREEN_DYNAMIC_DEPENDENCIES_PROVIDER
-import argument.twins.com.polykekschedule.dagger.features.WELCOME_DYNAMIC_DEPENDENCIES_PROVIDER
 import com.android.core.ui.navigation.ICiceroneHolder
 import com.android.core.ui.navigation.polytechCicirone.AnimationType
 import com.android.core.ui.navigation.polytechCicirone.PolytechAppNavigator
 import com.android.core.ui.navigation.polytechCicirone.PolytechFragmentScreen
-import com.android.feature.main.screen.dagger.IMainScreenModuleDependencies
 import com.android.feature.main.screen.dagger.MainScreenComponentHolder
-import com.android.feature.welcome.dagger.IWelcomeModuleDependencies
 import com.android.feature.welcome.dagger.WelcomeComponentHolder
-import com.android.module.injector.dependenciesHolders.DynamicProvider
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import com.android.shared.code.utils.syntaxSugar.hideStatusBar
 import com.android.shared.code.utils.syntaxSugar.isPortraitMode
 import com.github.terrakok.cicerone.Navigator
-import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.coroutines.*
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * Single activity.
@@ -47,14 +38,6 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var ciceroneHolder: ICiceroneHolder
-
-    @Inject
-    @Named(WELCOME_DYNAMIC_DEPENDENCIES_PROVIDER)
-    lateinit var dynamicDependencyProviderForWelcome: DynamicProvider<IWelcomeModuleDependencies>
-
-    @Inject
-    @Named(MAIN_SCREEN_DYNAMIC_DEPENDENCIES_PROVIDER)
-    lateinit var dynamicDependencyProviderForMainScreen: DynamicProvider<IMainScreenModuleDependencies>
 
     private val messageFromBusObserver = Observer<String> { smallFeaturesUiUseCase.showMessage(this, it) }
 
@@ -95,9 +78,9 @@ class MainActivity : AppCompatActivity() {
     private fun initStartScreen() = ciceroneHolder.getMainCicerone().router.navigateTo(
         PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
             if (viewModel.isItemSelected)
-                MainScreenComponentHolder.initAndGet(dynamicDependencyProviderForMainScreen).getMainFragment()
+                MainScreenComponentHolder.getApi().getMainFragment()
             else
-                WelcomeComponentHolder.initAndGet(dynamicDependencyProviderForWelcome).getWelcomeFragment()
+                WelcomeComponentHolder.getApi().getWelcomeFragment()
         }
     )
 

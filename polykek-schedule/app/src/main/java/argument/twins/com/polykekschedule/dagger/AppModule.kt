@@ -4,10 +4,8 @@ import android.app.Application
 import argument.twins.com.polykekschedule.App
 import argument.twins.com.polykekschedule.activity.dagger.ActivityModule
 import argument.twins.com.polykekschedule.background.BackgroundModule
-import argument.twins.com.polykekschedule.dagger.core.CoreRetrofitModule
+import argument.twins.com.polykekschedule.dagger.collector.DynamicDependenciesProviderFactoryBinder
 import argument.twins.com.polykekschedule.dagger.core.CoreRoomModule
-import argument.twins.com.polykekschedule.dagger.core.CoreUiModule
-import argument.twins.com.polykekschedule.dagger.core.ScheduleControllerModule
 import argument.twins.com.polykekschedule.dagger.features.*
 import com.android.core.ui.dagger.BACKGROUND_MESSAGE_BUS
 import com.android.core.ui.dagger.CoreUiGeneralModule
@@ -24,21 +22,8 @@ import javax.inject.Singleton
         CoreUiGeneralModule::class,
         ActivityModule::class,
         BackgroundModule::class,
-        CoreRetrofitModule::class,
-        CoreUiModule::class,
         CoreRoomModule::class,
-        ScheduleControllerModule::class,
-        WelcomeModule::class,
-        SchoolsModule::class,
-        GroupsModule::class,
-        MainScreenModule::class,
-        ScheduleModule::class,
-        NotesModule::class,
-        MapModule::class,
-        BuildingsModule::class,
-        ProfessorsModule::class,
-        FaqModule::class,
-        FeedbackModule::class
+        DynamicDependenciesProviderFactoryBinder::class
     ]
 )
 class AppModule {

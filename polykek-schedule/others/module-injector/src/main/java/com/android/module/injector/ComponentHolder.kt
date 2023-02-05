@@ -1,6 +1,7 @@
 package com.android.module.injector
 
 import com.android.module.injector.dependenciesHolders.DynamicProvider
+import com.android.module.injector.dependenciesHolders.IDynamicDependenciesHolder
 import com.android.module.injector.moduleMarkers.IModuleApi
 import com.android.module.injector.moduleMarkers.IModuleDependencies
 
@@ -10,28 +11,18 @@ import com.android.module.injector.moduleMarkers.IModuleDependencies
  * @param T Output API for some module
  * @param R Input dependencies for same module
  */
-abstract class ComponentHolder<T : IModuleApi, R : IModuleDependencies> {
+abstract class ComponentHolder<T : IModuleApi, R : IModuleDependencies> : IDynamicDependenciesHolder<R> {
     /**
      * To avoid memory leaking it have exactly to be a provider of dependencies. In result you can get them without
      * storing directly link here and help GC to make his work.
      */
     @Volatile
-    protected var dependenciesProvider: DynamicProvider<R>? = null
-
-    /**
-     * Init component and his API.
-     *
-     * @param dependenciesProvider Dependencies provider
-     */
-    fun initAndGet(dependenciesProvider: DynamicProvider<R>): T {
-        this.dependenciesProvider = dependenciesProvider
-        return getApi()
-    }
+    override var dependenciesProvider: DynamicProvider<R>? = null
 
     /**
      * Get component API.
      *
      * @return [T]
      */
-    protected abstract fun getApi(): T
+    abstract fun getApi(): T
 }

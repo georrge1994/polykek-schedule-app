@@ -29,7 +29,7 @@ private const val TAB_CONTAINER_ID = "TAB_CONTAINER_ID"
  * @constructor Create empty constructor for tab container fragment
  */
 internal class TabContainerFragment : BaseFragment(), IRouterProvider {
-    private val navigator: Navigator by lazy { PolytechAppNavigator(requireActivity(), R.id.ftcContainer, childFragmentManager) }
+    private var navigator: Navigator? = null
 
     @Inject
     lateinit var ciceroneHolder: ICiceroneHolder
@@ -55,6 +55,7 @@ internal class TabContainerFragment : BaseFragment(), IRouterProvider {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        navigator = PolytechAppNavigator(requireActivity(), R.id.ftcContainer, childFragmentManager)
         when (arguments?.getInt(TAB_CONTAINER_ID)) {
             R.id.schedule_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
                 mainScreenNavigationActions.getScheduleFragment()
@@ -74,22 +75,27 @@ internal class TabContainerFragment : BaseFragment(), IRouterProvider {
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        activity?.onBackPressedDispatcher?.addCallback(this, callback)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_tab_container, container, false)
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, callback)
+    }
+
     override fun onResume() {
         super.onResume()
-        cicerone.getNavigatorHolder().setNavigator(navigator)
+        cicerone.getNavigatorHolder().setNavigator(navigator!!)
     }
 
     override fun onPause() {
         cicerone.getNavigatorHolder().removeNavigator()
         super.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        navigator = null
     }
 
     companion object {

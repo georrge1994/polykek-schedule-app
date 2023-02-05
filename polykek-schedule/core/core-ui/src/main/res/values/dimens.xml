@@ -49,7 +49,7 @@
     <dimen name="feedback_button_height">@dimen/_65sdp</dimen>
 
     <!-- Groups -->
-    <dimen name="group_item_width">@dimen/_144sdp</dimen>
+    <dimen name="group_item_width">@dimen/_130sdp</dimen>
 
     <!-- Main -->
     <dimen name="main_group_toolbar_peek_height">@dimen/_37sdp</dimen>

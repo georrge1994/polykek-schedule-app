@@ -40,6 +40,7 @@ ext {
     navigationKtxVersion = '2.5.3'
     splashscreenVersion = '1.0.0'
     fragmentKtxVersion = '1.5.5'
+    activityKtxVersion = '1.6.1'
 
     materialVersion = '1.8.0-rc01'
     constraintlayoutVersion = '2.1.4'

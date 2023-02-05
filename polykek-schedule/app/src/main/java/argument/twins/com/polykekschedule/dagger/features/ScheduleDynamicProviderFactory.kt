@@ -1,16 +1,14 @@
 package argument.twins.com.polykekschedule.dagger.features
 
 import androidx.fragment.app.Fragment
-import argument.twins.com.polykekschedule.dagger.core.CORE_UI_DYNAMIC_DEPENDENCIES_PROVIDER
-import argument.twins.com.polykekschedule.dagger.core.SCHEDULE_CONTROLLER_DYNAMIC_DEPENDENCIES_PROVIDER
+import argument.twins.com.polykekschedule.dagger.collector.DynamicDependenciesProviderFactory
 import com.android.core.ui.dagger.CoreUiComponentHolder
 import com.android.core.ui.dagger.ICoreUiDependencies
 import com.android.core.ui.dagger.ICoreUiModuleApi
-import com.android.core.ui.dagger.ICoreUiModuleDependencies
-import com.android.feature.notes.dagger.INotesModuleDependencies
 import com.android.feature.notes.dagger.NotesComponentHolder
 import com.android.feature.schedule.base.dagger.IScheduleModuleDependencies
 import com.android.feature.schedule.base.dagger.IScheduleNavigationActions
+import com.android.feature.schedule.base.dagger.ScheduleComponentHolder
 import com.android.module.injector.dependenciesHolders.DependencyHolder2
 import com.android.module.injector.dependenciesHolders.DynamicProvider
 import com.android.module.injector.dependenciesHolders.IBaseDependencyHolder
@@ -19,38 +17,41 @@ import com.android.schedule.controller.api.IProfessorScheduleUseCase
 import com.android.schedule.controller.api.IScheduleController
 import com.android.schedule.controller.api.IScheduleControllerModuleApi
 import com.android.schedule.controller.api.IScheduleDateUseCase
-import com.android.schedule.controller.impl.dagger.IScheduleControllerModuleDependencies
 import com.android.schedule.controller.impl.dagger.ScheduleControllerComponentHolder
-import dagger.Module
-import dagger.Provides
-import javax.inject.Named
-import javax.inject.Singleton
+import javax.inject.Inject
 
-internal const val SCHEDULE_DYNAMIC_DEPENDENCIES_PROVIDER = "SCHEDULE_DYNAMIC_DEPENDENCIES_PROVIDER"
-
-@Module
-class ScheduleModule {
+/**
+ * Schedule dynamic provider factory.
+ *
+ * @constructor Create empty constructor for schedule dynamic provider factory
+ */
+class ScheduleDynamicProviderFactory @Inject constructor() :
+    DynamicDependenciesProviderFactory<ScheduleComponentHolder, IScheduleModuleDependencies>(ScheduleComponentHolder) {
     private class ScheduleModuleDependenciesHolder(
         coreUiModuleApi: ICoreUiModuleApi,
         scheduleControllerModuleApi: IScheduleControllerModuleApi,
         override val block: (IBaseDependencyHolder<IScheduleModuleDependencies>, ICoreUiModuleApi, IScheduleControllerModuleApi) -> IScheduleModuleDependencies
-    ) : DependencyHolder2<ICoreUiModuleApi, IScheduleControllerModuleApi, IScheduleModuleDependencies>(coreUiModuleApi, scheduleControllerModuleApi)
+    ) : DependencyHolder2<ICoreUiModuleApi, IScheduleControllerModuleApi, IScheduleModuleDependencies>(
+        coreUiModuleApi,
+        scheduleControllerModuleApi
+    )
 
-    @Provides
-    @Singleton
-    @Named(SCHEDULE_DYNAMIC_DEPENDENCIES_PROVIDER)
-    fun provideDynamicDependencyProviderForSchedule(
-        @Named(SCHEDULE_CONTROLLER_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForScheduleController: DynamicProvider<IScheduleControllerModuleDependencies>,
-        @Named(CORE_UI_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForCoreUi: DynamicProvider<ICoreUiModuleDependencies>,
-        @Named(NOTES_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForNotes: DynamicProvider<INotesModuleDependencies>
-    ) = DynamicProvider {
+    /**
+     * Get schedule navigation actions. Init note editor component only by user click.
+     */
+    private val scheduleNavigationActions: IScheduleNavigationActions = object : IScheduleNavigationActions {
+        override fun getNoteEditorFragment(noteId: String, title: String): Fragment =
+            NotesComponentHolder.getApi().getNoteEditorFragment(noteId, title)
+    }
+
+    override fun getDynamicProvider(): DynamicProvider<IScheduleModuleDependencies> = DynamicProvider {
         ScheduleModuleDependenciesHolder(
-            CoreUiComponentHolder.initAndGet(dynamicDependencyProviderForCoreUi),
-            ScheduleControllerComponentHolder.initAndGet(dynamicDependencyProviderForScheduleController)
+            CoreUiComponentHolder.getApi(),
+            ScheduleControllerComponentHolder.getApi()
         ) { dependencyHolder, coreUiModuleApi, scheduleControllerModuleApi ->
             object : IScheduleModuleDependencies {
                 override val scheduleNavigationActions: IScheduleNavigationActions
-                    get() = getScheduleNavigationActions(dynamicDependencyProviderForNotes)
+                    get() = this@ScheduleDynamicProviderFactory.scheduleNavigationActions
                 override val scheduleController: IScheduleController
                     get() = scheduleControllerModuleApi.scheduleController
                 override val scheduleDateUseCase: IScheduleDateUseCase
@@ -63,18 +64,5 @@ class ScheduleModule {
                     get() = dependencyHolder
             }
         }.dependencies
-    }
-
-    /**
-     * Get schedule navigation actions. Init note editor component only by user click.
-     *
-     * @param dynamicDependencyProviderForNotes Dynamic dependency provider for notes
-     * @return [IScheduleNavigationActions]
-     */
-    private fun getScheduleNavigationActions(
-        @Named(NOTES_DYNAMIC_DEPENDENCIES_PROVIDER) dynamicDependencyProviderForNotes: DynamicProvider<INotesModuleDependencies>
-    ): IScheduleNavigationActions = object : IScheduleNavigationActions {
-        override fun getNoteEditorFragment(noteId: String, title: String): Fragment =
-            NotesComponentHolder.initAndGet(dynamicDependencyProviderForNotes).getNoteEditorFragment(noteId, title)
     }
 }

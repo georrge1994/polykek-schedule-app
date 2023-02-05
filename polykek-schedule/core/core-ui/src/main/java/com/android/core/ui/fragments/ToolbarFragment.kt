@@ -62,4 +62,9 @@ abstract class ToolbarFragment : NavigationFragment(), MenuProvider {
             supportActionBar?.setDisplayHomeAsUpEnabled(showBackBtn)
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        activity?.removeMenuProvider(this)
+    }
 }

@@ -52,11 +52,6 @@ internal class MainFragment : NavigationFragment() {
         viewModel = (activity as AppCompatActivity).createViewModel(viewModelFactory)
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.updateBottomAnimation(isOpen = false)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_main, container, false)
 
@@ -70,6 +65,11 @@ internal class MainFragment : NavigationFragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateBottomAnimation(isOpen = false)
+    }
+
     /**
      * Set to main container one of [TabContainerFragment].
      *
@@ -77,6 +77,9 @@ internal class MainFragment : NavigationFragment() {
      * @return Was tab selected or not
      */
     private fun selectTab(itemId: Int): Boolean = with(childFragmentManager) {
+        // Don't do anything if the state is state has already been saved.
+        if (childFragmentManager.isStateSaved)
+            return false
         val tabTag = itemId.toString()
         val newSelectedTab = findFragmentByTag(tabTag)
         val currentTab = findFragmentByTag(currentItemId.toString())
@@ -101,6 +104,11 @@ internal class MainFragment : NavigationFragment() {
             .commitNow()
         currentItemId = itemId
         return true
+    }
+
+    override fun onDestroyView() {
+        viewBinding.bottomNavigationView.setOnItemSelectedListener(null)
+        super.onDestroyView()
     }
 
     companion object {

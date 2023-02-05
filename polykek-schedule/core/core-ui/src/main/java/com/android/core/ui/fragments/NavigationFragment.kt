@@ -21,7 +21,7 @@ abstract class NavigationFragment : BaseFragment() {
         get() = findTabRouterInAncestor()
 
     /**
-     * Find local router in ancestor.
+     * Find tab router in ancestor.
      *
      * @return [Router] or null
      */
