@@ -19,12 +19,20 @@ internal class NetworkStatusUseCase @Inject constructor(private val application:
     /**
      * Is network available.
      *
+     * A couple words about try-catch: once happen crash:
+     * "Fatal Exception: java.lang.SecurityException: Package android does not belong to 10353".
+     * Sounds like a native problem, but anyway will try to avoid it.
+     *
      * @return Condition result
      */
-    internal fun isNetworkAvailable() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        application.isNetworkAvailableSDK23()
-    } else {
-        application.isNetworkAvailableDeprecated()
+    internal fun isNetworkAvailable(): Boolean = try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            application.isNetworkAvailableSDK23()
+        } else {
+            application.isNetworkAvailableDeprecated()
+        }
+    } catch (e: Exception) {
+        false
     }
 
     /**

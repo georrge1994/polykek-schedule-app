@@ -44,7 +44,7 @@ class PolytechAppNavigator (
                         localStackCopy.add(screen.screenKey)
                     }
                     setReorderingAllowed(true)
-                    commitAllowingStateLoss()
+                    commit()
                 }
             }
         } else {

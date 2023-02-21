@@ -8,18 +8,14 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
- * Cache interceptor.
+ * Offline cache interceptor.
  *
  * @property networkStatusUseCase Provides actual status of network
- * @constructor Create [PolytechCacheInterceptor]
+ * @constructor Create [PolytechOfflineCacheInterceptor]
  */
-internal class PolytechCacheInterceptor @Inject constructor(private val networkStatusUseCase: NetworkStatusUseCase) : Interceptor {
-    private val onlineCacheControl by lazy {
-        CacheControl.Builder()
-            .maxAge(15, TimeUnit.MINUTES)
-            .build()
-    }
-
+internal class PolytechOfflineCacheInterceptor @Inject constructor(
+    private val networkStatusUseCase: NetworkStatusUseCase
+) : Interceptor {
     private val offlineCacheControl by lazy {
         CacheControl.Builder()
             .maxStale(1, TimeUnit.DAYS)
@@ -29,10 +25,8 @@ internal class PolytechCacheInterceptor @Inject constructor(private val networkS
 
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-        request = if (networkStatusUseCase.isNetworkAvailable()) {
-            request.newBuilder().cacheControl(onlineCacheControl).build()
-        } else {
-            request.newBuilder().cacheControl(offlineCacheControl).build()
+        if (!networkStatusUseCase.isNetworkAvailable()) {
+            request = request.newBuilder().cacheControl(offlineCacheControl).build()
         }
         return chain.proceed(request)
     }

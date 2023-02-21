@@ -14,6 +14,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
     }
 
     buildTypes {
@@ -73,7 +77,7 @@ dependencies {
     implementation("com.github.terrakok:cicerone:$ciceroneVersion")
 
     // Yandex map.
-    implementation "com.yandex.android:mapkit:$yandexMapKitVersion"
+    implementation "com.yandex.android:maps.mobile:$yandexMapKitVersion"
 
     // Other helpful libs.
     implementation "com.codesgood:justifiedtextview:$justifiedtextviewVersion"

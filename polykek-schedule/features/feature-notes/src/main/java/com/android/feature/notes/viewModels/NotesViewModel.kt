@@ -58,9 +58,10 @@ internal class NotesViewModel @Inject constructor(
      */
     private suspend fun updateNotes() {
         notesRoomRepository.getNotesWhichContains(selectedItemId.toString(), keyWord)
+            .asSequence()
             .filter { !it.id.contains(OWN_NOTE_ALIAS) }
             .map { NoteItem(note = it) }
-            .let { notesByLessons.postValueIfChanged(it) }
+            .let { notesByLessons.postValueIfChanged(it.toList()) }
         notesRoomRepository.getNotesWhichContains(OWN_NOTE_ALIAS, keyWord)
             .map { NoteItem(note = it) }
             .let { ownNotes.postValueIfChanged(it) }

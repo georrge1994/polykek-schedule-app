@@ -20,10 +20,6 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        devRelease {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -38,6 +34,7 @@ android {
                 "-opt-in=kotlinx.coroutines.FlowPreview"
         ]
     }
+    namespace 'com.android.test.support'
 }
 
 dependencies {

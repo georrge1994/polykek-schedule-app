@@ -13,8 +13,8 @@ android {
         applicationId "argument.twins.com.polykekschedule"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 39
-        versionName "2.2.7"
+        versionCode 40
+        versionName "2.2.8"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -23,6 +23,10 @@ android {
             annotationProcessorOptions {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
+        }
+
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
     }
 
@@ -116,14 +120,14 @@ dependencies {
     implementation "com.google.android.play:core:$playCoreVersion"
 
     // Firebase.
-    implementation "com.google.firebase:firebase-core:$firebaseCoreVersion"
-    implementation "com.google.firebase:firebase-analytics-ktx:$firebaseAnalyticsVersion"
-    implementation "com.google.firebase:firebase-database-ktx:$firebaseDatabaseVersion"
-    implementation "com.google.firebase:firebase-crashlytics:$firebaseCrashlyticsVersion"
-    implementation "com.google.firebase:firebase-messaging:$firebaseMessaging"
+    implementation platform("com.google.firebase:firebase-bom:$firebaseBom")
+    implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation "com.google.firebase:firebase-database-ktx"
+    implementation "com.google.firebase:firebase-crashlytics"
+    implementation "com.google.firebase:firebase-messaging"
 
     // Yandex map.
-    implementation "com.yandex.android:mapkit:$yandexMapKitVersion"
+    implementation "com.yandex.android:maps.mobile:$yandexMapKitVersion"
 
     // *************** JUnit tests libs *******************
     testImplementation "junit:junit:$junitVersion"

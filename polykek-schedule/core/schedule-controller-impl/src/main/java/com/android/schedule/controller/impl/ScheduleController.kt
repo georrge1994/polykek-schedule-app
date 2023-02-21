@@ -2,6 +2,7 @@ package com.android.schedule.controller.impl
 
 import com.android.common.models.savedItems.SavedItem
 import com.android.common.models.schedule.Week
+import com.android.common.models.schedule.stubWeek
 import com.android.core.room.api.notes.INotesRoomRepository
 import com.android.core.room.api.savedItems.ISavedItemsRoomRepository
 import com.android.schedule.controller.api.IScheduleController
@@ -18,7 +19,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * This is a schedule controller. It allows to synchronize UI changes between all tabs and avoid superfluous request, code duplicates.
+ * This is a schedule controller. It allows to synchronize UI changes between all tabs and avoid superfluous request,
+ * code duplicates.
  *
  * @property scheduleUseCase This class fetches schedule and covert it to app format
  * @property notesRoomRepository Notes room repository needs to update flags on saved item
@@ -48,7 +50,7 @@ internal class ScheduleController @Inject constructor(
     @Volatile
     override var indexOfDay: Int = 0 // [0..6].
 
-    override val weekFlow = MutableStateFlow<Week?>(null)
+    override val weekFlow = MutableStateFlow<Week?>(stubWeek)
 
     init {
         subscribeToSelectedItem()

@@ -15,7 +15,9 @@ internal const val ONE_WEEK = 1
  * @property scheduleDateUseCase Use case to work with schedule dates
  * @constructor Create [BaseScheduleViewModel]
  */
-internal abstract class BaseScheduleViewModel(private val scheduleDateUseCase: IScheduleDateUseCase) : BaseSubscriptionViewModel() {
+internal abstract class BaseScheduleViewModel(
+    private val scheduleDateUseCase: IScheduleDateUseCase
+) : BaseSubscriptionViewModel() {
     protected val schedule = MutableLiveData<Week?>()
 
     /**
@@ -35,7 +37,9 @@ internal abstract class BaseScheduleViewModel(private val scheduleDateUseCase: I
      * @param month Month
      * @param day Day
      */
-    internal fun showSpecificDateAsync(year: Int, month: Int, day: Int) = executeWithLoadingAnimation { showSpecificDate(year, month, day) }
+    internal fun showSpecificDateAsync(year: Int, month: Int, day: Int) = executeWithLoadingAnimation {
+        showSpecificDate(year, month, day)
+    }
 
     /**
      * Show the next week.

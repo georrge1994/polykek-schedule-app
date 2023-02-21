@@ -79,11 +79,11 @@ dependencies {
     implementation "com.intuit.ssp:ssp-android:$sdpAndSspVersion"
 
     // Firebase.
-    implementation "com.google.firebase:firebase-core:$firebaseCoreVersion"
-    implementation "com.google.firebase:firebase-analytics-ktx:$firebaseAnalyticsVersion"
-    implementation "com.google.firebase:firebase-database-ktx:$firebaseDatabaseVersion"
-    implementation "com.google.firebase:firebase-crashlytics:$firebaseCrashlyticsVersion"
-    implementation "com.google.firebase:firebase-messaging:$firebaseMessaging"
+    implementation platform("com.google.firebase:firebase-bom:$firebaseBom")
+    implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation "com.google.firebase:firebase-database-ktx"
+    implementation "com.google.firebase:firebase-crashlytics"
+    implementation "com.google.firebase:firebase-messaging"
 
     // *************** JUnit tests libs *******************
     testImplementation "junit:junit:$junitVersion"

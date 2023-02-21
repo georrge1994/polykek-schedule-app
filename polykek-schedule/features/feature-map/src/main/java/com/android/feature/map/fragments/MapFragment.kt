@@ -24,7 +24,7 @@ import com.android.shared.code.utils.syntaxSugar.createViewModel
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.BoundingBox
 import com.yandex.mapkit.map.CameraListener
-import com.yandex.mapkit.map.CameraUpdateSource
+import com.yandex.mapkit.map.CameraUpdateReason
 import com.yandex.mapkit.map.MapObjectTapListener
 import javax.inject.Inject
 
@@ -48,7 +48,7 @@ internal class MapFragment : BaseFragment() {
     }
 
     private val cameraListener = CameraListener { _, _, cameraUpdateReason, _ ->
-        if (cameraUpdateReason != CameraUpdateSource.APPLICATION)
+        if (cameraUpdateReason != CameraUpdateReason.APPLICATION)
             mapViewModel.deselectMapObject()
     }
 

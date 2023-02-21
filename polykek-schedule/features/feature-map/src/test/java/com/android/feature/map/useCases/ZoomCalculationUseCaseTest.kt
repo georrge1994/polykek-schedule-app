@@ -19,7 +19,7 @@ class ZoomCalculationUseCaseTest : BaseUnitTest() {
      * Get bounding box.
      */
     @Test
-    fun getBoundingBox() {
+    fun getBoundingBox_groupItems() {
         val yandexMapItems = listOf(
             YandexMapItem(point = Point(10.0, 10.0), imageId = 0, userData = null),
             YandexMapItem(point = Point(10.0, 20.0), imageId = 0, userData = null),
@@ -31,6 +31,19 @@ class ZoomCalculationUseCaseTest : BaseUnitTest() {
             assertEquals(southWest.longitude, 22.000000029802322, DELTA)
             assertEquals(northEast.latitude, 23.499999940395355, DELTA)
             assertEquals(northEast.longitude, 8.0, DELTA)
+        }
+    }
+
+    /**
+     * Get bounding box no items.
+     */
+    @Test
+    fun getBoundingBox_noItems() {
+        zoomCalculationUseCase.getBoundingBox(emptyList()).apply {
+            assertEquals(60.0094610000298, southWest.latitude, DELTA)
+            assertEquals(30.3710999999702, southWest.longitude, DELTA)
+            assertEquals(60.0094610000298, northEast.latitude, DELTA)
+            assertEquals(30.375100000029803, northEast.longitude, DELTA)
         }
     }
 }

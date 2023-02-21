@@ -34,5 +34,5 @@ class AppModule {
     @Provides
     @Singleton
     @Named(BACKGROUND_MESSAGE_BUS)
-    fun provideBackgroundMessageBus(): MutableSharedFlow<String> = MutableSharedFlow()
+    fun provideBackgroundMessageBus(): MutableSharedFlow<String> = MutableSharedFlow(replay = 1)
 }

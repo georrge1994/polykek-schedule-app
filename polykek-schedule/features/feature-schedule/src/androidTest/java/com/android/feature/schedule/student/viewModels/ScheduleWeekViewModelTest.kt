@@ -1,15 +1,18 @@
 package com.android.feature.schedule.student.viewModels
 
 import com.android.common.models.schedule.Week
+import com.android.common.models.schedule.stubWeek
 import com.android.schedule.controller.api.IScheduleController
 import com.android.schedule.controller.api.IScheduleDateUseCase
 import com.android.test.support.androidTest.base.BaseViewModelUnitTest
+import com.android.test.support.androidTest.utils.collectPost
 import com.android.test.support.androidTest.utils.getOrAwaitValue
 import com.android.test.support.dataGenerator.LessonDataGenerator
 import com.android.test.support.testFixtures.joinWithTimeout
 import com.android.test.support.testFixtures.runBlockingUnit
 import com.android.test.support.testFixtures.waitActiveSubscription
 import io.mockk.*
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Test
 import java.util.*
@@ -22,7 +25,7 @@ import java.util.*
 class ScheduleWeekViewModelTest : BaseViewModelUnitTest() {
     private val lessonDataGenerator = LessonDataGenerator()
     private val viewPagerPositionMock = 4
-    private val weekFlowMockk = MutableStateFlow<Week?>(null)
+    private val weekFlowMockk = MutableStateFlow<Week?>(stubWeek)
     private val scheduleController: IScheduleController = mockk {
         coEvery { weekFlow } returns weekFlowMockk
         coEvery { updateSchedule(any()) } returns Unit
@@ -57,13 +60,20 @@ class ScheduleWeekViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun complexTest() = runBlockingUnit {
         val weekMockk = lessonDataGenerator.getWeekMockk()
-        scheduleWeekViewModel.asyncSubscribe().joinWithTimeout()
-        scheduleWeekViewModel.viewPagerPosition.getOrAwaitValue(Pair(viewPagerPositionMock, false))
-        weekFlowMockk.waitActiveSubscription().emitAndWait(weekMockk).joinWithTimeout()
-        scheduleWeekViewModel.weekTitle.getOrAwaitValue(weekMockk.title)
-        scheduleWeekViewModel.dayTitleLiveData.getOrAwaitValue()
-        scheduleWeekViewModel.getLessonsLiveData(0).getOrAwaitValue(expectedResult = weekMockk.days[0]!!.lessons)
-        scheduleWeekViewModel.unSubscribe()
+        scheduleWeekViewModel.isLoading.collectPost {
+            scheduleWeekViewModel.asyncSubscribe().joinWithTimeout()
+            scheduleWeekViewModel.viewPagerPosition.getOrAwaitValue(Pair(viewPagerPositionMock, false))
+            weekFlowMockk.waitActiveSubscription().emitAndWait(weekMockk).joinWithTimeout()
+            scheduleWeekViewModel.weekTitle.getOrAwaitValue(weekMockk.title)
+            scheduleWeekViewModel.dayTitleLiveData.getOrAwaitValue()
+            scheduleWeekViewModel.getLessonsLiveData(0)
+                .getOrAwaitValue(expectedResult = weekMockk.days[0]!!.lessons)
+            scheduleWeekViewModel.unSubscribe()
+        }.apply {
+            assertEquals(2, size)
+            assertEquals(true, first())
+            assertEquals(false, last())
+        }
     }
 
     /**

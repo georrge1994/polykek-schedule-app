@@ -1,5 +1,7 @@
 package com.android.common.models.schedule
 
+val stubWeek = Week(title = "...", days = emptyMap())
+
 /**
  * Week.
  *

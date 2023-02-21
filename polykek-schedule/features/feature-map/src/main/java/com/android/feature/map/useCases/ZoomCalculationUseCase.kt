@@ -52,8 +52,27 @@ internal class ZoomCalculationUseCase @Inject constructor() : IUseCase {
         }
         // We need to add some margin ~20%.
         return BoundingBox(
-            Point(bottom + 0.2f * (bottom - top), left - 0.2f * (right - left)),
-            Point(top - 0.35f * (bottom - top), right + 0.2f * (right - left))
+            Point(
+                bottom + 0.2f * check(bottom, top),
+                left - 0.2f * check(right, left)
+            ),
+            Point(
+                top - 0.35f * check(bottom, top),
+                right + 0.2f * check(right, left)
+            )
         )
+    }
+
+    /**
+     * Check.
+     *
+     * @param firstBorder First border
+     * @param secondBorder Second border
+     * @return Padding for alone or calculated padding
+     */
+    private fun check(firstBorder: Double, secondBorder: Double) = if (firstBorder == secondBorder) {
+        0.01
+    } else {
+        firstBorder - secondBorder
     }
 }

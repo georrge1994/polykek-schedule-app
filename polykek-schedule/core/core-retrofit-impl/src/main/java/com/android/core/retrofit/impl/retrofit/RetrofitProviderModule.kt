@@ -19,13 +19,15 @@ internal class RetrofitProviderModule {
     @Singleton
     internal fun provideDefaultOkHttpClient(
         application: Application,
-        cacheInterceptor: PolytechCacheInterceptor
+        polytechOnlineCacheInterceptor: PolytechOnlineCacheInterceptor,
+        polytechOfflineCacheInterceptor: PolytechOfflineCacheInterceptor
     ): OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(TIME_OUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
         .writeTimeout(TIME_OUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
         .readTimeout(TIME_OUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
+        .addNetworkInterceptor(polytechOnlineCacheInterceptor)
+        .addInterceptor(polytechOfflineCacheInterceptor)
         .cache(Cache(application.cacheDir, 32 * 1024 * 1024)) // 32 MB.
-        .addInterceptor(cacheInterceptor)
         .build()
 
     /**

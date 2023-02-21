@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.android.common.models.schedule.Week
+import com.android.common.models.schedule.stubWeek
 import com.android.feature.schedule.R
 import com.android.feature.schedule.base.viewModels.BaseScheduleViewModel
 import com.android.feature.schedule.base.viewModels.ONE_WEEK
@@ -51,6 +52,7 @@ internal class ScheduleWeekViewModel @Inject constructor(
     override suspend fun subscribe() {
         super.subscribe()
         viewPagerPosition.postValue(Pair(scheduleController.indexOfDay, false))
+        isLoading.postValue(true)
         subscribeToWeekFlow()
     }
 
@@ -60,6 +62,8 @@ internal class ScheduleWeekViewModel @Inject constructor(
     private fun subscribeToWeekFlow() = scheduleController.weekFlow
         .onEach { week ->
             schedule.postValue(week)
+            if (week != stubWeek)
+                isLoading.postValue(false)
         }.cancelableLaunchInBackground()
 
     /**

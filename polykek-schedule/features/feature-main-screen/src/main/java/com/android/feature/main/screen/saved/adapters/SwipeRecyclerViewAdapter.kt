@@ -3,6 +3,7 @@ package com.android.feature.main.screen.saved.adapters
 import android.content.Context
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 import com.android.core.ui.adapters.BaseRecyclerViewAdapter
 
 /**
@@ -23,7 +24,8 @@ internal abstract class SwipeRecyclerViewAdapter<T : RecyclerView.ViewHolder, R 
              * if (viewHolder?.itemViewType == YourAdapter.SOME_TYPE) return 0
              * if (viewHolder?.adapterPosition == 0) return 0
              */
-            if (!isActionAllowed(recyclerView, viewHolder))
+            if (viewHolder.bindingAdapterPosition != NO_POSITION
+                && !isActionAllowed(recyclerView, viewHolder))
                 return 0
 
             return super.getMovementFlags(recyclerView, viewHolder)

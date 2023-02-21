@@ -29,7 +29,9 @@ private const val TAB_CONTAINER_ID = "TAB_CONTAINER_ID"
  * @constructor Create empty constructor for tab container fragment
  */
 internal class TabContainerFragment : BaseFragment(), IRouterProvider {
-    private var navigator: Navigator? = null
+    private val navigator: Navigator by lazy {
+        PolytechAppNavigator(requireActivity(), R.id.ftcContainer, childFragmentManager)
+    }
 
     @Inject
     lateinit var ciceroneHolder: ICiceroneHolder
@@ -55,23 +57,24 @@ internal class TabContainerFragment : BaseFragment(), IRouterProvider {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        navigator = PolytechAppNavigator(requireActivity(), R.id.ftcContainer, childFragmentManager)
-        when (arguments?.getInt(TAB_CONTAINER_ID)) {
-            R.id.schedule_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
-                mainScreenNavigationActions.getScheduleFragment()
+        if (childFragmentManager.findFragmentById(R.id.ftcContainer) == null) {
+            when (arguments?.getInt(TAB_CONTAINER_ID)) {
+                R.id.schedule_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
+                    mainScreenNavigationActions.getScheduleFragment()
+                }
+                R.id.notes_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
+                    mainScreenNavigationActions.getNotesFragment()
+                }
+                R.id.map_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
+                    mainScreenNavigationActions.getMapFragment()
+                }
+                R.id.professors_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
+                    mainScreenNavigationActions.getProfessorFragment()
+                }
+                else -> null
+            }?.apply {
+                router.replaceScreen(this)
             }
-            R.id.notes_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
-                mainScreenNavigationActions.getNotesFragment()
-            }
-            R.id.map_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
-                mainScreenNavigationActions.getMapFragment()
-            }
-            R.id.professors_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
-                mainScreenNavigationActions.getProfessorFragment()
-            }
-            else -> null
-        }?.apply {
-            router.replaceScreen(this)
         }
     }
 
@@ -85,17 +88,12 @@ internal class TabContainerFragment : BaseFragment(), IRouterProvider {
 
     override fun onResume() {
         super.onResume()
-        cicerone.getNavigatorHolder().setNavigator(navigator!!)
+        cicerone.getNavigatorHolder().setNavigator(navigator)
     }
 
     override fun onPause() {
         cicerone.getNavigatorHolder().removeNavigator()
         super.onPause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        navigator = null
     }
 
     companion object {

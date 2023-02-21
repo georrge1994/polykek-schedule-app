@@ -81,7 +81,7 @@ internal class MapActionsUiUseCase @Inject constructor() : IUseCase {
         yandexMap ?: return
         val mapObject = yandexMap.mapObjects.addPlacemark(
             yandexMapItem.point,
-            DrawableImageProvider(context, yandexMapItem.imageId)
+            DrawableImageProvider(context?.applicationContext, yandexMapItem.imageId)
         )
         mapObject.userData = yandexMapItem.userData
         mapObject.addTapListener(circleMapObjectTapListener)

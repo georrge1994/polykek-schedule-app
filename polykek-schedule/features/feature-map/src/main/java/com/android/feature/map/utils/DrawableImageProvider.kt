@@ -10,11 +10,14 @@ import com.yandex.runtime.image.ImageProvider
 /**
  * Yandex-map drawable image provider. Their lib still doesn't support vector images - (╯°益°)╯彡┻━┻.
  *
- * @property context Context
+ * @property context App context
  * @property id Drawable id
  * @constructor Create [DrawableImageProvider]
  */
-internal class DrawableImageProvider(private val context: Context?, @DrawableRes val id: Int) : ImageProvider() {
+internal class DrawableImageProvider(
+    private val context: Context?,
+    @DrawableRes val id: Int
+) : ImageProvider() {
     override fun getImage() = context?.getBitmapFromVectorDrawable(id)
 
     override fun getId() = id.toString()
