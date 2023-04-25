@@ -1,6 +1,6 @@
 package com.android.feature.main.screen.saved.viewModels
 
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.android.common.models.savedItems.SavedItem
 import com.android.core.room.api.savedItems.ISavedItemsRoomRepository
 import com.android.core.ui.viewModels.BaseSubscriptionViewModel
@@ -18,7 +18,7 @@ internal class SavedItemsViewModel @Inject constructor(
     private val savedItemsRoomRepository: ISavedItemsRoomRepository
 ) : BaseSubscriptionViewModel() {
     private var selectedItem: SavedItem? = null
-    val items = Transformations.map(savedItemsRoomRepository.savedItems) { savedItems ->
+    val items = savedItemsRoomRepository.savedItems.map { savedItems ->
         selectedItem = savedItems.firstOrNull { it.isSelected }
         savedItems.toMutableList<Any>().apply {
             add(ControlItem(iconId = R.drawable.ic_baseline_person_add_24, textId = R.string.bottom_sheet_fragment_add_professor))
@@ -26,9 +26,7 @@ internal class SavedItemsViewModel @Inject constructor(
             add(ControlItem(iconId = R.drawable.ic_baseline_report_problem_24, textId = R.string.bottom_sheet_fragment_report_schedule_error))
         }
     }
-    val isEmpty = Transformations.map(savedItemsRoomRepository.savedItems) {
-        it.isNullOrEmpty()
-    }
+    val isEmpty = savedItemsRoomRepository.savedItems.map { it.isEmpty() }
 
     /**
      * Get selected item.

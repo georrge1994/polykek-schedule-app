@@ -1,7 +1,7 @@
 package com.android.feature.schedule.professor.viewModels
 
 import android.app.Application
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.android.feature.schedule.R
 import com.android.feature.schedule.base.viewModels.BaseScheduleViewModel
 import com.android.feature.schedule.base.viewModels.ONE_WEEK
@@ -27,14 +27,14 @@ internal class ProfessorsScheduleViewModel @Inject constructor(
     private var lastRequestPeriod: String? = null
     private var professorId: Int? = null
 
-    val weekTitle = Transformations.map(schedule) { week ->
+    val weekTitle = schedule.map { week ->
         week?.title ?: application.getString(R.string.schedule_fragment_week)
     }
-    val lessons = Transformations.map(schedule) { week ->
+    val lessons = schedule.map { week ->
         professorScheduleUseCase.getRecyclerItems(week)
     }
-    val listIsEmpty = Transformations.map(lessons) { week ->
-        week.isNullOrEmpty()
+    val listIsEmpty = lessons.map { week ->
+        week.isEmpty()
     }
 
     override suspend fun showNextWeek() {

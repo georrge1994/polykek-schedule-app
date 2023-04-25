@@ -35,5 +35,8 @@ class MainActivityViewModel @Inject constructor(
      */
     private fun subscribeToBackgroundMessageBus() = backgroundMessageBus.onEach {
         messageFromBus.postValue(it)
+        // In some cases http request can return exception before subscription initialization. For that case we need
+        // replay = 1, but from another side - all messages have to be shown only once. So, reset cache after using.
+        backgroundMessageBus.resetReplayCache()
     }.cancelableLaunchInBackground()
 }

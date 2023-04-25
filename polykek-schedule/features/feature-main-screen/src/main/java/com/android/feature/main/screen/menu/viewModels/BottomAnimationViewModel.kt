@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.android.core.room.api.savedItems.ISavedItemsRoomRepository
 import com.android.core.ui.viewModels.BaseViewModel
 import com.android.feature.main.screen.R
@@ -35,7 +35,7 @@ internal class BottomAnimationViewModel @Inject constructor(
     private val grey500 = ContextCompat.getColor(application, R.color.grey_500)
     private val white = ContextCompat.getColor(application, R.color.white)
 
-    val title = Transformations.map(savedItemsRoomRepository.selectedItemLive2) { it?.name ?: application.getString(R.string.schedule_choose_group) }
+    val title = savedItemsRoomRepository.selectedItemLive2.map { it?.name ?: application.getString(R.string.schedule_choose_group) }
 
     // Offset + alpha.
     val slideTopPosition = MutableLiveData<Pair<Float, Float>>()

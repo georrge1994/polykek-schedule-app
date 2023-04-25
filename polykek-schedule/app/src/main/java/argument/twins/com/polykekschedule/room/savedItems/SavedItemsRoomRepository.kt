@@ -1,7 +1,7 @@
 package argument.twins.com.polykekschedule.room.savedItems
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import androidx.room.*
 import argument.twins.com.polykekschedule.dagger.core.DATABASE_DISPATCHER
 import argument.twins.com.polykekschedule.room.savedItems.*
@@ -35,13 +35,13 @@ class SavedItemsRoomRepository @Inject constructor(
     override val isItemSelected: Boolean
         get() = sharedPreferenceUtils.contains(ITEM_IS_SELECTED)
 
-    override val savedItems: LiveData<List<SavedItem>> = Transformations.map(savedItemsDao.getItems()) { list ->
+    override val savedItems: LiveData<List<SavedItem>> = savedItemsDao.getItems().map { list ->
         list.map { entity ->
             entity.toSavedItem()
         }
     }
 
-    override val selectedItemLive2: LiveData<SavedItem?> = Transformations.map(savedItemsDao.getSelectedItemLive()) { entity ->
+    override val selectedItemLive2: LiveData<SavedItem?> = savedItemsDao.getSelectedItemLive().map { entity ->
         entity?.toSavedItem()
     }
 

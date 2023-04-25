@@ -3,7 +3,7 @@ package com.android.feature.schedule.student.viewModels
 import android.app.Application
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.android.common.models.schedule.Week
 import com.android.common.models.schedule.stubWeek
@@ -36,9 +36,7 @@ internal class ScheduleWeekViewModel @Inject constructor(
 ) : BaseScheduleViewModel(scheduleDateUseCase) {
     private val titleFormat = SimpleDateFormat(CURRENT_DAY_TITLE, Locale.ENGLISH)
     val viewPagerPosition = MutableLiveData<Pair<Int, Boolean>>()
-    val weekTitle = Transformations.map(schedule) { week ->
-        week?.title ?: application.getString(R.string.schedule_fragment_week)
-    }
+    val weekTitle = schedule.map { week -> week?.title ?: application.getString(R.string.schedule_fragment_week) }
     val dayTitleLiveData = MediatorLiveData<String>().apply {
         addSource(schedule) {
             postValue(getScheduleTitle())
@@ -71,7 +69,7 @@ internal class ScheduleWeekViewModel @Inject constructor(
      *
      * @param dayId Day id
      */
-    internal fun getLessonsLiveData(dayId: Int) = Transformations.map(schedule) { week ->
+    internal fun getLessonsLiveData(dayId: Int) = schedule.map { week ->
         week?.days?.get(dayId)?.lessons ?: Collections.emptyList()
     }
 

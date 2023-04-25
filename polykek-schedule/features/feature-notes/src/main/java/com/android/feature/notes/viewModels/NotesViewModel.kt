@@ -1,7 +1,7 @@
 package com.android.feature.notes.viewModels
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.android.core.room.api.notes.INotesRoomRepository
 import com.android.core.room.api.savedItems.ISavedItemsRoomRepository
 import com.android.core.ui.viewModels.SearchViewModel
@@ -87,10 +87,8 @@ internal class NotesViewModel @Inject constructor(
     internal fun getIsEmptyNotesLivedata(notesTabTypes: NotesTabTypes) = when (notesTabTypes) {
         NotesTabTypes.BY_LESSONS -> notesByLessons
         NotesTabTypes.OWN_NOTES -> ownNotes
-    }.let { liveData ->
-        Transformations.map(liveData) { notes ->
-            notes.isNullOrEmpty()
-        }
+    }.map { notes ->
+        notes.isNullOrEmpty()
     }
 
     /**

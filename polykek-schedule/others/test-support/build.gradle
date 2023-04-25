@@ -22,11 +22,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = "17"
         // Hide warnings.
         freeCompilerArgs += [
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
@@ -47,7 +50,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     implementation "com.google.truth:truth:$truthVersion"
-    implementation "io.mockk:mockk:$mokkVersion"
+    implementation "io.mockk:mockk:$mockkVersion"
     implementation "androidx.test:core:$testCoreVersion"
     implementation "androidx.room:room-testing:$roomVersion"
     // Helper for other arch dependencies, including JUnit test rules that can be used with LiveData.

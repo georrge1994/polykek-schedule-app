@@ -1,7 +1,7 @@
 package com.android.feature.buildings.viewModels
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.android.common.models.map.Building
 import com.android.core.ui.viewModels.SearchViewModel
 import com.android.feature.buildings.useCases.BuildingUseCase
@@ -15,7 +15,7 @@ import javax.inject.Inject
  */
 internal class BuildingViewModel @Inject constructor(private val buildingUseCase: BuildingUseCase) : SearchViewModel() {
     val buildings = MutableLiveData<List<Building>>()
-    val isListEmpty = Transformations.map(buildings) { it.isEmpty() }
+    val isListEmpty = buildings.map { it.isEmpty() }
 
     override suspend fun keyWordWasChanged(keyWord: String?) {
         super.keyWordWasChanged(keyWord)

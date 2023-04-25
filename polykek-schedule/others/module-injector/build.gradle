@@ -23,15 +23,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     // That's excluding the second module for the androidTestImplementation configuration.
     configurations {
         androidTestImplementation { exclude group: 'io.mockk', module: 'mockk-agent-jvm' }
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
         // Hide warnings.
         freeCompilerArgs += [
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",

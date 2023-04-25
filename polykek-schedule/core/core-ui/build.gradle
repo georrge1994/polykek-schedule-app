@@ -26,15 +26,18 @@ android {
         viewBinding true
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
     }
     // That's excluding the second module for the androidTestImplementation configuration.
     configurations {
         androidTestImplementation { exclude group: 'io.mockk', module: 'mockk-agent-jvm' }
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
         // Hide warnings.
         freeCompilerArgs += [
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
@@ -56,6 +59,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleKtxVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleKtxVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleKtxVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
 
     // Dagger.
     implementation "com.google.dagger:dagger:$daggerVersion"
@@ -80,7 +84,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     testImplementation "com.google.truth:truth:$truthVersion"
-    testImplementation "io.mockk:mockk:$mokkVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "androidx.test:core:$testCoreVersion"
     testImplementation "androidx.room:room-testing:$roomVersion"
@@ -97,7 +101,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-    androidTestImplementation "io.mockk:mockk-android:$mokkVersion"
+    androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
     androidTestImplementation "androidx.work:work-testing:$workRuntimeKtxVersion"
 
     // ********************* Modules *************************

@@ -10,7 +10,9 @@ import javax.inject.Inject
  * @property schoolApiService [SchoolApiService]
  * @constructor Create [SchoolApiRepository]
  */
-internal class SchoolApiRepository @Inject constructor(private val schoolApiService: SchoolApiService) : BaseApiRepository() {
+internal class SchoolApiRepository @Inject constructor(
+    private val schoolApiService: SchoolApiService
+) : BaseApiRepository() {
     /**
      * Get school list.
      *

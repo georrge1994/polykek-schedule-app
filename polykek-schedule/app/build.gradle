@@ -13,8 +13,8 @@ android {
         applicationId "argument.twins.com.polykekschedule"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 40
-        versionName "2.2.8"
+        versionCode 42
+        versionName "2.2.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -48,8 +48,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     // That excludes module duplicates during gradle builds.
@@ -58,7 +58,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
         // Hide warnings.
         freeCompilerArgs += [
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
@@ -66,7 +66,9 @@ android {
                 "-opt-in=kotlinx.coroutines.FlowPreview"
         ]
     }
-
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
     sourceSets {
         // Adds exported schema location as test app assets.
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
@@ -87,6 +89,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleKtxVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
     implementation "androidx.activity:activity-ktx:$activityKtxVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
 
     // Material design.
     implementation "com.google.android.material:material:$materialVersion"
@@ -134,7 +137,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     testImplementation "com.google.truth:truth:$truthVersion"
-    testImplementation "io.mockk:mockk:$mokkVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "androidx.test:core:$testCoreVersion"
     testImplementation "androidx.room:room-testing:$roomVersion"
@@ -151,7 +154,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-    androidTestImplementation "io.mockk:mockk-android:$mokkVersion"
+    androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
     androidTestImplementation "androidx.work:work-testing:$workRuntimeKtxVersion"
 
     // ********************* Modules *************************

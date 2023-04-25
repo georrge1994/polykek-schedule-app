@@ -2,7 +2,7 @@ package com.android.professors.search.viewModels
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.android.common.models.professors.Professor
 import com.android.core.room.api.savedItems.ISavedItemsRoomRepository
 import com.android.core.ui.dagger.BACKGROUND_MESSAGE_BUS
@@ -35,10 +35,8 @@ internal class ProfessorSearchViewModel @Inject constructor(
     var scheduleMode = ScheduleMode.SEARCH
 
     val professors = MutableLiveData<List<Professor>>()
-    val listIsEmpty = Transformations.map(professors) {
-        it.isNullOrEmpty()
-    }
-    val messageId = Transformations.map(professors) {
+    val listIsEmpty = professors.map { it.isNullOrEmpty() }
+    val messageId = professors.map {
         if (it.isNullOrEmpty())
             R.string.professors_search_fragment_no_professors
         else

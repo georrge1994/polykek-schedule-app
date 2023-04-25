@@ -1,6 +1,5 @@
 package com.android.schedule.controller.impl.api
 
-import androidx.annotation.Keep
 import com.android.common.models.groups.GroupResponse
 import com.android.schedule.controller.api.week.DayResponse
 import com.android.schedule.controller.api.week.IWeekResponse
@@ -16,7 +15,6 @@ import java.util.*
  * @property group Information about group
  * @constructor Create [StudentWeekResponse]
  */
-@Keep
 internal data class StudentWeekResponse(
     @SerializedName("week")     override val weekInfo: WeekInfoResponse = WeekInfoResponse(),
     @SerializedName("days")     override val days: MutableList<DayResponse> = Collections.emptyList(),
