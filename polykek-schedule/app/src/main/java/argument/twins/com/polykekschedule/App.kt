@@ -4,6 +4,7 @@ import android.app.Application
 import argument.twins.com.polykekschedule.dagger.AppComponent
 import argument.twins.com.polykekschedule.dagger.DaggerAppComponent
 import argument.twins.com.polykekschedule.dagger.collector.IDynamicDependenciesProviderFactory
+import by.kirich1409.viewbindingdelegate.ViewBindingPropertyDelegate
 import com.android.schedule.controller.impl.dagger.ScheduleControllerComponentHolder
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -37,6 +38,8 @@ class App : Application(), HasAndroidInjector {
         // In the init block the ScheduleController requests a schedule for today. In the result the request will be sent before activity
         // and viewModels creation.
         ScheduleControllerComponentHolder.getApi().scheduleController.hashCode()
+        // Try to fix crash with "Access to viewBinding after Lifecycle is destroyed or hasn't created yet".
+        ViewBindingPropertyDelegate.strictMode = false
     }
 
     companion object {

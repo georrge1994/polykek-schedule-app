@@ -1,28 +1,35 @@
 package com.android.core.ui.viewModels
 
 import androidx.lifecycle.viewModelScope
-import com.android.shared.code.utils.liveData.EventLiveData
+import com.android.core.ui.mvi.MviAction
+import com.android.core.ui.mvi.MviIntent
+import com.android.core.ui.mvi.MviState
+import com.android.core.ui.mvi.MviViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Base subscription view model.
  *
  * @constructor Create empty constructor for base subscription view model
  */
-abstract class BaseSubscriptionViewModel : BaseViewModel() {
+abstract class BaseSubscriptionViewModel<I : MviIntent, S : MviState, A : MviAction>(
+    defaultState: S
+) : MviViewModel<I, S, A>(defaultState) {
     private val backgroundJobs = HashMap<Int, Job>()
-
-    val isLoading = EventLiveData<Boolean>()
 
     /**
      * Async subscribe .
      */
-    fun asyncSubscribe() = launchInBackground {
-        subscribe()
+    fun asyncSubscribe() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            subscribe()
+        }
     }
 
     /**
@@ -42,24 +49,15 @@ abstract class BaseSubscriptionViewModel : BaseViewModel() {
         }
 
     /**
-     * Execute with loading animation.
-     *
-     * @param requestAction Action
-     */
-    protected fun executeWithLoadingAnimation(requestAction: suspend () -> Unit) = launchInBackground {
-        isLoading.postValue(true)
-        requestAction.invoke()
-        isLoading.postValue(false)
-        backgroundJobs.remove(requestAction.hashCode())
-    }.also {
-        backgroundJobs[requestAction.hashCode()] = it
-    }
-
-    /**
      * Unsubscribe.
      */
     open fun unSubscribe() {
         backgroundJobs.forEach { it.value.cancel() }
         backgroundJobs.clear()
+    }
+
+    override fun onCleared() {
+        unSubscribe()
+        super.onCleared()
     }
 }

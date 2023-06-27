@@ -1,11 +1,11 @@
 package com.android.professors.list.viewModels
 
-import androidx.lifecycle.MutableLiveData
-import com.android.common.models.professors.Professor
 import com.android.core.ui.viewModels.BaseSubscriptionViewModel
+import com.android.professors.list.mvi.ProfessorAction
+import com.android.professors.list.mvi.ProfessorIntent
+import com.android.professors.list.mvi.ProfessorState
 import com.android.professors.list.useCases.ProfessorsUseCase
 import com.android.schedule.controller.api.IScheduleController
-import com.android.shared.code.utils.liveData.EventLiveData
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
@@ -19,24 +19,24 @@ import javax.inject.Inject
 internal class ProfessorsViewModel @Inject constructor(
     private val scheduleController: IScheduleController,
     private val professorsUseCase: ProfessorsUseCase
-) : BaseSubscriptionViewModel() {
-    val professors = MutableLiveData<List<Professor>>()
-    val isListEmpty = EventLiveData<Boolean>()
-
+) : BaseSubscriptionViewModel<ProfessorIntent, ProfessorState, ProfessorAction>(ProfessorState.Default) {
     override suspend fun subscribe() {
         super.subscribe()
-        subscribeToWeekFlow()
+        // Subscribe to week flow.
+        scheduleController.weekFlow
+            .onEach { week ->
+                week?.let {
+                    currentState.copyState(professors = professorsUseCase.getProfessors(week)).emitState()
+                } ?: currentState.copyState(professors = emptyList()).emitState()
+            }.cancelableLaunchInBackground()
     }
 
-    /**
-     * Subscribe to week flow.
-     */
-    private fun subscribeToWeekFlow() = scheduleController.weekFlow
-        .onEach { week ->
-            week?.let {
-                val professors = professorsUseCase.getProfessors(week)
-                this@ProfessorsViewModel.professors.postValue(professors)
-                isListEmpty.postValue(professors.isEmpty())
-            } ?: isListEmpty.postValue(true)
-        }.cancelableLaunchInBackground()
+    override suspend fun dispatchIntent(intent: ProfessorIntent) {
+        when (intent) {
+            ProfessorIntent.OpenFAQScreen -> ProfessorAction.OpenFAQScreen.emitAction()
+            is ProfessorIntent.OpenProfessorScheduleScreen ->
+                ProfessorAction.OpenProfessorScheduleScreen(intent.professor).emitAction()
+            ProfessorIntent.OpenProfessorSearchScreen -> ProfessorAction.OpenProfessorSearchScreen.emitAction()
+        }
+    }
 }

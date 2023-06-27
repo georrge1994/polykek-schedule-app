@@ -1,5 +1,10 @@
 package com.android.core.ui.fragments
 
+import com.android.core.ui.mvi.MviAction
+import com.android.core.ui.mvi.MviFragment
+import com.android.core.ui.mvi.MviIntent
+import com.android.core.ui.mvi.MviState
+import com.android.core.ui.mvi.MviViewModel
 import com.android.core.ui.navigation.ICiceroneHolder
 import com.android.core.ui.navigation.IRouterProvider
 import com.github.terrakok.cicerone.Router
@@ -10,7 +15,8 @@ import javax.inject.Inject
  *
  * @constructor Create empty constructor for navigation fragment
  */
-abstract class NavigationFragment : BaseFragment() {
+abstract class NavigationFragment<I : MviIntent, S : MviState, A : MviAction, VM : MviViewModel<I, S, A>> :
+    MviFragment<I, S, A, VM>() {
     @Inject
     lateinit var ciceroneHolder: ICiceroneHolder
 

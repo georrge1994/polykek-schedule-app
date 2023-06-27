@@ -7,20 +7,20 @@ import com.android.module.injector.moduleMarkers.IModuleComponent
 import javax.inject.Inject
 
 /**
- * Base fragment.
+ * Base MVI-fragment.
  *
  * @constructor Create empty constructor for base fragment
  */
 abstract class BaseFragment : Fragment() {
-    private var strongReferenceToOwnComponent: IModuleComponent? = null
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private var strongReferenceToOwnComponent: IModuleComponent? = null
+
     override fun onAttach(context: Context) {
-        // Every each top-level feature (screen feature) have to store a reference to the own component, because no one before will not
-        // store it. We create feature-api only by navigation action, so we use dynamic dependencies providers - no one feature will not
-        // keep reference to this api).
+        // Every each top-level feature (screen feature) have to store a reference to the own component, because no one
+        // before will not store it. We create feature-api only by navigation action, so we use dynamic dependencies
+        // providers - no one feature will not keep reference to this api).
         strongReferenceToOwnComponent = getComponent()
         injectToComponent()
         super.onAttach(context)

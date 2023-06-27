@@ -3,10 +3,12 @@ package argument.twins.com.polykekschedule.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import argument.twins.com.polykekschedule.App
 import argument.twins.com.polykekschedule.R
+import argument.twins.com.polykekschedule.activity.mvi.ActivityAction
+import argument.twins.com.polykekschedule.activity.mvi.ActivityIntent
 import argument.twins.com.polykekschedule.activity.useCases.SmallFeaturesUiUseCase
 import argument.twins.com.polykekschedule.activity.viewModels.MainActivityViewModel
 import com.android.core.ui.navigation.ICiceroneHolder
@@ -19,6 +21,8 @@ import com.android.shared.code.utils.syntaxSugar.createViewModel
 import com.android.shared.code.utils.syntaxSugar.hideStatusBar
 import com.android.shared.code.utils.syntaxSugar.isPortraitMode
 import com.github.terrakok.cicerone.Navigator
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 /**
@@ -39,27 +43,43 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var ciceroneHolder: ICiceroneHolder
 
-    private val messageFromBusObserver = Observer<String> { smallFeaturesUiUseCase.showMessage(this, it) }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         App.appComponent.inject(this)
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         viewModel = createViewModel(viewModelFactory)
         viewModel.asyncSubscribe()
-        viewModel.messageFromBus.observe(this, messageFromBusObserver)
-
+        viewModel.action.onEach(::singleAction).launchIn(lifecycleScope)
         if (savedInstanceState == null) {
-            initStartScreen()
-            if (viewModel.isItemSelected)
-                smallFeaturesUiUseCase.askNotificationPermissionForFMS(this)
+            viewModel.dispatchIntentAsync(ActivityIntent.ReInitScreen)
         }
 
         // Specific options/modes.
         smallFeaturesUiUseCase.checkSmallFeatures(this)
-        if (!isPortraitMode())
+        if (!isPortraitMode()) {
             hideStatusBar()
+        }
+    }
+
+    /**
+     * Single action.
+     *
+     * @param action Action
+     */
+    private fun singleAction(action: ActivityAction) {
+        when (action) {
+            is ActivityAction.InitScreen -> {
+                initStartScreen(action.isSelectedItem)
+                if (action.isSelectedItem) {
+                    smallFeaturesUiUseCase.askNotificationPermissionForFMS(this)
+                }
+            }
+            is ActivityAction.ShowMessage -> {
+                smallFeaturesUiUseCase.showMessage(this, action.message)
+            }
+        }
     }
 
     override fun onResumeFragments() {
@@ -74,10 +94,12 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Init default screen.
+     *
+     * @param isItemSelected Is group or professor selected
      */
-    private fun initStartScreen() = ciceroneHolder.getMainCicerone().router.navigateTo(
+    private fun initStartScreen(isItemSelected: Boolean) = ciceroneHolder.getMainCicerone().router.navigateTo(
         PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
-            if (viewModel.isItemSelected)
+            if (isItemSelected)
                 MainScreenComponentHolder.getApi().getMainFragment()
             else
                 WelcomeComponentHolder.getApi().getWelcomeFragment()

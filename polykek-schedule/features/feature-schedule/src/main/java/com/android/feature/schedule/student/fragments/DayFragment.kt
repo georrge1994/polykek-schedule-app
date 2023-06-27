@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.common.models.schedule.Lesson
 import com.android.core.ui.fragments.NavigationFragment
@@ -16,6 +15,9 @@ import com.android.feature.schedule.base.dagger.IScheduleNavigationActions
 import com.android.feature.schedule.base.dagger.ScheduleComponentHolder
 import com.android.feature.schedule.databinding.FragmentDayBinding
 import com.android.feature.schedule.student.adapters.recycler.LessonsRecyclerViewAdapter
+import com.android.feature.schedule.student.mvi.StudentAction
+import com.android.feature.schedule.student.mvi.StudentIntent
+import com.android.feature.schedule.student.mvi.StudentState
 import com.android.feature.schedule.student.viewModels.ScheduleWeekViewModel
 import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createSharedViewModelWithParentFragment
@@ -29,27 +31,17 @@ private const val ID_DAY = "ID_DAY"
  * @constructor Create empty constructor for day fragment
  * @author darkt on 8/24/2017
  */
-internal class DayFragment : NavigationFragment() {
+internal class DayFragment : NavigationFragment<StudentIntent, StudentState, StudentAction, ScheduleWeekViewModel>() {
     private val viewBinding by viewBinding(FragmentDayBinding::bind)
-    private lateinit var scheduleViewModel: ScheduleWeekViewModel
     private lateinit var adapter: LessonsRecyclerViewAdapter
     private var dayId = 0
 
     @Inject
     lateinit var scheduleNavigationActions: IScheduleNavigationActions
 
-    private val dayObserver = Observer<List<Lesson>> { lessons ->
-        viewBinding.lessonsListIsEmpty.isVisible = lessons.isEmpty()
-        adapter.updateItems(lessons)
-    }
-
     private val clickItemListener = object : ILessonActions {
         override fun onClick(lesson: Lesson) {
-            tabRouter?.navigateTo(
-                PolytechFragmentScreen {
-                    scheduleNavigationActions.getNoteEditorFragment(lesson.noteId, lesson.title)
-                }
-            )
+            StudentIntent.OpenNoteEditor(dayId, lesson.noteId, lesson.title).dispatchIntent()
         }
     }
 
@@ -59,18 +51,35 @@ internal class DayFragment : NavigationFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.apply { dayId = getInt(ID_DAY) }
+        dayId = arguments?.getInt(ID_DAY) ?: 0
+        viewModel = createSharedViewModelWithParentFragment(viewModelFactory)
         adapter = LessonsRecyclerViewAdapter(requireContext(), clickItemListener)
-        scheduleViewModel = createSharedViewModelWithParentFragment(viewModelFactory)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_day, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreatedBeforeRendering(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreatedBeforeRendering(view, savedInstanceState)
         viewBinding.recyclerView.adapter = adapter
-        scheduleViewModel.getLessonsLiveData(dayId).observe(viewLifecycleOwner, dayObserver)
+    }
+
+    override fun invalidateUi(state: StudentState) {
+        super.invalidateUi(state)
+        val lessonsForCurrentDay = state.days[dayId]?.lessons ?: emptyList()
+        viewBinding.lessonsListIsEmpty.isVisible = lessonsForCurrentDay.isEmpty() && state.isLoading.not()
+        adapter.updateItems(lessonsForCurrentDay)
+    }
+
+    override fun executeSingleAction(action: StudentAction) {
+        super.executeSingleAction(action)
+        if (action is StudentAction.OpenNoteEditor && action.dayId == dayId) {
+            tabRouter?.navigateTo(
+                PolytechFragmentScreen {
+                    scheduleNavigationActions.getNoteEditorFragment(action.noteId, action.title)
+                }
+            )
+        }
     }
 
     override fun onDestroyView() {

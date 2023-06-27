@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.core.ui.fragments.ToolbarFragment
 import com.android.core.ui.models.ScheduleMode
@@ -18,6 +17,9 @@ import com.android.feature.schools.dagger.ISchoolsNavigationActions
 import com.android.feature.schools.dagger.SchoolsComponentHolder
 import com.android.feature.schools.databinding.FragmentSchoolsBinding
 import com.android.feature.schools.models.School
+import com.android.feature.schools.mvi.SchoolAction
+import com.android.feature.schools.mvi.SchoolIntent
+import com.android.feature.schools.mvi.SchoolState
 import com.android.feature.schools.viewModels.SchoolViewModel
 import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
@@ -28,23 +30,18 @@ import javax.inject.Inject
  *
  * @constructor Create empty constructor for schools list fragment
  */
-internal class SchoolsFragment : ToolbarFragment() {
+internal class SchoolsFragment : ToolbarFragment<SchoolIntent, SchoolState, SchoolAction, SchoolViewModel>() {
     private val viewBinding by viewBinding(FragmentSchoolsBinding::bind)
     private lateinit var adapter: SchoolsRecyclerViewAdapter
-    private lateinit var schoolViewModel: SchoolViewModel
 
     @Inject
     lateinit var schoolsNavigationActions: ISchoolsNavigationActions
 
     private val schoolActions = object : ISchoolActions {
         override fun onClick(school: School) {
-            showGroupsFragment(school)
+            SchoolIntent.ShowGroups(school).dispatchIntent()
         }
     }
-
-    private val schoolsObserver = Observer<List<School>?> { adapter.updateItems(it) }
-
-    private val isLoadingObserver = Observer<Boolean> { viewBinding.animation.root.isVisible = it }
 
     override fun getComponent(): IModuleComponent = SchoolsComponentHolder.getComponent()
 
@@ -52,31 +49,42 @@ internal class SchoolsFragment : ToolbarFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        schoolViewModel = createViewModel(viewModelFactory)
-        schoolViewModel.updateSchools()
-        schoolViewModel.scheduleMode = arguments?.getScheduleMode() ?: ScheduleMode.SEARCH
+        viewModel = createViewModel(viewModelFactory)
+        SchoolIntent.InitContent(arguments?.getScheduleMode() ?: ScheduleMode.SEARCH).dispatchIntent()
         adapter = SchoolsRecyclerViewAdapter(requireContext(), schoolActions)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_schools, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreatedBeforeRendering(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreatedBeforeRendering(view, savedInstanceState)
         viewBinding.toolbarLayout.toolbar.updateToolbar(R.string.school_fragment_list_of_schools, true)
         viewBinding.recyclerView.adapter = adapter
-        schoolViewModel.schools.observe(viewLifecycleOwner, schoolsObserver)
-        schoolViewModel.isLoading.observe(viewLifecycleOwner, isLoadingObserver)
+    }
+
+    override fun invalidateUi(state: SchoolState) {
+        super.invalidateUi(state)
+        adapter.updateItems(state.schools)
+        viewBinding.animation.root.isVisible = state.isLoading
+    }
+
+    override fun executeSingleAction(action: SchoolAction) {
+        super.executeSingleAction(action)
+        if (action is SchoolAction.ShowGroups) {
+            showGroupsFragment(action.school, action.scheduleMode)
+        }
     }
 
     /**
      * Show groups fragment.
      *
      * @param school School
+     * @param scheduleMode Schedule mode
      */
-    private fun showGroupsFragment(school: School) = mainRouter.navigateTo(
+    private fun showGroupsFragment(school: School, scheduleMode: ScheduleMode) = mainRouter.navigateTo(
         PolytechFragmentScreen {
-            schoolsNavigationActions.getGroupsScreen(schoolViewModel.scheduleMode, school.id, school.abbr)
+            schoolsNavigationActions.getGroupsScreen(scheduleMode, school.id, school.abbr)
         }
     )
 

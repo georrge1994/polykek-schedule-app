@@ -15,6 +15,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.android.core.ui.R
+import com.android.core.ui.mvi.MviAction
+import com.android.core.ui.mvi.SearchIntent
+import com.android.core.ui.mvi.SearchState
 import com.android.core.ui.viewModels.SearchViewModel
 import com.android.shared.code.utils.syntaxSugar.hideSoftwareKeyboard
 import com.android.shared.code.utils.syntaxSugar.isPortraitMode
@@ -23,24 +26,25 @@ import kotlin.reflect.KClass
 /**
  * Toolbar fragment with searchbar.
  *
- * @param T Sub-type of [SearchViewModel]
+ * @param I Sub-type of [SearchIntent]
+ * @param S Sub-type of [SearchState]
+ * @param VM Sub-type of [SearchViewModel]
+ * @property vmKClass [KClass]
  * @constructor Create [SearchToolbarFragment]
- *
- * @param clazz [KClass]
  */
-abstract class SearchToolbarFragment<T : SearchViewModel>(private val clazz: KClass<T>) : ToolbarFragment() {
-    lateinit var viewModel: T
-
+abstract class SearchToolbarFragment<I : SearchIntent, S : SearchState, A : MviAction, VM : SearchViewModel<I, S, A>>(
+    private val vmKClass: KClass<VM>
+) : ToolbarFragment<I, S, A, VM>() {
     open val menuId: Int = R.menu.menu_search
 
     private val queryTextListener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
-            viewModel.updateKeyWordAsync(query)
+            getSearchIntent(query).dispatchIntent()
             return true
         }
 
         override fun onQueryTextChange(newText: String?): Boolean {
-            viewModel.updateKeyWordAsync(newText)
+            getSearchIntent(newText).dispatchIntent()
             return true
         }
     }
@@ -51,12 +55,7 @@ abstract class SearchToolbarFragment<T : SearchViewModel>(private val clazz: KCl
             store = viewModelStore,
             factory = viewModelFactory,
             defaultCreationExtras = defaultViewModelCreationExtras
-        )[clazz.java]
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.asyncSubscribe()
+        )[vmKClass.java]
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -73,10 +72,10 @@ abstract class SearchToolbarFragment<T : SearchViewModel>(private val clazz: KCl
     /**
      * Init search.
      *
-     * @param menu Menu
+     * @param menu [Menu]
      */
     private fun initSearch(menu: Menu) {
-        val searchMenuItem = menu.findItem(R.id.search)
+        val searchMenuItem = menu.findItem(R.id.search) ?: return
         val searchView = searchMenuItem.actionView as SearchView? ?: return
         val searchAutoComplete = searchView.findViewById<SearchView.SearchAutoComplete>(R.id.search_src_text)
         val searchCloseIcon = searchView.findViewById<ImageView>(R.id.search_close_btn)
@@ -86,7 +85,7 @@ abstract class SearchToolbarFragment<T : SearchViewModel>(private val clazz: KCl
         searchCloseIconSettings(searchCloseIcon)
         searchPlateSettings(searchPlate)
 
-        searchViewSettings(searchMenuItem, searchView)
+        searchViewSettings(viewModel.currentState.keyWord, searchMenuItem, searchView)
     }
 
     /**
@@ -123,26 +122,29 @@ abstract class SearchToolbarFragment<T : SearchViewModel>(private val clazz: KCl
     /**
      * Search view settings.
      *
+     * @param keyWord Key word
      * @param searchMenuItem Search menu item
      * @param searchView Search view
      */
-    private fun searchViewSettings(searchMenuItem: MenuItem, searchView: SearchView) {
-        if (viewModel.keyWord.isNotEmpty()) {
-            // Fixing search view after recreating.
+    private fun searchViewSettings(keyWord: String?, searchMenuItem: MenuItem, searchView: SearchView) {
+        if (!keyWord.isNullOrEmpty()) {
+            // Fixing the search view after activity recreation.
             searchView.clearFocus()
             searchView.isIconified = false
             searchMenuItem.expandActionView()
-            searchView.setQuery(viewModel.keyWord, false)
+            searchView.setQuery(keyWord, false)
         }
         (searchView.findViewById(R.id.search_bar) as LinearLayout).layoutTransition = LayoutTransition()
         searchView.maxWidth = Resources.getSystem().displayMetrics.widthPixels
-        searchView.setQuery(viewModel.keyWord, true)
+        searchView.setQuery(keyWord, true)
         searchView.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI
         searchView.setOnQueryTextListener(queryTextListener)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.unSubscribe()
-    }
+    /**
+     * We can't create an instance of [I] carefully, so will be simpler just redirect it to the children.
+     *
+     * @param keyWord Key word
+     */
+    protected abstract fun getSearchIntent(keyWord: String?): I
 }

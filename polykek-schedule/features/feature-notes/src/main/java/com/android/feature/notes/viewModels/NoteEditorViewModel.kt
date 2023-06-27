@@ -1,12 +1,18 @@
 package com.android.feature.notes.viewModels
 
 import android.app.Application
-import androidx.lifecycle.MutableLiveData
 import com.android.core.room.api.notes.INotesRoomRepository
 import com.android.core.room.api.notes.Note
-import com.android.core.ui.viewModels.BaseViewModel
+import com.android.core.ui.mvi.MviViewModel
 import com.android.feature.notes.R
-import java.util.*
+import com.android.feature.notes.mvi.NoteEditorAction
+import com.android.feature.notes.mvi.NoteEditorIntent
+import com.android.feature.notes.mvi.NoteEditorState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
+import java.util.Date
 import javax.inject.Inject
 
 internal const val OWN_NOTE_ALIAS = "_own_note_"
@@ -21,10 +27,19 @@ internal const val OWN_NOTE_ALIAS = "_own_note_"
 internal class NoteEditorViewModel @Inject constructor(
     private val application: Application,
     private val notesRoomRepository: INotesRoomRepository
-) : BaseViewModel() {
+) : MviViewModel<NoteEditorIntent, NoteEditorState, NoteEditorAction>(NoteEditorState.Default) {
+    private val mutex = Mutex()
     private var note: Note? = null
 
-    val noteLiveData = MutableLiveData<Note>()
+    override suspend fun dispatchIntent(intent: NoteEditorIntent) {
+        when (intent) {
+            is NoteEditorIntent.InitContent -> init(intent.noteId, intent.lessonTitle, intent.groupId)
+            is NoteEditorIntent.SaveBody -> saveBody(intent.text)
+            is NoteEditorIntent.SaveHeader -> saveHeader(intent.text)
+            NoteEditorIntent.UpdateNote -> saveNote()
+            NoteEditorIntent.DeleteNote -> deleteNote()
+        }
+    }
 
     /**
      * Init.
@@ -33,7 +48,7 @@ internal class NoteEditorViewModel @Inject constructor(
      * @param lessonTitle Lesson title
      * @param groupId Group id
      */
-    internal fun init(noteId: String?, lessonTitle: String?, groupId: String?) = launchInBackground {
+    private suspend fun init(noteId: String?, lessonTitle: String?, groupId: String?) = withContext(Dispatchers.IO) {
         val checkedNoteId = noteId ?: "${groupId}$OWN_NOTE_ALIAS${Date().time}"
         note = notesRoomRepository.getNoteById(checkedNoteId) ?: Note(
             id = checkedNoteId,
@@ -41,7 +56,7 @@ internal class NoteEditorViewModel @Inject constructor(
             header = "",
             body = ""
         )
-        noteLiveData.postValue(note!!)
+        state.value.copyState(note).emitState()
     }
 
     /**
@@ -49,7 +64,7 @@ internal class NoteEditorViewModel @Inject constructor(
      *
      * @param text Text
      */
-    internal fun saveHeader(text: String) {
+    private suspend fun saveHeader(text: String) = mutex.withLock {
         note?.header = text
     }
 
@@ -58,24 +73,27 @@ internal class NoteEditorViewModel @Inject constructor(
      *
      * @param text Text
      */
-    internal fun saveBody(text: String) {
+    private suspend fun saveBody(text: String) = mutex.withLock {
         note?.body = text
     }
 
     /**
      * Delete note.
      */
-    internal fun deleteNote() = launchInBackground {
+    private suspend fun deleteNote() = withContext(Dispatchers.IO) {
         note?.let { checkedNote ->
             notesRoomRepository.deleteNoteById(checkedNote.id)
         }
-        note = null
+        mutex.withLock {
+            note = null
+        }
+        NoteEditorAction.Exit.emitAction()
     }
 
     /**
-     * Update note.
+     * Save note.
      */
-    internal fun updateNote() = launchInBackground {
+    private suspend fun saveNote() = withContext(Dispatchers.IO) {
         note?.let { checkedNote ->
             if (checkedNote.isBlank()) {
                 notesRoomRepository.deleteNoteById(checkedNote.id)

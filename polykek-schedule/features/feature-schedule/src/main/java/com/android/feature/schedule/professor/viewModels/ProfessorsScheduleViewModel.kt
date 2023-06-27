@@ -1,15 +1,19 @@
 package com.android.feature.schedule.professor.viewModels
 
 import android.app.Application
-import androidx.lifecycle.map
+import com.android.core.ui.mvi.MviViewModel
 import com.android.feature.schedule.R
-import com.android.feature.schedule.base.viewModels.BaseScheduleViewModel
-import com.android.feature.schedule.base.viewModels.ONE_WEEK
+import com.android.feature.schedule.professor.mvi.ProfessorAction
+import com.android.feature.schedule.professor.mvi.ProfessorIntent
+import com.android.feature.schedule.professor.mvi.ProfessorState
 import com.android.feature.schedule.professor.useCases.ProfessorScheduleUseCase
 import com.android.schedule.controller.api.IScheduleDateUseCase
-import com.android.shared.code.utils.syntaxSugar.postValueIfChanged
-import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.util.Calendar
 import javax.inject.Inject
+
+private const val ONE_WEEK = 1
 
 /**
  * Provides logic for "professor" schedule screen (4th tab).
@@ -23,31 +27,56 @@ internal class ProfessorsScheduleViewModel @Inject constructor(
     private val application: Application,
     private val professorScheduleUseCase: ProfessorScheduleUseCase,
     private val scheduleDateUseCase: IScheduleDateUseCase
-) : BaseScheduleViewModel(scheduleDateUseCase) {
+) : MviViewModel<ProfessorIntent, ProfessorState, ProfessorAction>(ProfessorState.Default) {
     private var lastRequestPeriod: String? = null
     private var professorId: Int? = null
 
-    val weekTitle = schedule.map { week ->
-        week?.title ?: application.getString(R.string.schedule_fragment_week)
-    }
-    val lessons = schedule.map { week ->
-        professorScheduleUseCase.getRecyclerItems(week)
-    }
-    val listIsEmpty = lessons.map { week ->
-        week.isEmpty()
+    override suspend fun dispatchIntent(intent: ProfessorIntent) {
+        when (intent) {
+            ProfessorIntent.CheckPeriodAndRefresh -> checkAndRefresh()
+            ProfessorIntent.ShowDataPicker -> openDatePickerForSelectedDate()
+            ProfessorIntent.ShowNextWeek -> showNextWeek()
+            ProfessorIntent.ShowPreviousWeek -> showPreviousWeek()
+            is ProfessorIntent.ShowSpecificDate -> showSpecificDate(intent.year, intent.month, intent.day)
+            is ProfessorIntent.UpdateProfessorId -> updateProfessorSchedule(professorId = intent.professorId)
+        }
     }
 
-    override suspend fun showNextWeek() {
+    /**
+     * App has the one period for both "student" and "professor" schedule screens. When user changes the period on the
+     * student screen, we also have to update schedule on the professor screen.
+     */
+    private suspend fun checkAndRefresh() = withContext(Dispatchers.Default) {
+        if (lastRequestPeriod != scheduleDateUseCase.getPeriod()) {
+            updateProfessorSchedule(professorId)
+        }
+    }
+
+    /**
+     * Show next week for selected professor.
+     */
+    private suspend fun showNextWeek() = withContext(Dispatchers.Default) {
         scheduleDateUseCase.addToSelectedDate(Calendar.WEEK_OF_YEAR, ONE_WEEK)
         updateProfessorSchedule(professorId)
     }
 
-    override suspend fun showPreviousWeek() {
+    /**
+     * Show previous week for selected professor.
+     */
+    private suspend fun showPreviousWeek() = withContext(Dispatchers.Default) {
         scheduleDateUseCase.addToSelectedDate(Calendar.WEEK_OF_YEAR, -ONE_WEEK)
         updateProfessorSchedule(professorId)
     }
 
-    override suspend fun showSpecificDate(year: Int, month: Int, day: Int) {
+    /**
+     * Show specific date.
+     *
+     * @param year Year
+     * @param month Month
+     * @param day Day
+     * @return [Unit]
+     */
+    private suspend fun showSpecificDate(year: Int, month: Int, day: Int) = withContext(Dispatchers.Default) {
         scheduleDateUseCase.setSelectedDay(year, month, day)
         updateProfessorSchedule(professorId)
     }
@@ -57,23 +86,28 @@ internal class ProfessorsScheduleViewModel @Inject constructor(
      *
      * @param professorId Professor id
      */
-    internal fun updateProfessorSchedule(professorId: Int?) = executeWithLoadingAnimation {
-        professorId ?: return@executeWithLoadingAnimation
-        this.professorId = professorId
-        scheduleDateUseCase.getPeriod().let { period ->
-            lastRequestPeriod = period
-            schedule.postValueIfChanged(professorScheduleUseCase.getProfessorSchedule(professorId, period))
-        }
+    private suspend fun updateProfessorSchedule(professorId: Int?) = withContext(Dispatchers.IO) {
+        professorId ?: return@withContext
+        this@ProfessorsScheduleViewModel.professorId = professorId
+        currentState.copyState(isLoading = true).emitState()
+        val period = scheduleDateUseCase.getPeriod()
+        val week = professorScheduleUseCase.getProfessorSchedule(professorId, period)
+        currentState.copyState(
+            weekTitle = week?.title ?: application.getString(R.string.schedule_fragment_week),
+            lessons = professorScheduleUseCase.getRecyclerItems(week),
+            isLoading = false,
+        ).emitState()
+        lastRequestPeriod = period
     }
 
     /**
-     * App has the one period for both "student" and "professor" schedule screens. When user changes the period on the student screen,
-     * we also have to update schedule on the professor screen. It's not necessary vice verde, because student screen has
-     * schedule-controller. This is a hotfix.
+     * Open date picker for selected date.
      */
-    internal fun checkAndRefresh() = launchInBackground {
-        if (lastRequestPeriod != scheduleDateUseCase.getPeriod()) {
-            updateProfessorSchedule(professorId)
-        }
+    private suspend fun openDatePickerForSelectedDate() = with(scheduleDateUseCase.selectedDate) {
+        ProfessorAction.OpenDatePicker(
+            day = get(Calendar.DAY_OF_MONTH),
+            month = get(Calendar.MONTH),
+            year = get(Calendar.YEAR)
+        ).emitAction()
     }
 }

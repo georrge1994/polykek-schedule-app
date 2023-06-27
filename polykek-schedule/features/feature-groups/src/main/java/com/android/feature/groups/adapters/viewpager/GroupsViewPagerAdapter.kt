@@ -3,7 +3,7 @@ package com.android.feature.groups.adapters.viewpager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.android.core.ui.adapters.BaseFragmentStateAdapter
 import com.android.core.ui.models.ScheduleMode
 import com.android.feature.groups.fragments.GroupListFragment
 import com.android.feature.groups.models.GroupType
@@ -23,7 +23,7 @@ internal class GroupsViewPagerAdapter(
     private val scheduleMode: ScheduleMode,
     fragmentManager: FragmentManager,
     viewLifecycle: Lifecycle
-) : FragmentStateAdapter(fragmentManager, viewLifecycle) {
+) : BaseFragmentStateAdapter(fragmentManager, viewLifecycle) {
     override fun getItemCount() = NUM_PAGES
 
     override fun createFragment(position: Int): Fragment = when (position) {
@@ -32,4 +32,6 @@ internal class GroupsViewPagerAdapter(
         2 -> GroupListFragment.newInstance(scheduleMode, GroupType.OTHER)
         else -> GroupListFragment.newInstance(scheduleMode, GroupType.OTHER)
     }
+
+    override fun shouldBeDetached(fragment: Fragment): Boolean = fragment is GroupListFragment
 }

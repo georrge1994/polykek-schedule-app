@@ -12,6 +12,9 @@ import com.android.feature.welcome.R
 import com.android.feature.welcome.adapter.WelcomeViewPagerAdapter
 import com.android.feature.welcome.dagger.WelcomeComponentHolder
 import com.android.feature.welcome.databinding.FragmentWelcomeBinding
+import com.android.feature.welcome.mvi.WelcomeAction
+import com.android.feature.welcome.mvi.WelcomeIntent
+import com.android.feature.welcome.mvi.WelcomeState
 import com.android.feature.welcome.viewModels.WelcomeViewModel
 import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
@@ -22,15 +25,14 @@ import com.google.android.material.tabs.TabLayoutMediator
  *
  * @constructor Create empty constructor for welcome fragment
  */
-internal class WelcomeFragment : VerticalFragment() {
+internal class WelcomeFragment : VerticalFragment<WelcomeIntent, WelcomeState, WelcomeAction, WelcomeViewModel>() {
     private val viewBinding by viewBinding(FragmentWelcomeBinding::bind)
-    private lateinit var welcomeViewModel: WelcomeViewModel
 
-    private val nextBtnListener = View.OnClickListener { showSchools() }
+    private val nextBtnListener = View.OnClickListener { WelcomeIntent.ShowRoleScreen.dispatchIntent() }
 
     private val viewPagerListener = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
-            viewBinding.message.text = getString(welcomeViewModel.getLabelResId(position))
+            WelcomeIntent.ChangeTabPosition(position).dispatchIntent()
         }
     }
 
@@ -40,14 +42,14 @@ internal class WelcomeFragment : VerticalFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        welcomeViewModel = createViewModel(viewModelFactory)
+        viewModel = createViewModel(viewModelFactory)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_welcome, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreatedBeforeRendering(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreatedBeforeRendering(view, savedInstanceState)
         viewBinding.viewPager2.adapter = WelcomeViewPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle)
         viewBinding.viewPager2.registerOnPageChangeCallback(viewPagerListener)
         viewBinding.viewPager2.isSaveEnabled = false
@@ -58,10 +60,22 @@ internal class WelcomeFragment : VerticalFragment() {
         viewBinding.nextBtn.setOnClickListener(nextBtnListener)
     }
 
+    override fun invalidateUi(state: WelcomeState) {
+        super.invalidateUi(state)
+        viewBinding.message.text = getString(state.titleResId)
+    }
+
+    override fun executeSingleAction(action: WelcomeAction) {
+        super.executeSingleAction(action)
+        if (action is WelcomeAction.ShowRoleScreen) {
+            showChooseRole()
+        }
+    }
+
     /**
-     * Show school list.
+     * Show choose role.
      */
-    private fun showSchools() = mainRouter.navigateTo(
+    private fun showChooseRole() = mainRouter.navigateTo(
         PolytechFragmentScreen {
             ChooseRoleFragment()
         }

@@ -9,6 +9,10 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import com.android.core.ui.mvi.MviAction
+import com.android.core.ui.mvi.MviIntent
+import com.android.core.ui.mvi.MviState
+import com.android.core.ui.mvi.MviViewModel
 import com.android.core.ui.view.custom.PolytechToolbar
 
 /**
@@ -16,9 +20,10 @@ import com.android.core.ui.view.custom.PolytechToolbar
  *
  * @constructor Create empty constructor for toolbar fragment
  */
-abstract class ToolbarFragment : NavigationFragment(), MenuProvider {
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+abstract class ToolbarFragment<I : MviIntent, S : MviState, A : MviAction, VM : MviViewModel<I, S, A>> :
+    NavigationFragment<I, S, A, VM>(), MenuProvider {
+    override fun onViewCreatedBeforeRendering(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreatedBeforeRendering(view, savedInstanceState)
         activity?.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
@@ -64,7 +69,8 @@ abstract class ToolbarFragment : NavigationFragment(), MenuProvider {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         activity?.removeMenuProvider(this)
+        (activity as AppCompatActivity).setSupportActionBar(null)
+        super.onDestroyView()
     }
 }

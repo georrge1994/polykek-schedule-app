@@ -1,9 +1,13 @@
 package com.android.feature.feedback.viewModels
 
-import com.android.core.ui.viewModels.BaseSubscriptionViewModel
+import com.android.core.ui.mvi.MviViewModel
 import com.android.feature.feedback.models.FeedbackType
+import com.android.feature.feedback.mvi.FeedbackAction
+import com.android.feature.feedback.mvi.FeedbackIntent
+import com.android.feature.feedback.mvi.FeedbackState
 import com.android.feature.feedback.useCases.FeedbackUseCase
-import com.android.shared.code.utils.liveData.EventLiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -12,8 +16,14 @@ import javax.inject.Inject
  * @property feedbackUseCase Feedback use case provides request to firebase
  * @constructor Create [FeedbackViewModel]
  */
-internal class FeedbackViewModel @Inject constructor(private val feedbackUseCase: FeedbackUseCase) : BaseSubscriptionViewModel() {
-    val resetNavigation = EventLiveData<Boolean>()
+internal class FeedbackViewModel @Inject constructor(
+    private val feedbackUseCase: FeedbackUseCase
+) : MviViewModel<FeedbackIntent, FeedbackState, FeedbackAction>(FeedbackState.Default) {
+    override suspend fun dispatchIntent(intent: FeedbackIntent) {
+        when (intent) {
+            is FeedbackIntent.Send -> tryToSendFeedback(intent.message, intent.type)
+        }
+    }
 
     /**
      * Try to send feedback.
@@ -21,9 +31,12 @@ internal class FeedbackViewModel @Inject constructor(private val feedbackUseCase
      * @param message Message
      * @param type [FeedbackType]
      */
-    internal fun tryToSendFeedback(message: String, type: FeedbackType) = executeWithLoadingAnimation {
+    private suspend fun tryToSendFeedback(message: String, type: FeedbackType) = withContext(Dispatchers.IO) {
+        FeedbackState.Update(isLoading = true).emitState()
         val isSuccessful = feedbackUseCase.tryToSendFeedback(message, type)
-        if (isSuccessful)
-            resetNavigation.postValue(true)
+        FeedbackState.Update(isLoading = false).emitState()
+        if (isSuccessful) {
+            FeedbackAction.Exit.emitAction()
+        }
     }
 }

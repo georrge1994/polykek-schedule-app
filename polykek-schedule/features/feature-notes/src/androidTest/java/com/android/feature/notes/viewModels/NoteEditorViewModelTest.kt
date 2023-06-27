@@ -2,13 +2,15 @@ package com.android.feature.notes.viewModels
 
 import com.android.core.room.api.notes.INotesRoomRepository
 import com.android.core.room.api.notes.Note
+import com.android.feature.notes.mvi.NoteEditorIntent
+import com.android.feature.notes.mvi.NoteEditorState
 import com.android.test.support.androidTest.base.BaseViewModelUnitTest
-import com.android.test.support.androidTest.utils.getOrAwaitValue
 import com.android.test.support.testFixtures.joinWithTimeout
 import com.android.test.support.testFixtures.runBlockingUnit
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
@@ -35,13 +37,20 @@ class NoteEditorViewModelTest : BaseViewModelUnitTest() {
      */
     @Test
     fun complexTest() = runBlockingUnit {
-        noteEditorViewModel.init(null, null, null)
-        noteEditorViewModel.noteLiveData.getOrAwaitValue(noteMock)
+        // Default.
+        noteEditorViewModel.state.value.compareState(null, null, null, null)
+
+        // Init content.
+        val initContentIntent = NoteEditorIntent.InitContent(null, null, null)
+        noteEditorViewModel.dispatchIntentAsync(initContentIntent).joinWithTimeout()
+        noteEditorViewModel.state.value.compareState(noteMock.id, noteMock.name, noteMock.header, noteMock.body)
         coVerify(exactly = 1) { notesRoomRepository.getNoteById(any()) }
-        noteEditorViewModel.saveHeader("newHeader")
-        noteEditorViewModel.saveBody("newBody")
+
+        noteEditorViewModel.dispatchIntentAsync(NoteEditorIntent.SaveHeader("newHeader")).joinWithTimeout()
+        noteEditorViewModel.dispatchIntentAsync(NoteEditorIntent.SaveBody("newBody")).joinWithTimeout()
+
         // Update.
-        noteEditorViewModel.updateNote().joinWithTimeout()
+        noteEditorViewModel.dispatchIntentAsync(NoteEditorIntent.UpdateNote).joinWithTimeout()
         coVerify(exactly = 1) {
             notesRoomRepository.insert(
                 Note(
@@ -53,7 +62,7 @@ class NoteEditorViewModelTest : BaseViewModelUnitTest() {
             )
         }
         // Delete.
-        noteEditorViewModel.deleteNote().joinWithTimeout()
+        noteEditorViewModel.dispatchIntentAsync(NoteEditorIntent.DeleteNote).joinWithTimeout()
         coVerify(exactly = 1) { notesRoomRepository.deleteNoteById(noteMock.id) }
     }
 
@@ -63,10 +72,33 @@ class NoteEditorViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun updateNote_deletingBlank() = runBlockingUnit {
         coEvery { notesRoomRepository.getNoteById(any()) } returns null
-        noteEditorViewModel.init("0", null, null).joinWithTimeout()
+        val initContentIntent = NoteEditorIntent.InitContent("0", null, null)
+        noteEditorViewModel.dispatchIntentAsync(initContentIntent).joinWithTimeout()
+        noteEditorViewModel.state.value.compareState(noteMock.id, "test string", "", "")
         coVerify(exactly = 1) { notesRoomRepository.getNoteById(any()) }
         // Update.
-        noteEditorViewModel.updateNote().joinWithTimeout()
+        noteEditorViewModel.dispatchIntentAsync(NoteEditorIntent.UpdateNote).joinWithTimeout()
         coVerify(exactly = 1) { notesRoomRepository.deleteNoteById("0") }
+    }
+
+    /**
+     * Compare state.
+     *
+     * @receiver [NoteEditorState]
+     * @param id Id
+     * @param name Name
+     * @param header Header
+     * @param body Body
+     */
+    private fun NoteEditorState.compareState(
+        id: String?,
+        name: String?,
+        header: String?,
+        body: String?
+    ) {
+        assertEquals(id, this.note?.id)
+        assertEquals(name, this.note?.name)
+        assertEquals(header, this.note?.header)
+        assertEquals(body, this.note?.body)
     }
 }

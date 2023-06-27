@@ -1,9 +1,11 @@
 package argument.twins.com.polykekschedule.activity.viewModels
 
+import argument.twins.com.polykekschedule.activity.mvi.ActivityAction
+import argument.twins.com.polykekschedule.activity.mvi.ActivityIntent
+import argument.twins.com.polykekschedule.activity.mvi.ActivityState
 import argument.twins.com.polykekschedule.room.savedItems.SavedItemsRoomRepository
 import com.android.core.ui.dagger.BACKGROUND_MESSAGE_BUS
 import com.android.core.ui.viewModels.BaseSubscriptionViewModel
-import com.android.shared.code.utils.liveData.EventLiveData
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -19,24 +21,23 @@ import javax.inject.Named
 class MainActivityViewModel @Inject constructor(
     @Named(BACKGROUND_MESSAGE_BUS) private val backgroundMessageBus: MutableSharedFlow<String>,
     private val savedItemsRoomRepository: SavedItemsRoomRepository
-) : BaseSubscriptionViewModel() {
-    val messageFromBus = EventLiveData<String>()
-
-    val isItemSelected: Boolean
-        get() = savedItemsRoomRepository.isItemSelected
-
+) : BaseSubscriptionViewModel<ActivityIntent, ActivityState, ActivityAction>(ActivityState.Default) {
     override suspend fun subscribe() {
         super.subscribe()
-        subscribeToBackgroundMessageBus()
+        // Subscribe to background message bus.
+        backgroundMessageBus.onEach {
+            ActivityAction.ShowMessage(it).emitAction()
+            // In some cases http request can return exception before subscription initialization. For that case we need
+            // replay = 1, but from another side - all messages have to be shown only once. So, reset cache after using.
+            backgroundMessageBus.resetReplayCache()
+        }.cancelableLaunchInBackground()
     }
 
-    /**
-     * Subscribe to background message bus.
-     */
-    private fun subscribeToBackgroundMessageBus() = backgroundMessageBus.onEach {
-        messageFromBus.postValue(it)
-        // In some cases http request can return exception before subscription initialization. For that case we need
-        // replay = 1, but from another side - all messages have to be shown only once. So, reset cache after using.
-        backgroundMessageBus.resetReplayCache()
-    }.cancelableLaunchInBackground()
+    override suspend fun dispatchIntent(intent: ActivityIntent) {
+        when (intent) {
+            ActivityIntent.ReInitScreen ->
+                ActivityAction.InitScreen(savedItemsRoomRepository.isItemSelected).emitAction()
+            is ActivityIntent.ShowMessage -> ActivityAction.ShowMessage(intent.message).emitAction()
+        }
+    }
 }

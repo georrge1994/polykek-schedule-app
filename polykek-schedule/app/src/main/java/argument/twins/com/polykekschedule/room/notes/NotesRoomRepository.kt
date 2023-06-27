@@ -13,18 +13,19 @@ import javax.inject.Named
  * Notes room repository.
  *
  * @property notesDao Contains entities wih users` notes
- * @property databaseDispatcher Single thread dispatcher to synchronize all requests to room to avoid concurrency exception
+ * @property databaseDispatcher Single thread dispatcher to synchronize all requests to avoid concurrency exception
  * @constructor Create [NotesRoomRepository]
  */
 class NotesRoomRepository @Inject constructor(
     private val notesDao: NotesDao,
     @Named(DATABASE_DISPATCHER) private val databaseDispatcher: CoroutineDispatcher
 ) : INotesRoomRepository {
-    override suspend fun getNotesWhichContains(noteIdBit: String, keyWord: String): List<Note> = withContext(databaseDispatcher) {
-        notesDao.getNotesWhichContains(noteIdBit, keyWord).map { entity ->
-            entity.toNote()
+    override suspend fun getNotesWhichContains(noteIdBit: String, keyWord: String): List<Note> =
+        withContext(databaseDispatcher) {
+            notesDao.getNotesWhichContains(noteIdBit, keyWord).map { entity ->
+                entity.toNote()
+            }
         }
-    }
 
     override suspend fun getNoteIds(): List<String> = withContext(databaseDispatcher) {
         notesDao.getNoteIds()

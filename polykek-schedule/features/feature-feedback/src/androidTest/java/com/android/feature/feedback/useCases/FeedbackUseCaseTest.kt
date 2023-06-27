@@ -49,7 +49,12 @@ class FeedbackUseCaseTest : BaseAndroidUnitTestForSubscriptions() {
     @Test
     fun tryToSendFeedback_fail() = runBlockingUnit {
         coEvery { feedbackApiRepository.pushFeedback(any()) } returns false
-        assertFalse(feedbackUseCase.tryToSendFeedback("the long complex message with length more than 20 symbols", FeedbackType.OTHER))
+        assertFalse(
+            feedbackUseCase.tryToSendFeedback(
+                "the long complex message with length more than 20 symbols",
+                FeedbackType.OTHER
+            )
+        )
         backgroundMessageBus.subscribeAndCompareFirstValue(TEST_STRING).joinWithTimeout()
         coVerify(exactly = 1) {
             feedbackApiRepository.getFirebaseToken()
@@ -63,7 +68,12 @@ class FeedbackUseCaseTest : BaseAndroidUnitTestForSubscriptions() {
     @Test
     fun tryToSendFeedback_success() = runBlockingUnit {
         coEvery { feedbackApiRepository.pushFeedback(any()) } returns true
-        assertTrue(feedbackUseCase.tryToSendFeedback("the long complex message with length more than 20 symbols", FeedbackType.OTHER))
+        assertTrue(
+            feedbackUseCase.tryToSendFeedback(
+                "the long complex message with length more than 20 symbols",
+                FeedbackType.OTHER
+            )
+        )
         backgroundMessageBus.subscribeAndCompareFirstValue(TEST_STRING).joinWithTimeout()
         coVerify(exactly = 1) {
             feedbackApiRepository.getFirebaseToken()

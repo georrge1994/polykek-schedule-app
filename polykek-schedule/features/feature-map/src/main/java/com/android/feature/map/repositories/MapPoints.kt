@@ -6,7 +6,7 @@ import javax.inject.Singleton
 
 /**
  * This class contains points for all Polytech's buildings. It uses the Russian names like a keys, because server has only
- * the Russian variant.
+ * the Russian variant and doesn't provide full list of ids.
  *
  * @constructor Create empty constructor for map points
  */
@@ -58,7 +58,10 @@ internal class MapPoints @Inject constructor() {
             "ФГУП \"ВНИИМ им. Д.И.Менделеева\"" to Point(59.917526, 30.317450),
             "Центр Алмазова" to Point(59.934529, 30.353885),
             "Университетский политехнический колледж" to Point(60.003565, 30.329334),
-            "НИИ ПТ" to Point(60.009125, 30.361026)
+            "НИИ ПТ" to Point(60.009125, 30.361026),
+            "ФГБУ Нмиц им. В.А. Алмазова" to Point(60.010366, 30.296743),
+            "Российско-Германский центр лазерных технологий" to Point(60.000614, 30.373774),
+            "Центр профориентации" to Point(60.009435, 30.371689)
         )
     }
 

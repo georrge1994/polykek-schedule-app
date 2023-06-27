@@ -3,7 +3,7 @@ package com.android.module.injector
 import com.android.module.injector.dependenciesHolders.DynamicProvider
 import com.android.module.injector.moduleMarkers.IModuleApi
 import com.android.module.injector.moduleMarkers.IModuleDependencies
-import java.lang.ref.SoftReference
+import java.lang.ref.WeakReference
 
 /**
  * Component holder provides soft reference to component and logic for creating component.
@@ -18,7 +18,7 @@ class WeakComponentHolderDelegate<T : IModuleApi, R : IModuleDependencies, S : T
     private val componentFactory: (R) -> S
 ) {
     @Volatile
-    private var componentWeakRef: SoftReference<S>? = null
+    private var componentWeakRef: WeakReference<S>? = null
 
     /**
      * Get api for component.
@@ -34,7 +34,7 @@ class WeakComponentHolderDelegate<T : IModuleApi, R : IModuleDependencies, S : T
                 component = componentWeakRef?.get()
                 if (component == null) {
                     component = componentFactory(dependencyProvider.invokeDependencyHolder())
-                    componentWeakRef = SoftReference(component)
+                    componentWeakRef = WeakReference(component)
                 }
             } ?: throw IllegalStateException("dependencyProvider is not initialized for $componentFactory ")
         }

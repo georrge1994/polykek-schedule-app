@@ -12,7 +12,7 @@ import com.yandex.mapkit.geometry.BoundingBox
  * @constructor Create [MapInstructions]
  */
 internal data class MapInstructions(
-    val yandexMapItems: List<YandexMapItem>,
-    var isExistUnknownPlace: Boolean,
-    val boundingBox: BoundingBox
+    val yandexMapItems: List<YandexMapItem> = emptyList(),
+    val isExistUnknownPlace: Boolean = false,
+    val boundingBox: BoundingBox = BoundingBox()
 )

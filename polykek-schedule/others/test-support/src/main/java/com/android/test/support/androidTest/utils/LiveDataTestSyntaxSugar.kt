@@ -23,7 +23,7 @@ import java.util.concurrent.TimeoutException
  * @param time Time in milliseconds
  * @return [T]
  */
-fun <T> LiveData<T>.getOrAwaitValue(expectedResult: T, time: Long = 2 * ONE_SECOND): Boolean {
+fun <T> LiveData<T>.getOrAwaitValueScoped(expectedResult: T, time: Long = 2 * ONE_SECOND): Boolean {
     val latch = CountDownLatch(1)
     var result: T? = null
     val observer = Observer<T> { o ->
@@ -52,8 +52,8 @@ fun <T> LiveData<T>.getOrAwaitValue(expectedResult: T, time: Long = 2 * ONE_SECO
  * @return [T]
  */
 @Throws(TimeoutException::class)
-suspend fun <T> LiveData<T>.getOrAwaitValue(time: Long = 2 * ONE_SECOND): T =
-    getOrAwaitValues(1, null, time).first()
+suspend fun <T> LiveData<T>.getOrAwaitValueScoped(time: Long = 2 * ONE_SECOND): T =
+    getOrAwaitValuesScoped(1, null, time).first()
 
 /**
  * Get or await values.
@@ -66,7 +66,7 @@ suspend fun <T> LiveData<T>.getOrAwaitValue(time: Long = 2 * ONE_SECOND): T =
  * @return [T]
  */
 @Throws(TimeoutException::class)
-suspend fun <T> LiveData<T>.getOrAwaitValues(
+suspend fun <T> LiveData<T>.getOrAwaitValuesScoped(
     count: Int,
     action: (suspend () -> Unit)? = null,
     time: Long = 2 * ONE_SECOND
@@ -101,7 +101,7 @@ suspend fun <T> LiveData<T>.getOrAwaitValues(
  * @return List of caught items
  */
 @Throws(TimeoutException::class)
-suspend fun <T> LiveData<T>.collectPost(
+suspend fun <T> LiveData<T>.collectPostScoped(
     count: Int = 0,
     timeout: Long = 2 * ONE_SECOND,
     action: suspend () -> Unit

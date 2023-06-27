@@ -1,17 +1,20 @@
 package com.android.feature.main.screen.menu.viewModels
 
 import android.app.Application
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.ColorUtils
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
+import android.view.View
+import androidx.annotation.DrawableRes
 import com.android.core.room.api.savedItems.ISavedItemsRoomRepository
-import com.android.core.ui.viewModels.BaseViewModel
+import com.android.core.ui.viewModels.BaseSubscriptionViewModel
 import com.android.feature.main.screen.R
+import com.android.feature.main.screen.menu.mvi.MenuAction
+import com.android.feature.main.screen.menu.mvi.MenuIntent
+import com.android.feature.main.screen.menu.mvi.MenuState
 import com.android.shared.code.utils.general.DateFactory
 import com.android.shared.code.utils.general.toCalendar
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
+import java.util.Calendar
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -22,63 +25,69 @@ private val VICTORY_PERIOD = 6..12
  *
  * @property application Application object to get context
  * @property dateFactory Provides today day
+ * @property savedItemsRoomRepository Stores selected groups and professors (selected items)
  * @constructor Create [BottomAnimationViewModel]
- *
- * @param savedItemsRoomRepository Stores selected groups and professors (selected items)
  */
 internal class BottomAnimationViewModel @Inject constructor(
     private val application: Application,
     private val dateFactory: DateFactory,
-    savedItemsRoomRepository: ISavedItemsRoomRepository
-) : BaseViewModel() {
-    private val green = ContextCompat.getColor(application, R.color.colorPrimary)
-    private val grey500 = ContextCompat.getColor(application, R.color.grey_500)
-    private val white = ContextCompat.getColor(application, R.color.white)
+    private val savedItemsRoomRepository: ISavedItemsRoomRepository
+) : BaseSubscriptionViewModel<MenuIntent, MenuState, MenuAction>(MenuState.Default) {
+    @DrawableRes
+    private val moreBtnClosedStateChevron: Int = getChevron()
 
-    val title = savedItemsRoomRepository.selectedItemLive2.map { it?.name ?: application.getString(R.string.schedule_choose_group) }
+    override suspend fun subscribe() {
+        super.subscribe()
+        // Subscribe to selected items.
+        savedItemsRoomRepository.getSelectedItemFlow().onEach { savedItem ->
+            val newTitle = savedItem?.name ?: application.getString(R.string.schedule_choose_group)
+            currentState.copyState(title = newTitle).emitState()
+        }.cancelableLaunchInBackground()
+    }
 
-    // Offset + alpha.
-    val slideTopPosition = MutableLiveData<Pair<Float, Float>>()
-    val slideMiddlePosition = MutableLiveData<Pair<Float, Float>>()
-    val slideBottomPosition = MutableLiveData<Pair<Float, Float>>()
-
-    // Colors.
-    val groupToolbarColor = MutableLiveData<Int>()
-    val groupNameColor = MutableLiveData<Int>()
-
-    val bottomSheetState = MutableLiveData<Int>()
-
-    /**
-     * Update bottom animation.
-     *
-     * @param state State
-     */
-    internal fun updateBottomAnimation(state: Int) =
-        updateBottomAnimation(state == BottomSheetBehavior.STATE_COLLAPSED)
-
-    /**
-     * Update bottom animation.
-     *
-     * @param isOpen Is open
-     */
-    internal fun updateBottomAnimation(isOpen: Boolean) {
-        bottomSheetState.postValue(getState(isOpen))
-        updateUiByOffset(0f)
+    override suspend fun dispatchIntent(intent: MenuIntent) {
+        when (intent) {
+            is MenuIntent.ChangeStateOfBottomBar -> updateBottomAnimation(intent.newState)
+            is MenuIntent.UpdateUiByOffset -> updateUiByOffset(intent.offset)
+        }
     }
 
     /**
-     * Update ui by offset.
+     * Update bottom animation.
+     *
+     * @param newState Bar state
+     */
+    private suspend fun updateBottomAnimation(newState: Int) = withContext(Dispatchers.Default) {
+        MenuAction.ChangeMenuState(newState).emitAction()
+    }
+
+    /**
+     * Update UI by offset.
      *
      * @param slideOffset Slide offset
      */
-    internal fun updateUiByOffset(slideOffset: Float) {
-        groupToolbarColor.postValue(ColorUtils.blendARGB(white, green, abs(slideOffset)))
-        groupNameColor.postValue(ColorUtils.blendARGB(grey500, white, abs(slideOffset)))
+    private suspend fun updateUiByOffset(slideOffset: Float) = withContext(Dispatchers.Default) {
         when {
-            slideOffset < 0.33f -> slideTopPosition.postValue(Pair(slideOffset, 1f - 3f * slideOffset))
-            slideOffset > 0.66f -> slideMiddlePosition.postValue(Pair(slideOffset, 3f * (slideOffset - 0.66f)))
-            else -> slideBottomPosition.postValue(Pair(slideOffset, 1f))
-        }
+            slideOffset < 0.33f -> currentState.copyState(
+                colorMixCoefficient = abs(slideOffset),
+                moreBtnAlpha = 1f - 3f * slideOffset,
+                moreBtnChevron = moreBtnClosedStateChevron,
+                bottomNavigationViewShift = slideOffset,
+                bottomNavigationViewVisibility = View.VISIBLE,
+                bottomNavigationViewAlpha = 1f - 3f * slideOffset
+            )
+            slideOffset > 0.66f -> currentState.copyState(
+                colorMixCoefficient = abs(slideOffset),
+                moreBtnAlpha = 3f * (slideOffset - 0.66f),
+                moreBtnChevron = R.drawable.ic_keyboard_arrow_down_white_24dp,
+            )
+            else -> currentState.copyState(
+                moreBtnAlpha = 0f,
+                colorMixCoefficient = abs(slideOffset),
+                bottomNavigationViewVisibility = View.INVISIBLE,
+                bottomNavigationViewAlpha = 0f
+            )
+        }.emitState()
     }
 
     /**
@@ -86,21 +95,10 @@ internal class BottomAnimationViewModel @Inject constructor(
      *
      * @return Drawable
      */
-    internal fun getChevron(): Int = with(dateFactory.getToday().toCalendar()) {
+    private fun getChevron(): Int = with(dateFactory.getToday().toCalendar()) {
         if (get(Calendar.MONTH) == Calendar.MAY && get(Calendar.DATE) in VICTORY_PERIOD)
             R.drawable.ribbon_of_saint_george
         else
             R.drawable.ic_more_vertical_grey_24dp
     }
-
-    /**
-     * Get state.
-     *
-     * @param isOpen Is open
-     * @return [BottomSheetBehavior]
-     */
-    private fun getState(isOpen: Boolean) = if (isOpen)
-        BottomSheetBehavior.STATE_EXPANDED
-    else
-        BottomSheetBehavior.STATE_COLLAPSED
 }

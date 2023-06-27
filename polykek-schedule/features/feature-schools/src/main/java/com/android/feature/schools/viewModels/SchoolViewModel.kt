@@ -1,10 +1,13 @@
 package com.android.feature.schools.viewModels
 
-import androidx.lifecycle.MutableLiveData
 import com.android.core.ui.models.ScheduleMode
-import com.android.core.ui.viewModels.BaseSubscriptionViewModel
-import com.android.feature.schools.models.School
+import com.android.core.ui.mvi.MviViewModel
+import com.android.feature.schools.mvi.SchoolAction
+import com.android.feature.schools.mvi.SchoolIntent
+import com.android.feature.schools.mvi.SchoolState
 import com.android.feature.schools.useCases.SchoolUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -13,16 +16,23 @@ import javax.inject.Inject
  * @property schoolUseCase This use case is an interactor before school repository
  * @constructor Create [SchoolViewModel]
  */
-internal class SchoolViewModel @Inject constructor(private val schoolUseCase: SchoolUseCase) : BaseSubscriptionViewModel() {
-    val schools = MutableLiveData<List<School>?>()
-    var scheduleMode = ScheduleMode.SEARCH
+internal class SchoolViewModel @Inject constructor(
+    private val schoolUseCase: SchoolUseCase
+) : MviViewModel<SchoolIntent, SchoolState, SchoolAction>(SchoolState.Default) {
+    override suspend fun dispatchIntent(intent: SchoolIntent) {
+        when (intent) {
+            is SchoolIntent.InitContent -> updateSchools(intent.scheduleMode)
+            is SchoolIntent.ShowGroups -> SchoolAction.ShowGroups(intent.school, currentState.scheduleMode).emitAction()
+        }
+    }
 
     /**
      * Update schools.
+     *
+     * @param scheduleMode Schedule mode
      */
-    internal fun updateSchools() = executeWithLoadingAnimation {
-        schoolUseCase.getSchools().apply {
-            schools.postValue(this)
-        }
+    private suspend fun updateSchools(scheduleMode: ScheduleMode) = withContext(Dispatchers.IO) {
+        currentState.copyState(scheduleMode = scheduleMode, isLoading = true).emitState()
+        currentState.copyState(schools = schoolUseCase.getSchools(), isLoading = false).emitState()
     }
 }

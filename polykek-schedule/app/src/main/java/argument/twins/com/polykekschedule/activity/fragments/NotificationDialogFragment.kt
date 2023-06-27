@@ -6,13 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import argument.twins.com.polykekschedule.App
 import argument.twins.com.polykekschedule.R
-import argument.twins.com.polykekschedule.activity.viewModels.NotificationViewModel
+import argument.twins.com.polykekschedule.activity.mvi.ActivityIntent
+import argument.twins.com.polykekschedule.activity.viewModels.MainActivityViewModel
 import argument.twins.com.polykekschedule.databinding.FragmentNotificationDialogBinding
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.core.ui.fragments.BaseDialogFragment
@@ -27,14 +28,16 @@ import com.android.shared.code.utils.syntaxSugar.createViewModel
 class NotificationDialogFragment : BaseDialogFragment() {
     private val viewBinding by viewBinding(FragmentNotificationDialogBinding::bind)
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
-    private lateinit var notificationViewModel: NotificationViewModel
+    private lateinit var mainActivityViewModel: MainActivityViewModel
 
     private val yesClickListener = View.OnClickListener {
         requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
     private val noClickListener = View.OnClickListener {
-        notificationViewModel.pushMessage(R.string.fcm_notification_spirit_leaves)
+        mainActivityViewModel.dispatchIntentAsync(
+            ActivityIntent.ShowMessage(getString(R.string.fcm_notification_spirit_leaves))
+        )
         dismissAllowingStateLoss()
     }
 
@@ -43,8 +46,8 @@ class NotificationDialogFragment : BaseDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.DialogThemeTransparent)
-        requestPermissionLauncher = getCallBackAndPostRequest(requireActivity())
-        notificationViewModel = createViewModel(viewModelFactory)
+        requestPermissionLauncher = getCallBackAndPostRequest()
+        mainActivityViewModel = (activity as AppCompatActivity).createViewModel(viewModelFactory)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -59,18 +62,17 @@ class NotificationDialogFragment : BaseDialogFragment() {
 
     /**
      * Init call back and post request.
-     *
-     * @param activity Activity
      */
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun getCallBackAndPostRequest(
-        activity: ComponentActivity
-    ) = activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            notificationViewModel.pushMessage(R.string.fcm_notification_spirit_time_to_time)
-        } else {
-            notificationViewModel.pushMessage(R.string.fcm_notification_spirit_leaves)
+    private fun getCallBackAndPostRequest() =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                getString(R.string.fcm_notification_spirit_time_to_time)
+            } else {
+                getString(R.string.fcm_notification_spirit_leaves)
+            }.let { message ->
+                mainActivityViewModel.dispatchIntentAsync(ActivityIntent.ShowMessage(message))
+            }
+            dismissAllowingStateLoss()
         }
-        dismissAllowingStateLoss()
-    }
 }

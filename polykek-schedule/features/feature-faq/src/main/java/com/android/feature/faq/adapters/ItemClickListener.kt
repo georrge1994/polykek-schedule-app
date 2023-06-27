@@ -8,6 +8,7 @@ interface ItemClickListener {
      * On click.
      *
      * @param position Item position
+     * @param isOpen Is open state
      */
-    fun onClick(position: Int)
+    fun onClick(position: Int, isOpen: Boolean)
 }

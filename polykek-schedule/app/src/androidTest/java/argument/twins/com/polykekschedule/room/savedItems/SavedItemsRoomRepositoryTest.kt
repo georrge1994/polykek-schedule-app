@@ -4,7 +4,7 @@ import argument.twins.com.polykekschedule.room.AppRoomDatabase
 import argument.twins.com.polykekschedule.room.dataGenerator.SavedItemDataGenerator
 import com.android.shared.code.utils.general.SharedPreferenceUtils
 import com.android.test.support.androidTest.base.BaseRoomRepositoryTest
-import com.android.test.support.androidTest.utils.getOrAwaitValue
+import com.android.test.support.androidTest.utils.getOrAwaitValueScoped
 import com.android.test.support.testFixtures.runBlockingUnit
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -54,15 +54,6 @@ class SavedItemsRoomRepositoryTest : BaseRoomRepositoryTest<AppRoomDatabase>(App
                 savedItemDataGenerator.professorSavedItem2
             )
         )
-    }
-
-    /**
-     * Get selected item live.
-     */
-    @Test
-    fun getSelectedItemLive() = runBlockingUnit {
-        insertTestDataToDb()
-        savedItemsRoomRepository.selectedItemLive2.getOrAwaitValue(savedItemDataGenerator.savedGroupItem1)
     }
 
     /**

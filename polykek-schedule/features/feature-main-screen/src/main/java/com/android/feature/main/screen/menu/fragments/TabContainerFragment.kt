@@ -1,6 +1,5 @@
 package com.android.feature.main.screen.menu.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -58,23 +57,7 @@ internal class TabContainerFragment : BaseFragment(), IRouterProvider {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (childFragmentManager.findFragmentById(R.id.ftcContainer) == null) {
-            when (arguments?.getInt(TAB_CONTAINER_ID)) {
-                R.id.schedule_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
-                    mainScreenNavigationActions.getScheduleFragment()
-                }
-                R.id.notes_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
-                    mainScreenNavigationActions.getNotesFragment()
-                }
-                R.id.map_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
-                    mainScreenNavigationActions.getMapFragment()
-                }
-                R.id.professors_navigation -> PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
-                    mainScreenNavigationActions.getProfessorFragment()
-                }
-                else -> null
-            }?.apply {
-                router.replaceScreen(this)
-            }
+            showTabInContainer()
         }
     }
 
@@ -94,6 +77,31 @@ internal class TabContainerFragment : BaseFragment(), IRouterProvider {
     override fun onPause() {
         cicerone.getNavigatorHolder().removeNavigator()
         super.onPause()
+    }
+
+    /**
+     * Show tab.
+     */
+    private fun showTabInContainer() = when (arguments?.getInt(TAB_CONTAINER_ID)) {
+        R.id.schedule_navigation ->
+            PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
+                mainScreenNavigationActions.getScheduleFragment()
+            }
+        R.id.notes_navigation ->
+            PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
+                mainScreenNavigationActions.getNotesFragment()
+            }
+        R.id.map_navigation ->
+            PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
+                mainScreenNavigationActions.getMapFragment()
+            }
+        R.id.professors_navigation ->
+            PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
+                mainScreenNavigationActions.getProfessorFragment()
+            }
+        else -> null
+    }?.apply {
+        router.replaceScreen(this)
     }
 
     companion object {

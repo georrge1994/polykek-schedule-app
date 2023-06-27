@@ -1,6 +1,10 @@
 package com.android.test.support.androidTest.base
 
 import com.android.test.support.androidTest.BaseAndroidUnitTest
+import com.android.test.support.androidTest.utils.collectPostScoped
+import com.android.test.support.androidTest.utils.getOrAwaitValueScoped
+import com.android.test.support.androidTest.utils.getOrAwaitValuesScoped
+import com.android.test.support.testFixtures.ONE_SECOND
 import com.android.test.support.testFixtures.subscribeAndCompareFirstValueWithScope
 import com.android.test.support.testFixtures.subscribeAndCompareSecondValue
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +17,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import java.util.concurrent.TimeoutException
 
 /**
  * Base class for testing subscriptions.
@@ -97,4 +102,62 @@ abstract class BaseAndroidUnitTestForSubscriptions : BaseAndroidUnitTest() {
         ).also {
             this.emit(value)
         }
+
+    /**
+     * Get or await value.
+     *
+     * @receiver [Flow]
+     * @param T Type
+     * @param time Time in milliseconds
+     * @return [T]
+     */
+    protected fun <T> Flow<T>.getOrAwaitValue(
+        expectedResult: T,
+        time: Long = 2 * ONE_SECOND
+    ): Boolean = this.getOrAwaitValueScoped(expectedResult, testScope, time)
+
+    /**
+     * Get or await value.
+     *
+     * @receiver [Flow]
+     * @param T Type
+     * @param time Time in milliseconds
+     * @return [T]
+     */
+    @Throws(TimeoutException::class)
+    suspend fun <T> Flow<T>.getOrAwaitValue(time: Long = 2 * ONE_SECOND): T =
+        this@getOrAwaitValue.getOrAwaitValueScoped(testScope, time)
+
+    /**
+     * Get or await values.
+     *
+     * @receiver [Flow]
+     * @param T Type
+     * @param count Count of values
+     * @param action Action after observe
+     * @param time Time in milliseconds
+     * @return [T]
+     */
+    suspend fun <T> Flow<T>.getOrAwaitValues(
+        count: Int,
+        action: (suspend () -> Unit)? = null,
+        time: Long = 2 * ONE_SECOND
+    ): List<T> = getOrAwaitValuesScoped(count, action, testScope, time)
+
+    /**
+     * Collect post with expecting count of items.
+     *
+     * @receiver [Flow]
+     * @param T T
+     * @param count Count of expected values
+     * @param timeout Timeout before throw exception
+     * @param action Action
+     * @return List of caught items
+     */
+    @Throws(TimeoutException::class)
+    suspend fun <T> Flow<T>.collectPost(
+        count: Int = 0,
+        timeout: Long = 2 * ONE_SECOND,
+        action: suspend () -> Unit
+    ): List<T?> = collectPostScoped(count, timeout, testScope, action)
 }

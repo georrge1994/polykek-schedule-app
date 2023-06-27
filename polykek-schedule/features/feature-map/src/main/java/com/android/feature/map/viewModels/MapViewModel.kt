@@ -8,16 +8,19 @@ import com.android.core.ui.dagger.BACKGROUND_MESSAGE_BUS
 import com.android.core.ui.viewModels.BaseSubscriptionViewModel
 import com.android.feature.map.R
 import com.android.feature.map.models.Content
-import com.android.feature.map.models.DayControls
+import com.android.feature.map.models.MapInstructions
 import com.android.feature.map.models.YandexMapItem
+import com.android.feature.map.mvi.MapAction
+import com.android.feature.map.mvi.MapIntent
+import com.android.feature.map.mvi.MapState
 import com.android.feature.map.useCases.DayControlsUseCase
 import com.android.feature.map.useCases.MapUseCase
 import com.android.schedule.controller.api.IScheduleController
-import com.android.shared.code.utils.liveData.EventLiveData
-import com.yandex.mapkit.geometry.BoundingBox
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -40,17 +43,29 @@ internal class MapViewModel @Inject constructor(
     private val dayControlsUseCase: DayControlsUseCase,
     @Named(BACKGROUND_MESSAGE_BUS) private val backgroundMessageBus: MutableSharedFlow<String>,
     private val scheduleController: IScheduleController
-) : BaseSubscriptionViewModel() {
-    val selectedMapItem = EventLiveData<Content?>()
-    val boundingBox = EventLiveData<BoundingBox>()
-    val yandexMapItems = EventLiveData<List<YandexMapItem>>()
-    val dayControls = EventLiveData<DayControls>()
-
+) : BaseSubscriptionViewModel<MapIntent, MapState, MapAction>(MapState.Default) {
     private var lastWeek: Week? = null
+    private var mapInstructions: MapInstructions = MapInstructions()
+
+    // Focus logic is specific -> actions should be executed outside of the main life circle.
+    override val action = MutableSharedFlow<MapAction>(replay = 1)
 
     override suspend fun subscribe() {
         super.subscribe()
         subscribeToWeekFlow()
+    }
+
+    override suspend fun dispatchIntent(intent: MapIntent) {
+        when (intent) {
+            MapIntent.MakeDefaultFocus -> showDefaultFocus()
+            MapIntent.ShowNextDay -> showNextDay()
+            MapIntent.ShowPreviousDay -> showPreviousDay()
+            MapIntent.ShowBuildingScreen -> MapAction.ShowBuildingScreen.emitAction()
+            MapIntent.DeselectMapObject -> deselectMapObject()
+            is MapIntent.SaveCameraPosition -> MapAction.UpdateCameraPosition(intent.cameraPosition).emitAction()
+            is MapIntent.SelectMapObject -> selectMapObject(intent.userData)
+            is MapIntent.BuildingSearchResult -> updateBuildingSearchMapItem(intent.building)
+        }
     }
 
     /**
@@ -58,22 +73,43 @@ internal class MapViewModel @Inject constructor(
      */
     private fun subscribeToWeekFlow() = scheduleController.weekFlow
         .onEach { week ->
-            this.lastWeek = week
-            week?.updateMap()
+            if (week != lastWeek) {
+                this.lastWeek = week
+                week?.updateMap()
+            }
         }.cancelableLaunchInBackground()
 
     /**
-     * Deselect map object. This null-checking help to avoid the multi deselecting and restart animation.
+     * Show default focus.
      */
-    internal fun deselectMapObject() = selectedMapItem.value?.let {
-        selectedMapItem.postValue(null)
+    private suspend fun showDefaultFocus() = withContext(Dispatchers.Default) {
+        currentState.copyState(content = null).emitState()
+        MapAction.DefaultFocus(mapInstructions.boundingBox).emitAction()
     }
 
     /**
-     * Focus map by bounding box.
+     * Show the next day.
      */
-    internal fun refreshMapFocusByBoundingBox() = boundingBox.value?.apply {
-        boundingBox.postValue(this)
+    private suspend fun showNextDay() = withContext(Dispatchers.Default) {
+        scheduleController.indexOfDay += ONE_DAY
+        lastWeek?.updateMap()
+    }
+
+    /**
+     * Show the previous day.
+     */
+    private suspend fun showPreviousDay() = withContext(Dispatchers.Default) {
+        scheduleController.indexOfDay -= ONE_DAY
+        lastWeek?.updateMap()
+    }
+
+    /**
+     * Deselect map object.
+     */
+    private suspend fun deselectMapObject() = withContext(Dispatchers.Default) {
+        if (currentState.content != null) {
+            currentState.copyState(content = null).emitState()
+        }
     }
 
     /**
@@ -81,64 +117,61 @@ internal class MapViewModel @Inject constructor(
      *
      * @param userData User data
      */
-    internal fun selectMapObject(userData: Any?) = launchInBackground {
+    private suspend fun selectMapObject(userData: Any?) = withContext(Dispatchers.Default) {
         with(userData) {
             if (this is Lesson) {
-                selectedMapItem.postValue(
-                    Content(
+                currentState.copyState(
+                    content = Content(
                         title = title,
                         opposingTitle = time,
                         subTitle1 = typeLesson,
                         subTitle2 = teacherNames,
                         subTitle3 = address
                     )
-                )
+                ).emitState()
             } else if (this is Building) {
-                delay(DELAY_BEFORE_ANIMATION)
-                selectedMapItem.postValue(Content(name, address))
+                currentState.copyState(content = Content(name, address)).emitState()
             }
         }
     }
 
     /**
-     * Show the next day.
-     */
-    internal fun showNextDay() = launchInBackground {
-        scheduleController.indexOfDay += ONE_DAY
-        lastWeek?.updateMap()
-        deselectMapObject()
-    }
-
-    /**
-     * Show the previous day.
-     */
-    internal fun showPreviousDay() = launchInBackground {
-        scheduleController.indexOfDay -= ONE_DAY
-        lastWeek?.updateMap()
-        deselectMapObject()
-    }
-
-    /**
-     * Get yandex map item.
+     * Update an additional yandex map item.
      *
      * @param building Building
      * @return [YandexMapItem] or null
      */
-    internal fun getYandexMapItem(building: Building?) = mapUseCase.getYandexMapItem(building)
+    private suspend fun updateBuildingSearchMapItem(building: Building?) = withContext(Dispatchers.Default) {
+        building ?: return@withContext
+        mapUseCase.getYandexMapItem(building)?.let { mapItem ->
+            // Emit focus action immediately to avoid double focusing.
+            MapAction.ShowBuildingSearchOnTheMap(mapItem.point).emitAction()
+            // Show content after small delay - give pop-back animation time to finish before the new animation.
+            delay(DELAY_BEFORE_ANIMATION)
+            currentState.copyState(
+                content = Content(building.name, building.address),
+                searchResultMapItem = mapItem
+            ).emitState()
+        }
+    }
 
     /**
      * Update map.
      *
      * @receiver [Week]
      */
-    private suspend fun Week.updateMap() {
-        val mapInstructions = mapUseCase.getMapInstruction(scheduleController.indexOfDay, this)
+    private suspend fun Week.updateMap() = withContext(Dispatchers.Default) {
+        mapInstructions = mapUseCase.getMapInstruction(scheduleController.indexOfDay, this@updateMap)
         if (mapInstructions.isExistUnknownPlace) {
             backgroundMessageBus.emit(application.getString(R.string.map_fragment_one_or_more_addresses_are_not_known))
-            mapInstructions.isExistUnknownPlace = false
         }
-        yandexMapItems.postValue(mapInstructions.yandexMapItems)
-        boundingBox.postValue(mapInstructions.boundingBox)
-        dayControls.postValue(dayControlsUseCase.getDayControls(scheduleController.indexOfDay))
+        currentState.copyState(
+            content = null,
+            searchResultMapItem = null,
+            yandexMapItems = mapInstructions.yandexMapItems,
+            dayControls = dayControlsUseCase.getDayControls(scheduleController.indexOfDay)
+        ).emitState()
+        // Make default focus.
+        MapAction.DefaultFocus(mapInstructions.boundingBox).emitAction()
     }
 }

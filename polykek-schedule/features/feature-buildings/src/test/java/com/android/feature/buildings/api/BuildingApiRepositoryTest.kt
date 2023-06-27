@@ -33,7 +33,7 @@ class BuildingApiRepositoryTest : BaseApiRepositoryTest() {
         buildingApiRepository.getBuildings().apply {
             assert(this is Resource.Success)
             assert(data?.buildingResponses?.isNotEmpty()== true)
-            this.data?.buildingResponses?.first()?.apply {
+            this.data?.buildingResponses?.get(9)?.apply {
                 assertEquals(id, 21)
                 assertEquals(name, "6-й учебный корпус")
                 assertEquals(abbr, "6 к.")

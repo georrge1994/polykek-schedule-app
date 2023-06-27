@@ -1,11 +1,15 @@
 package com.android.feature.groups.viewModels
 
-import androidx.lifecycle.MutableLiveData
 import com.android.core.room.api.savedItems.ISavedItemsRoomRepository
 import com.android.core.ui.viewModels.SearchViewModel
 import com.android.feature.groups.models.Group
 import com.android.feature.groups.models.GroupType
+import com.android.feature.groups.mvi.GroupsAction
+import com.android.feature.groups.mvi.GroupsIntent
+import com.android.feature.groups.mvi.GroupsState
 import com.android.feature.groups.useCases.GroupUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -18,47 +22,60 @@ import javax.inject.Inject
 internal class GroupViewModel @Inject constructor(
     private val groupUseCase: GroupUseCase,
     private val savedItemsRoomRepository: ISavedItemsRoomRepository
-) : SearchViewModel() {
-    private val bachelorGroups = MutableLiveData<List<Any>?>()
-    private val masterGroups = MutableLiveData<List<Any>?>()
-    private val otherGroups = MutableLiveData<List<Any>?>()
-
-    override suspend fun keyWordWasChanged(keyWord: String?) {
-        super.keyWordWasChanged(keyWord)
-        updateGroups()
+) : SearchViewModel<GroupsIntent, GroupsState, GroupsAction>(GroupsState.Default) {
+    override suspend fun dispatchIntent(intent: GroupsIntent) {
+        when (intent) {
+            is GroupsIntent.LoadContent -> loadGroups(intent.schoolId, keyWordFromLastState)
+            is GroupsIntent.KeyWordChanged -> updateGroups(intent.keyWord)
+            is GroupsIntent.GroupSelected -> selectAndSaveItem(intent.group, intent.tabType)
+            is GroupsIntent.ChangeTab -> changeTab(intent.tabPosition)
+        }
     }
 
     /**
-     * Get groups live data by group type.
+     * Load groups.
      *
-     * @param tabType Tab type
-     * @return Specified [MutableLiveData]
+     * @param schoolId School id
+     * @param keyWord Key word
      */
-    internal fun getGroupsLiveDataByGroupType(tabType: GroupType?) = when (tabType) {
-        GroupType.BACHELOR -> bachelorGroups
-        GroupType.MASTER -> masterGroups
-        else -> otherGroups
+    private suspend fun loadGroups(schoolId: String?, keyWord: String?) = withContext(Dispatchers.IO) {
+        currentState.copyState(keyWord = keyWord, isLoading = true).emitState()
+        currentState.copyState(
+            items = groupUseCase.getGroupsByTypes(schoolId, keyWord ?: ""),
+            isLoading = false
+        ).emitState()
     }
 
     /**
      * Update groups.
      *
-     * @param schoolId School id
+     * @param keyWord Key word
      */
-    internal fun updateGroups(schoolId: String? = null) = executeWithLoadingAnimation {
-        groupUseCase.getGroupsByTypes(schoolId, keyWord)?.let {
-            bachelorGroups.postValue(it[GroupType.BACHELOR])
-            masterGroups.postValue(it[GroupType.MASTER])
-            otherGroups.postValue(it[GroupType.OTHER])
-        }
+    private suspend fun updateGroups(keyWord: String?) = withContext(Dispatchers.Default) {
+        currentState.copyState(
+            keyWord = keyWord,
+            items = groupUseCase.getGroupsByTypes(keyWord ?: "")
+        ).emitState()
     }
 
     /**
      * Save item.
      *
      * @param group Group
+     * @param tabType Tab type
      */
-    internal fun selectAndSaveItem(group: Group) = launchInBackground {
+    private suspend fun selectAndSaveItem(group: Group, tabType: GroupType) = withContext(Dispatchers.IO) {
         savedItemsRoomRepository.saveItemAndSelectIt(group.toSavedItem())
+        GroupsAction.SelectGroup(tabType).emitAction()
+    }
+
+    /**
+     * Change tab.
+     *
+     * @param tabPosition Tab position
+     * @return [GroupsState]
+     */
+    private suspend fun changeTab(tabPosition: Int) = withContext(Dispatchers.Default) {
+        currentState.copyState(tabPosition = tabPosition).emitState()
     }
 }

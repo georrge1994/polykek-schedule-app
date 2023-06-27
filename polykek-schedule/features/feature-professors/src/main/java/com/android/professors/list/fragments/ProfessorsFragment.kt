@@ -1,9 +1,13 @@
 package com.android.professors.list.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.common.models.professors.Professor
 import com.android.core.ui.fragments.ToolbarFragment
@@ -17,6 +21,9 @@ import com.android.professors.base.adapters.IProfessorActions
 import com.android.professors.base.adapters.ProfessorRecyclerViewAdapter
 import com.android.professors.base.dagger.IProfessorsNavigationActions
 import com.android.professors.base.dagger.ProfessorsComponentHolder
+import com.android.professors.list.mvi.ProfessorAction
+import com.android.professors.list.mvi.ProfessorIntent
+import com.android.professors.list.mvi.ProfessorState
 import com.android.professors.list.viewModels.ProfessorsViewModel
 import com.android.professors.search.fragments.ProfessorSearchFragment
 import com.android.shared.code.utils.syntaxSugar.createViewModel
@@ -27,9 +34,9 @@ import javax.inject.Inject
  *
  * @constructor Create empty constructor for professors fragment
  */
-internal class ProfessorsFragment : ToolbarFragment() {
+internal class ProfessorsFragment :
+    ToolbarFragment<ProfessorIntent, ProfessorState, ProfessorAction, ProfessorsViewModel>() {
     private val fragmentProfessorsBinding by viewBinding(FragmentProfessorsBinding::bind)
-    private lateinit var professorsViewModel: ProfessorsViewModel
     private lateinit var adapter: ProfessorRecyclerViewAdapter
 
     @Inject
@@ -37,13 +44,9 @@ internal class ProfessorsFragment : ToolbarFragment() {
 
     private val clickListener = object : IProfessorActions {
         override fun onClick(professor: Professor) {
-            showProfessorSchedule(professor)
+            ProfessorIntent.OpenProfessorScheduleScreen(professor).dispatchIntent()
         }
     }
-
-    private val buildingsObserver = Observer<List<Professor>?> { adapter.updateItems(it) }
-
-    private val listIsEmptyObserver = Observer<Boolean> { fragmentProfessorsBinding.listIsEmpty.isVisible = it }
 
     override fun getComponent(): IModuleComponent = ProfessorsComponentHolder.getComponent()
 
@@ -51,32 +54,48 @@ internal class ProfessorsFragment : ToolbarFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        professorsViewModel = createViewModel(viewModelFactory)
+        viewModel = createViewModel(viewModelFactory)
         adapter = ProfessorRecyclerViewAdapter(requireContext(), clickListener)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_professors, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        professorsViewModel.asyncSubscribe()
+    override fun onViewCreatedBeforeRendering(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreatedBeforeRendering(view, savedInstanceState)
+        viewModel.asyncSubscribe()
         fragmentProfessorsBinding.toolbarLayout.toolbar.updateToolbar(R.string.professors_fragment_title, false)
         fragmentProfessorsBinding.recyclerView.adapter = adapter
+    }
 
-        professorsViewModel.professors.observe(viewLifecycleOwner, buildingsObserver)
-        professorsViewModel.isListEmpty.observe(viewLifecycleOwner, listIsEmptyObserver)
+    override fun invalidateUi(state: ProfessorState) {
+        super.invalidateUi(state)
+        adapter.updateItems(state.professors)
+        fragmentProfessorsBinding.listIsEmpty.isVisible = state.professors.isEmpty()
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) =
         menuInflater.inflate(R.menu.professor_toolbar, menu)
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.faq -> openFAQFragment()
-            R.id.globalSearch -> openProfessorSearchFragment()
+    override fun onMenuItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.faq -> {
+            openFAQFragment()
+            true
         }
-        return super.onMenuItemSelected(item)
+        R.id.globalSearch -> {
+            openProfessorSearchFragment()
+            true
+        }
+        else -> super.onMenuItemSelected(item)
+    }
+
+    override fun executeSingleAction(action: ProfessorAction) {
+        super.executeSingleAction(action)
+        when (action) {
+            ProfessorAction.OpenFAQScreen -> openFAQFragment()
+            ProfessorAction.OpenProfessorSearchScreen -> openProfessorSearchFragment()
+            is ProfessorAction.OpenProfessorScheduleScreen -> showProfessorSchedule(action.professor)
+        }
     }
 
     /**
@@ -111,6 +130,6 @@ internal class ProfessorsFragment : ToolbarFragment() {
     override fun onDestroyView() {
         adapter.detachRecyclerView()
         super.onDestroyView()
-        professorsViewModel.unSubscribe()
+        viewModel.unSubscribe()
     }
 }

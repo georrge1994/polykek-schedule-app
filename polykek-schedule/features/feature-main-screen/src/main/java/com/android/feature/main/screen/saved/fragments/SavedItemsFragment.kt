@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.common.models.savedItems.SavedItem
 import com.android.core.ui.fragments.NavigationFragment
@@ -18,12 +17,18 @@ import com.android.feature.main.screen.R
 import com.android.feature.main.screen.dagger.IMainScreenNavigationActions
 import com.android.feature.main.screen.dagger.MainScreenComponentHolder
 import com.android.feature.main.screen.databinding.FragmentSavedItemsBinding
+import com.android.feature.main.screen.menu.mvi.MenuAction
+import com.android.feature.main.screen.menu.mvi.MenuIntent
 import com.android.feature.main.screen.menu.viewModels.BottomAnimationViewModel
 import com.android.feature.main.screen.saved.adapters.ISaveItemMenuActions
 import com.android.feature.main.screen.saved.adapters.SavedItemsRecyclerViewAdapter
+import com.android.feature.main.screen.saved.mvi.SavedItemAction
+import com.android.feature.main.screen.saved.mvi.SavedItemIntent
+import com.android.feature.main.screen.saved.mvi.SavedItemState
 import com.android.feature.main.screen.saved.viewModels.SavedItemsViewModel
 import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import javax.inject.Inject
 
 private const val VND_ANDROID_CURSOR_ITEM_EMAIL = "vnd.android.cursor.item/email"
@@ -33,41 +38,38 @@ private const val VND_ANDROID_CURSOR_ITEM_EMAIL = "vnd.android.cursor.item/email
  *
  * @constructor Create empty constructor for saved items fragment
  */
-internal class SavedItemsFragment : NavigationFragment() {
+internal class SavedItemsFragment :
+    NavigationFragment<SavedItemIntent, SavedItemState, SavedItemAction, SavedItemsViewModel>() {
     private val viewBinding by viewBinding(FragmentSavedItemsBinding::bind)
-    private lateinit var adapter: SavedItemsRecyclerViewAdapter
-    private lateinit var savedItemsViewModel: SavedItemsViewModel
     private lateinit var bottomAnimationViewModel: BottomAnimationViewModel
+    private lateinit var adapter: SavedItemsRecyclerViewAdapter
 
     @Inject
     lateinit var mainScreenNavigationActions: IMainScreenNavigationActions
 
     private val savedItemActions = object : ISaveItemMenuActions {
         override fun onClick(item: SavedItem) {
-            bottomAnimationViewModel.updateBottomAnimation(isOpen = false)
-            savedItemsViewModel.selectItem(item)
+            bottomAnimationViewModel.dispatchIntentAsync(
+                MenuIntent.ChangeStateOfBottomBar(BottomSheetBehavior.STATE_COLLAPSED))
+            SavedItemIntent.SelectItem(item).dispatchIntent()
         }
 
         override fun onRemove(item: SavedItem) {
-            savedItemsViewModel.delete(item)
+            SavedItemIntent.RemoveItem(item).dispatchIntent()
         }
 
         override fun addGroup() {
-            showSchools()
+            SavedItemIntent.OpenSchools.dispatchIntent()
         }
 
         override fun addProfessor() {
-            showProfessorSearch()
+            SavedItemIntent.OpenProfessors.dispatchIntent()
         }
 
         override fun sayAboutScheduleError() {
-            openEmailChooser()
+            SavedItemIntent.OpenEmailChooser.dispatchIntent()
         }
     }
-
-    private val savedItemsObserver = Observer<List<Any>> { adapter.updateItems(it) }
-
-    private val isEmptyObserver = Observer<Boolean> { viewBinding.isEmpty.isVisible = it }
 
     override fun getComponent(): IModuleComponent = MainScreenComponentHolder.getComponent()
 
@@ -75,7 +77,7 @@ internal class SavedItemsFragment : NavigationFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        savedItemsViewModel = createViewModel(viewModelFactory)
+        viewModel = createViewModel(viewModelFactory)
         bottomAnimationViewModel = (activity as AppCompatActivity).createViewModel(viewModelFactory)
         adapter = SavedItemsRecyclerViewAdapter(requireContext(), savedItemActions)
     }
@@ -83,11 +85,25 @@ internal class SavedItemsFragment : NavigationFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_saved_items, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreatedBeforeRendering(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreatedBeforeRendering(view, savedInstanceState)
+        viewModel.asyncSubscribe()
         viewBinding.recyclerView.adapter = adapter
-        savedItemsViewModel.isEmpty.observe(viewLifecycleOwner, isEmptyObserver)
-        savedItemsViewModel.items.observe(viewLifecycleOwner, savedItemsObserver)
+    }
+
+    override fun invalidateUi(state: SavedItemState) {
+        super.invalidateUi(state)
+        adapter.updateItems(state.menuItems)
+        viewBinding.isEmpty.isVisible = state.menuItems.isEmpty()
+    }
+
+    override fun executeSingleAction(action: SavedItemAction) {
+        super.executeSingleAction(action)
+        when (action) {
+            is SavedItemAction.OpenEmailChooser -> openEmailChooser(action.groupName)
+            SavedItemAction.OpenProfessors -> showProfessorSearch()
+            SavedItemAction.OpenSchools -> showSchools()
+        }
     }
 
     /**
@@ -110,13 +126,19 @@ internal class SavedItemsFragment : NavigationFragment() {
 
     /**
      * Open email chooser.
+     *
+     * @param groupName Group name
      */
-    private fun openEmailChooser() {
+    private fun openEmailChooser(groupName: String) {
+        // Close bottom sheet bar.
+        (activity as AppCompatActivity).createViewModel<BottomAnimationViewModel>(viewModelFactory)
+            .dispatchIntentAsync(MenuIntent.ChangeStateOfBottomBar(BottomSheetBehavior.STATE_COLLAPSED))
+        // Open email chooser.
         val emailIntent = Intent(Intent.ACTION_SEND)
         emailIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         emailIntent.type = VND_ANDROID_CURSOR_ITEM_EMAIL
         emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.error_in_the_schedule_email)))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.error_in_the_schedule_subject, savedItemsViewModel.getSelectedItem()))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.error_in_the_schedule_subject, groupName))
         startActivity(Intent.createChooser(emailIntent, getString(R.string.error_in_the_schedule_selection_message)))
     }
 
@@ -124,5 +146,6 @@ internal class SavedItemsFragment : NavigationFragment() {
         adapter.detachRecyclerView()
         viewBinding.recyclerView.adapter = null
         super.onDestroyView()
+        viewModel.unSubscribe()
     }
 }

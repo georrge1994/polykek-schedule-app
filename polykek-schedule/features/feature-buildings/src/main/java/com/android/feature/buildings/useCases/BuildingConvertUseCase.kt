@@ -11,7 +11,7 @@ import javax.inject.Inject
  * @constructor Create [BuildingConvertUseCase]
  */
 internal class BuildingConvertUseCase @Inject constructor() : IUseCase {
-    private val blackList = listOf("DL", "Выездное", "Не определено")
+    private val blackList = listOf("DL", "Выездное", "Не определено", "Литейный корпус")
 
     /**
      * Convert [BuildingsResponse] to [Building] list.

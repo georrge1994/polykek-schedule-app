@@ -6,23 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.clearFragmentResultListener
 import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.common.models.map.BUILDING_ITEM
 import com.android.common.models.map.Building.Companion.getBuilding
-import com.android.core.ui.fragments.BaseFragment
+import com.android.core.ui.mvi.MviFragment
 import com.android.feature.map.R
 import com.android.feature.map.dagger.MapComponentHolder
 import com.android.feature.map.databinding.FragmentMapBinding
-import com.android.feature.map.models.DayControls
-import com.android.feature.map.models.YandexMapItem
+import com.android.feature.map.mvi.MapAction
+import com.android.feature.map.mvi.MapIntent
+import com.android.feature.map.mvi.MapState
 import com.android.feature.map.repositories.MapKitInitializer
 import com.android.feature.map.useCases.MapActionsUiUseCase
 import com.android.feature.map.viewModels.MapViewModel
 import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import com.yandex.mapkit.MapKitFactory
-import com.yandex.mapkit.geometry.BoundingBox
 import com.yandex.mapkit.map.CameraListener
 import com.yandex.mapkit.map.CameraUpdateReason
 import com.yandex.mapkit.map.MapObjectTapListener
@@ -33,9 +32,8 @@ import javax.inject.Inject
  *
  * @constructor Create empty constructor for map fragment
  */
-internal class MapFragment : BaseFragment() {
+internal class MapFragment : MviFragment<MapIntent, MapState, MapAction, MapViewModel>() {
     private val viewBinding by viewBinding(FragmentMapBinding::bind)
-    private lateinit var mapViewModel: MapViewModel
     private var titles: Array<String>? = null
 
     @Inject
@@ -43,40 +41,20 @@ internal class MapFragment : BaseFragment() {
 
     // Listeners.
     private val circleMapObjectTapListener = MapObjectTapListener { mapObject, _ ->
-        mapViewModel.selectMapObject(mapObject.userData)
+        MapIntent.SelectMapObject(mapObject.userData).dispatchIntent()
         true
     }
 
     private val cameraListener = CameraListener { _, _, cameraUpdateReason, _ ->
         if (cameraUpdateReason != CameraUpdateReason.APPLICATION)
-            mapViewModel.deselectMapObject()
+            MapIntent.DeselectMapObject.dispatchIntent()
     }
 
-    private val nextDayListener = View.OnClickListener {
-        viewBinding.mapView.map.mapObjects.clear()
-        mapViewModel.showNextDay()
-    }
+    private val nextDayListener = View.OnClickListener { MapIntent.ShowNextDay.dispatchIntent() }
 
-    private val previousDayListener = View.OnClickListener {
-        viewBinding.mapView.map.mapObjects.clear()
-        mapViewModel.showPreviousDay()
-    }
+    private val previousDayListener = View.OnClickListener { MapIntent.ShowPreviousDay.dispatchIntent() }
 
     // Observers.
-    private val boundingBoxObserver = Observer<BoundingBox> { mapActionsUiUseCase.move(viewBinding.mapView.map, it) }
-
-    private val dayControlsStateObserver = Observer<DayControls> {
-        viewBinding.previousBtn.isEnabled = it.isPreviousEnabled
-        viewBinding.nextBtn.isEnabled = it.isNextEnabled
-        viewBinding.dayAbbr.text = titles?.get(it.dayIndex)
-    }
-
-    private val yandexMapItemsObserver = Observer<List<YandexMapItem>> { items ->
-        items.forEach {
-            mapActionsUiUseCase.addPlaceMark(context, viewBinding.mapView.map, it, circleMapObjectTapListener)
-        }
-    }
-
     override fun getComponent(): IModuleComponent = MapComponentHolder.getComponent()
 
     override fun injectToComponent() = MapComponentHolder.getComponent().inject(this)
@@ -84,31 +62,55 @@ internal class MapFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MapKitInitializer.initialize(requireContext())
-        mapViewModel = createViewModel(viewModelFactory)
+        viewModel = createViewModel(viewModelFactory)
         titles = context?.resources?.getStringArray(R.array.schedule_fragment_day_abbreviations)
         setFragmentResultListener(BUILDING_ITEM) { _, bundle ->
-            mapViewModel.getYandexMapItem(bundle.getBuilding())?.let { yandexMapItem ->
-                mapActionsUiUseCase.addPlaceMark(context, viewBinding.mapView.map, yandexMapItem, circleMapObjectTapListener)
-                mapActionsUiUseCase.move(viewBinding.mapView.map, yandexMapItem.point)
-                mapViewModel.selectMapObject(yandexMapItem.userData)
-            }
+            MapIntent.BuildingSearchResult(bundle.getBuilding()).dispatchIntent()
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_map, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mapViewModel.asyncSubscribe()
-
+    override fun onViewCreatedBeforeRendering(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreatedBeforeRendering(view, savedInstanceState)
+        viewModel.asyncSubscribe()
         viewBinding.mapView.map.addCameraListener(cameraListener)
         viewBinding.nextBtn.setOnClickListener(nextDayListener)
         viewBinding.previousBtn.setOnClickListener(previousDayListener)
+    }
 
-        mapViewModel.yandexMapItems.observe(viewLifecycleOwner, yandexMapItemsObserver)
-        mapViewModel.dayControls.observe(viewLifecycleOwner, dayControlsStateObserver)
-        mapViewModel.boundingBox.observe(viewLifecycleOwner, boundingBoxObserver)
+    override fun invalidateUi(state: MapState) {
+        super.invalidateUi(state)
+        // Remove previous map objects and add new.
+        viewBinding.mapView.map.mapObjects.clear()
+        state.yandexMapItems.forEach {
+            mapActionsUiUseCase.addPlaceMark(context, viewBinding.mapView.map, it, circleMapObjectTapListener)
+        }
+        state.searchResultMapItem?.let { yandexMapItem ->
+            mapActionsUiUseCase.addPlaceMark(
+                context,
+                viewBinding.mapView.map,
+                yandexMapItem,
+                circleMapObjectTapListener
+            )
+        }
+        // Update control buttons` state.
+        viewBinding.previousBtn.isEnabled = state.dayControls?.isPreviousEnabled ?: true
+        viewBinding.nextBtn.isEnabled = state.dayControls?.isNextEnabled ?: true
+        viewBinding.dayAbbr.text = titles?.get(state.dayControls?.dayIndex ?: 0)
+    }
+
+    override fun executeSingleAction(action: MapAction) {
+        super.executeSingleAction(action)
+        with(viewBinding.mapView.map) {
+            when (action) {
+                is MapAction.DefaultFocus -> mapActionsUiUseCase.move(this, action.boundingBox)
+                is MapAction.ShowBuildingSearchOnTheMap -> mapActionsUiUseCase.move(this, action.point)
+                is MapAction.UpdateCameraPosition -> mapActionsUiUseCase.move(this, action.cameraPosition)
+                else -> { /* Nothing doing. */ }
+            }
+        }
     }
 
     override fun onStart() {
@@ -124,9 +126,11 @@ internal class MapFragment : BaseFragment() {
     }
 
     override fun onDestroyView() {
+        // Save camera position.
+        MapIntent.SaveCameraPosition(viewBinding.mapView.map.cameraPosition).dispatchIntent()
         viewBinding.mapView.map?.removeCameraListener(cameraListener)
         super.onDestroyView()
-        mapViewModel.unSubscribe()
+        viewModel.unSubscribe()
     }
 
     override fun onDestroy() {

@@ -3,9 +3,9 @@ package com.android.feature.notes.adapters.viewPager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.android.core.ui.adapters.BaseFragmentStateAdapter
 import com.android.feature.notes.fragments.NoteListFragment
-import com.android.feature.notes.models.NotesTabTypes
+import com.android.feature.notes.models.NotesTabType
 
 private const val NUM_PAGES = 2
 
@@ -20,12 +20,14 @@ private const val NUM_PAGES = 2
 internal class NotesViewPagerAdapter(
     fragmentManager: FragmentManager,
     viewLifecycle: Lifecycle
-) : FragmentStateAdapter(fragmentManager, viewLifecycle) {
+) : BaseFragmentStateAdapter(fragmentManager, viewLifecycle) {
     override fun getItemCount() = NUM_PAGES
 
     override fun createFragment(position: Int): Fragment = when (position) {
-        0 -> NoteListFragment.newInstance(NotesTabTypes.BY_LESSONS)
-        1 -> NoteListFragment.newInstance(NotesTabTypes.OWN_NOTES)
-        else -> NoteListFragment.newInstance(NotesTabTypes.OWN_NOTES)
+        0 -> NoteListFragment.newInstance(NotesTabType.BY_LESSONS)
+        1 -> NoteListFragment.newInstance(NotesTabType.OWN_NOTES)
+        else -> NoteListFragment.newInstance(NotesTabType.OWN_NOTES)
     }
+
+    override fun shouldBeDetached(fragment: Fragment): Boolean = fragment is NoteListFragment
 }

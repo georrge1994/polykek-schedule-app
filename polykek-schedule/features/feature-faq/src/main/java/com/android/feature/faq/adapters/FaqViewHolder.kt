@@ -20,13 +20,12 @@ internal class FaqViewHolder constructor(
      * Bind data to view.
      *
      * @param faq [FAQ]
-     * @param isSelectedItem Is selected item
      */
-    internal fun bindTo(faq: FAQ, isSelectedItem: Boolean) = with(faqItemView) {
+    internal fun bindTo(faq: FAQ) = with(faqItemView) {
         question.text = context.getString(faq.questionId)
         answer.text = context.getString(faq.answerId)
-        answer.isVisible = isSelectedItem
-        moreIcon.isVisibleOrInvisible(!isSelectedItem)
-        parentLayout.setOnClickListener { listener.onClick(bindingAdapterPosition) }
+        answer.isVisible = faq.isOpened
+        moreIcon.isVisibleOrInvisible(!faq.isOpened)
+        parentLayout.setOnClickListener { listener.onClick(bindingAdapterPosition, !faq.isOpened) }
     }
 }

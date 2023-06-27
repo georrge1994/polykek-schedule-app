@@ -1,10 +1,11 @@
 package com.android.core.ui.adapters
 
 import android.annotation.SuppressLint
-import android.transition.Fade
-import android.transition.TransitionManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Fade
+import androidx.transition.Transition
+import androidx.transition.TransitionManager
 
 /**
  * Base recycler view adapter.
@@ -30,10 +31,12 @@ abstract class BaseRecyclerViewAdapter<T : RecyclerView.ViewHolder, R : Any> : R
      * Update items.
      *
      * @param items Items
+     * @param transitionAnimation Transition animation
      */
-    fun updateItems(items: List<R>?) {
-        items ?: return
-        recyclerView?.let { TransitionManager.beginDelayedTransition(recyclerView, Fade()) }
+    open fun updateItems(items: List<R>?, transitionAnimation: Transition = Fade()) {
+        if (items == null || items == this.items)
+            return
+        recyclerView?.let { TransitionManager.beginDelayedTransition(recyclerView!!, transitionAnimation) }
         val diff = calcDiff(this.items, items)
         this.items.clear()
         this.items.addAll(items)

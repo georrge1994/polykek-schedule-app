@@ -12,16 +12,13 @@ private const val GET_SELECTED_ITEM = "SELECT * from SAVED_ITEMS WHERE isSelecte
 @Dao
 interface SavedItemsDao {
     @Query("SELECT * from SAVED_ITEMS ORDER BY name ASC")
-    fun getItems(): LiveData<List<SavedItemEntity>>
+    fun getItemsFlow(): Flow<List<SavedItemEntity>>
 
     @Query(GET_SELECTED_ITEM)
     fun getSelectedItemFlow(): Flow<SavedItemEntity?>
 
     @Query(GET_SELECTED_ITEM)
     fun getSelectedItems(): SavedItemEntity?
-
-    @Query(GET_SELECTED_ITEM)
-    fun getSelectedItemLive(): LiveData<SavedItemEntity?>
 
     @Transaction
     suspend fun saveNewItem(item: SavedItemEntity) {

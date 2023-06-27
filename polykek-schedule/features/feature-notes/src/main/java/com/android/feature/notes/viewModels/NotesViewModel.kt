@@ -1,45 +1,47 @@
 package com.android.feature.notes.viewModels
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
-import com.android.core.room.api.notes.INotesRoomRepository
 import com.android.core.room.api.savedItems.ISavedItemsRoomRepository
 import com.android.core.ui.viewModels.SearchViewModel
-import com.android.feature.notes.adapters.recycler.NoteItem
-import com.android.feature.notes.models.NotesTabTypes
-import com.android.shared.code.utils.liveData.EventLiveData
-import com.android.shared.code.utils.syntaxSugar.postValueIfChanged
+import com.android.feature.notes.models.NotesTabType
+import com.android.feature.notes.mvi.NotesAction
+import com.android.feature.notes.mvi.NotesIntent
+import com.android.feature.notes.mvi.NotesState
+import com.android.feature.notes.useCases.NotesUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
  * Notes view model provides logic for note screens.
  *
- * @property notesRoomRepository Notes room repository to work with notes in the memory
+ * @property notesUseCase Notes room use case provides map of notes
  * @property savedItemsRoomRepository Stores selected groups and professors (selected items)
  * @constructor Create [NotesViewModel]
  */
 internal class NotesViewModel @Inject constructor(
-    private val notesRoomRepository: INotesRoomRepository,
+    private val notesUseCase: NotesUseCase,
     private val savedItemsRoomRepository: ISavedItemsRoomRepository
-) : SearchViewModel() {
+) : SearchViewModel<NotesIntent, NotesState, NotesAction>(NotesState.DefaultState) {
     private val removingNoteIds = HashSet<String>()
-    private val notesByLessons = MutableLiveData<List<NoteItem>>()
-    private val ownNotes = MutableLiveData<List<NoteItem>>()
-    val selectionModeState = EventLiveData<Boolean>()
-    var selectedItemId: Int? = null
-        private set
+    private var selectedItemId: Int? = null
 
     override suspend fun subscribe() {
         super.subscribe()
         subscribeToSelectedItemFlow()
-        updateNotes()
+        updateNotes(keyWordFromLastState)
     }
 
-    override suspend fun keyWordWasChanged(keyWord: String?) {
-        super.keyWordWasChanged(keyWord)
-        updateNotes()
+    override suspend fun dispatchIntent(intent: NotesIntent) {
+        when (intent) {
+            is NotesIntent.KeyWordChanged -> updateNotes(intent.keyWord)
+            is NotesIntent.LongPressByNote -> longPressByNote(intent.noteId)
+            is NotesIntent.ClickByNote -> clickByNote(intent.noteId, intent.tabType)
+            is NotesIntent.OpenNoteEditorNew -> NotesAction.OpenNoteEditorNew(selectedItemId).emitAction()
+            is NotesIntent.DeleteSelectedNotes -> deleteSelectedNotes()
+            is NotesIntent.ChangeTab -> changeTabPosition(intent.position)
+        }
     }
 
     /**
@@ -50,71 +52,76 @@ internal class NotesViewModel @Inject constructor(
             .filterNotNull()
             .onEach {
                 selectedItemId = it.id
-                updateNotes()
+                updateNotes(keyWordFromLastState)
             }.cancelableLaunchInBackground()
 
     /**
      * Update notes.
-     */
-    private suspend fun updateNotes() {
-        notesRoomRepository.getNotesWhichContains(selectedItemId.toString(), keyWord)
-            .asSequence()
-            .filter { !it.id.contains(OWN_NOTE_ALIAS) }
-            .map { NoteItem(note = it) }
-            .let { notesByLessons.postValueIfChanged(it.toList()) }
-        notesRoomRepository.getNotesWhichContains(OWN_NOTE_ALIAS, keyWord)
-            .map { NoteItem(note = it) }
-            .let { ownNotes.postValueIfChanged(it) }
-    }
-
-    /**
-     * Get notes live data.
      *
-     * @param notesTabTypes Notes tab types
-     * @return Specific live data for list fragment
+     * @param keyWord Key word to search notes
      */
-    internal fun getNotesLiveData(notesTabTypes: NotesTabTypes) = when (notesTabTypes) {
-        NotesTabTypes.BY_LESSONS -> notesByLessons
-        NotesTabTypes.OWN_NOTES -> ownNotes
+    private suspend fun updateNotes(keyWord: String?) = withContext(Dispatchers.IO) {
+        currentState.copyState(
+            keyWord = keyWord,
+            notes = notesUseCase.getNotes(selectedItemId, keyWord)
+        ).emitState()
     }
 
     /**
-     * Get is empty notes livedata.
-     *
-     * @param notesTabTypes Notes tab types
-     * @return Specific live data for list fragment
-     */
-    internal fun getIsEmptyNotesLivedata(notesTabTypes: NotesTabTypes) = when (notesTabTypes) {
-        NotesTabTypes.BY_LESSONS -> notesByLessons
-        NotesTabTypes.OWN_NOTES -> ownNotes
-    }.map { notes ->
-        notes.isNullOrEmpty()
-    }
-
-    /**
-     * click by item (select/deselect).
+     * Long press by note.
      *
      * @param noteId Note id
      */
-    internal fun clickByItem(noteId: String) = launchInBackground {
+    private suspend fun longPressByNote(noteId: String) {
+        val isNotSelectedYet = currentState.isSelectionModeEnabled.not()
         if (removingNoteIds.contains(noteId)) {
             removingNoteIds.remove(noteId)
-            if (removingNoteIds.isEmpty()) {
-                selectionModeState.postValue(false)
-            }
         } else {
-            selectionModeState.postValueIfChanged(true)
             removingNoteIds.add(noteId)
+        }
+        currentState.copyState(isSelectionModeEnabled = removingNoteIds.isNotEmpty()).emitState()
+        // TODO: possible for jetpack compose I will simplify it.
+        if (isNotSelectedYet) {
+            NotesAction.UpdateToolbar.emitAction()
+        }
+    }
+
+    /**
+     * Click by note.
+     *
+     * @param noteId Note id
+     * @param tabType Tab type
+     */
+    private suspend fun clickByNote(noteId: String, tabType: NotesTabType) {
+        if (currentState.isSelectionModeEnabled) {
+            if (removingNoteIds.contains(noteId)) {
+                removingNoteIds.remove(noteId)
+            } else {
+                removingNoteIds.add(noteId)
+            }
+            currentState.copyState(isSelectionModeEnabled = removingNoteIds.isNotEmpty()).emitState()
+        } else {
+            NotesAction.OpenNoteEditor(noteId, tabType).emitAction()
         }
     }
 
     /**
      * Delete selected notes.
      */
-    internal fun deleteSelectedNotes() = launchInBackground {
-        notesRoomRepository.deleteNotesByIds(removingNoteIds)
-        selectionModeState.postValue(false)
+    private suspend fun deleteSelectedNotes() = withContext(Dispatchers.IO) {
+        currentState.copyState(isSelectionModeEnabled = false).emitState()
+        notesUseCase.deleteNotesByIds(removingNoteIds)
         removingNoteIds.clear()
-        updateNotes()
+        updateNotes(keyWordFromLastState)
+        NotesAction.UpdateToolbar.emitAction()
+    }
+
+    /**
+     * Change tab position.
+     *
+     * @param tabPosition Tab position
+     */
+    private suspend fun changeTabPosition(tabPosition: Int) = withContext(Dispatchers.Default) {
+        currentState.copyState(tabPosition = tabPosition).emitState()
     }
 }

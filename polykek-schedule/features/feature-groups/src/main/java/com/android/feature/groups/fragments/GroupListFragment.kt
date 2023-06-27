@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.core.ui.fragments.NavigationFragment
 import com.android.core.ui.models.ScheduleMode
@@ -21,6 +20,9 @@ import com.android.feature.groups.dagger.IGroupsNavigationActions
 import com.android.feature.groups.databinding.FragmentGroupsListBinding
 import com.android.feature.groups.models.Group
 import com.android.feature.groups.models.GroupType
+import com.android.feature.groups.mvi.GroupsAction
+import com.android.feature.groups.mvi.GroupsIntent
+import com.android.feature.groups.mvi.GroupsState
 import com.android.feature.groups.viewModels.GroupViewModel
 import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createSharedViewModelWithParentFragment
@@ -33,9 +35,8 @@ private const val TAB_TYPE = "TAB_TYPE"
  *
  * @constructor Create empty constructor for group list fragment
  */
-internal class GroupListFragment : NavigationFragment() {
+internal class GroupListFragment : NavigationFragment<GroupsIntent, GroupsState, GroupsAction, GroupViewModel>() {
     private val viewBinding by viewBinding(FragmentGroupsListBinding::bind)
-    private lateinit var viewModel: GroupViewModel
     private lateinit var adapter: GroupsRecyclerViewAdapter
     private var scheduleMode = ScheduleMode.SEARCH
     private var tabType: GroupType? = null
@@ -45,14 +46,8 @@ internal class GroupListFragment : NavigationFragment() {
 
     private val groupActions = object : IGroupActions {
         override fun onClick(group: Group) {
-            viewModel.selectAndSaveItem(group)
-            showNextFragment()
+            GroupsIntent.GroupSelected(group, tabType!!).dispatchIntent()
         }
-    }
-
-    private val groupListObserver = Observer<List<Any>?> { items ->
-        viewBinding.listIsEmpty.isVisible = items.isNullOrEmpty()
-        adapter.updateItems(items)
     }
 
     override fun getComponent(): IModuleComponent = GroupsComponentHolder.getComponent()
@@ -72,10 +67,22 @@ internal class GroupListFragment : NavigationFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_groups_list, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreatedBeforeRendering(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreatedBeforeRendering(view, savedInstanceState)
         viewBinding.recyclerView.adapter = adapter
-        viewModel.getGroupsLiveDataByGroupType(tabType).observe(viewLifecycleOwner, groupListObserver)
+    }
+
+    override fun invalidateUi(state: GroupsState) {
+        super.invalidateUi(state)
+        viewBinding.listIsEmpty.isVisible = state.isLoading.not() && state.items?.get(tabType).isNullOrEmpty()
+        adapter.updateItems(state.items?.get(tabType))
+    }
+
+    override fun executeSingleAction(action: GroupsAction) {
+        super.executeSingleAction(action)
+        if (action is GroupsAction.SelectGroup && action.groupType == tabType) {
+            showNextFragment()
+        }
     }
 
     /**

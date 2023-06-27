@@ -50,6 +50,9 @@ internal class NotesRecyclerViewAdapter(
      */
     @SuppressLint("NotifyDataSetChanged")
     fun updateSelectionMode(isSelectionModeActivated: Boolean) {
+        if (isSelectionModeActivated == this.isSelectionModeActivated)
+            return
+
         this.isSelectionModeActivated = isSelectionModeActivated
         if (!isSelectionModeActivated)
             items.forEach { it.isSelected = false }

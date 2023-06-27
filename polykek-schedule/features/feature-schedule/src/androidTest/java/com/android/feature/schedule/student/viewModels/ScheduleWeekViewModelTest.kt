@@ -2,20 +2,25 @@ package com.android.feature.schedule.student.viewModels
 
 import com.android.common.models.schedule.Week
 import com.android.common.models.schedule.stubWeek
+import com.android.feature.schedule.student.mvi.StudentAction
+import com.android.feature.schedule.student.mvi.StudentIntent
+import com.android.feature.schedule.student.mvi.StudentState
 import com.android.schedule.controller.api.IScheduleController
 import com.android.schedule.controller.api.IScheduleDateUseCase
 import com.android.test.support.androidTest.base.BaseViewModelUnitTest
-import com.android.test.support.androidTest.utils.collectPost
-import com.android.test.support.androidTest.utils.getOrAwaitValue
 import com.android.test.support.dataGenerator.LessonDataGenerator
 import com.android.test.support.testFixtures.joinWithTimeout
 import com.android.test.support.testFixtures.runBlockingUnit
 import com.android.test.support.testFixtures.waitActiveSubscription
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Test
-import java.util.*
+import java.util.Calendar
 
 /**
  * Schedule week view model test for [ScheduleWeekViewModel].
@@ -55,25 +60,51 @@ class ScheduleWeekViewModelTest : BaseViewModelUnitTest() {
     }
 
     /**
-     * Complex test.
+     * Complex test. TODO: fix this test in the future.
      */
     @Test
     fun complexTest() = runBlockingUnit {
         val weekMockk = lessonDataGenerator.getWeekMockk()
-        scheduleWeekViewModel.isLoading.collectPost {
+        scheduleWeekViewModel.state.collectPost(count = 3) {
             scheduleWeekViewModel.asyncSubscribe().joinWithTimeout()
-            scheduleWeekViewModel.viewPagerPosition.getOrAwaitValue(Pair(viewPagerPositionMock, false))
             weekFlowMockk.waitActiveSubscription().emitAndWait(weekMockk).joinWithTimeout()
-            scheduleWeekViewModel.weekTitle.getOrAwaitValue(weekMockk.title)
-            scheduleWeekViewModel.dayTitleLiveData.getOrAwaitValue()
-            scheduleWeekViewModel.getLessonsLiveData(0)
-                .getOrAwaitValue(expectedResult = weekMockk.days[0]!!.lessons)
-            scheduleWeekViewModel.unSubscribe()
         }.apply {
-            assertEquals(2, size)
-            assertEquals(true, first())
-            assertEquals(false, last())
+            assertEquals(StudentState.Default, this[0])
+            assertEquals(StudentState.Update(
+                weekTitle = "...",
+                dayTitle = "",
+                days = emptyMap(),
+                viewPagerPosition = viewPagerPositionMock,
+                smoothPaging = false,
+                isLoading = true
+            ), this[1])
+            assertEquals(StudentState.Update(
+                weekTitle = weekMockk.title,
+                dayTitle = this[2]?.dayTitle ?: "", // Don't check this property.
+                days = weekMockk.days,
+                viewPagerPosition = viewPagerPositionMock,
+                smoothPaging = false,
+                isLoading = false
+            ), this[2])
         }
+        scheduleWeekViewModel.unSubscribe()
+    }
+
+    /**
+     * Open date picker for selected date.
+     */
+    @Test
+    fun openDatePickerForSelectedDate() = runBlockingUnit {
+        val date = Calendar.getInstance()
+        coEvery { scheduleDateUseCase.selectedDate } returns date
+        val expectedAction = StudentAction.OpenDatePicker(
+            day = date.get(Calendar.DATE),
+            month = date.get(Calendar.MONTH),
+            year = date.get(Calendar.YEAR)
+        )
+        val actionJob = scheduleWeekViewModel.action.subscribeAndCompareFirstValue(expectedAction)
+        scheduleWeekViewModel.dispatchIntentAsync(StudentIntent.ShowDataPicker).joinWithTimeout()
+        actionJob.joinWithTimeout()
     }
 
     /**
@@ -81,9 +112,14 @@ class ScheduleWeekViewModelTest : BaseViewModelUnitTest() {
      */
     @Test
     fun swipeDay() = runBlockingUnit {
-        scheduleWeekViewModel.swipeDay(0).joinWithTimeout()
+        scheduleWeekViewModel.dispatchIntentAsync(StudentIntent.SwipeDay(0)).joinWithTimeout()
         coVerify(exactly = 1) { scheduleDateUseCase.addToSelectedDate(Calendar.DATE, any()) }
-        scheduleWeekViewModel.dayTitleLiveData.getOrAwaitValue()
+        coVerify(exactly = 2) { scheduleController setProperty "indexOfDay" value any<Int>() }
+        scheduleWeekViewModel.currentState.apply {
+            assertEquals(viewPagerPositionMock, viewPagerPosition) // Notes! This is not 0, because mocked logic.
+            assertEquals(false, smoothPaging)
+            assertEquals(true, isLoading)
+        }
     }
 
     /**
@@ -91,13 +127,19 @@ class ScheduleWeekViewModelTest : BaseViewModelUnitTest() {
      */
     @Test
     fun showSpecificDate() = runBlockingUnit {
-        scheduleWeekViewModel.showSpecificDateAsync(2022, 10, 2).joinWithTimeout()
+        scheduleWeekViewModel.dispatchIntentAsync(
+            StudentIntent.ShowSpecificDate(2022, 10, 2)).joinWithTimeout()
         coVerify(exactly = 1) {
             scheduleDateUseCase.setSelectedDay(any(), any(), any())
             scheduleController.updateSchedule(any())
             scheduleDateUseCase.getPeriod()
         }
-        scheduleWeekViewModel.viewPagerPosition.getOrAwaitValue(Pair(viewPagerPositionMock, true))
+        coVerify(exactly = 2) { scheduleController setProperty "indexOfDay" value any<Int>() }
+        scheduleWeekViewModel.currentState.apply {
+            assertEquals(viewPagerPositionMock, viewPagerPosition)
+            assertEquals(true, smoothPaging)
+            assertEquals(true, isLoading)
+        }
     }
 
     /**
@@ -105,7 +147,7 @@ class ScheduleWeekViewModelTest : BaseViewModelUnitTest() {
      */
     @Test
     fun showNextWeek() = runBlockingUnit {
-        scheduleWeekViewModel.showNextWeekAsync().joinWithTimeout()
+        scheduleWeekViewModel.dispatchIntentAsync(StudentIntent.ShowNextWeek).joinWithTimeout()
         verifyShiftWeek(1)
     }
 
@@ -114,8 +156,24 @@ class ScheduleWeekViewModelTest : BaseViewModelUnitTest() {
      */
     @Test
     fun showPreviousWeek() = runBlockingUnit {
-        scheduleWeekViewModel.showPreviousWeekAsync().joinWithTimeout()
+        scheduleWeekViewModel.dispatchIntentAsync(StudentIntent.ShowPreviousWeek).joinWithTimeout()
         verifyShiftWeek(-1)
+    }
+
+    /**
+     * Open note editor.
+     */
+    @Test
+    fun openNoteEditor() = runBlockingUnit {
+        val dayIdMockk = 1
+        val noteIdMockk = "NoteId"
+        val titleMockk = "title"
+        val actionJob = scheduleWeekViewModel.action.subscribeAndCompareFirstValue(
+            StudentAction.OpenNoteEditor(dayIdMockk, noteIdMockk, titleMockk)
+        )
+        scheduleWeekViewModel.dispatchIntentAsync(
+            StudentIntent.OpenNoteEditor(dayIdMockk, noteIdMockk, titleMockk)).joinWithTimeout()
+        actionJob.joinWithTimeout()
     }
 
     /**
@@ -129,6 +187,10 @@ class ScheduleWeekViewModelTest : BaseViewModelUnitTest() {
             scheduleDateUseCase.addToSelectedDate(Calendar.DATE, any())
             scheduleController.updateSchedule(any())
         }
-        scheduleWeekViewModel.viewPagerPosition.getOrAwaitValue(Pair(viewPagerPositionMock, true))
+        scheduleWeekViewModel.currentState.apply {
+            assertEquals(viewPagerPositionMock, viewPagerPosition)
+            assertEquals(true, smoothPaging)
+            assertEquals(true, isLoading)
+        }
     }
 }

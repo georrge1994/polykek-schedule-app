@@ -1,22 +1,23 @@
 package com.android.feature.main.screen.menu.viewModels
 
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.MutableLiveData
+import android.view.View
 import com.android.common.models.savedItems.SavedItem
 import com.android.core.room.api.savedItems.ISavedItemsRoomRepository
 import com.android.feature.main.screen.R
+import com.android.feature.main.screen.menu.mvi.MenuAction
+import com.android.feature.main.screen.menu.mvi.MenuIntent
 import com.android.shared.code.utils.general.DateFactory
 import com.android.test.support.androidTest.base.BaseViewModelUnitTest
-import com.android.test.support.androidTest.utils.getOrAwaitValue
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.android.test.support.testFixtures.joinWithTimeout
+import com.android.test.support.testFixtures.runBlockingUnit
+import com.android.test.support.testFixtures.waitActiveSubscription
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import io.mockk.coEvery
 import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.unmockkAll
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.util.*
+import java.util.Calendar
 
 /**
  * Bottom animation view model test for [BottomAnimationViewModel].
@@ -24,91 +25,118 @@ import java.util.*
  * @constructor Create empty constructor for bottom animation view model test
  */
 class BottomAnimationViewModelTest : BaseViewModelUnitTest() {
-    private val savedItem = MutableLiveData<SavedItem?>()
+    private val savedItemMock = SavedItem(id = 1, name = "1083/1")
+    private val savedItemFlow = MutableSharedFlow<SavedItem?>()
     private val dateFactory: DateFactory = mockk()
     private val savedItemsRoomRepository: ISavedItemsRoomRepository = mockk {
-        coEvery { selectedItemLive2 } returns savedItem
+        coEvery { getSelectedItemFlow() } returns savedItemFlow
     }
     private lateinit var bottomAnimationViewModel: BottomAnimationViewModel
 
     override fun beforeTest() {
         super.beforeTest()
-        mockkStatic(ContextCompat::class)
-        coEvery { ContextCompat.getColor(any(), any()) } returns 0
-        bottomAnimationViewModel = BottomAnimationViewModel(application, dateFactory, savedItemsRoomRepository)
+        val usualDay = Calendar.getInstance().apply {
+            set(Calendar.MONTH, Calendar.JANUARY)
+            set(Calendar.DATE, 1)
+        }.time
+        coEvery { dateFactory.getToday() } returns usualDay
+        bottomAnimationViewModel = BottomAnimationViewModel(
+            application = application,
+            dateFactory = dateFactory,
+            savedItemsRoomRepository = savedItemsRoomRepository
+        )
     }
 
     /**
-     * Title transformation.
+     * Subscription test.
      */
     @Test
-    fun titleTransformation() {
-        savedItem.postValue(SavedItem(id = 1, name = "1083/1"))
-        bottomAnimationViewModel.title.getOrAwaitValue("1083/1")
+    fun subscriptionTest() = runBlockingUnit {
+        bottomAnimationViewModel.asyncSubscribe().joinWithTimeout()
+        savedItemFlow.waitActiveSubscription().emitAndWait(savedItemMock).joinWithTimeout()
+        assertEquals(savedItemMock.name, bottomAnimationViewModel.state.getOrAwaitValue().title)
+        bottomAnimationViewModel.unSubscribe()
     }
 
     /**
      * Update bottom animation - STATE_COLLAPSED.
      */
     @Test
-    fun updateBottomAnimation() {
-        bottomAnimationViewModel.updateBottomAnimation(state = STATE_COLLAPSED)
-        bottomAnimationViewModel.bottomSheetState.getOrAwaitValue(BottomSheetBehavior.STATE_EXPANDED)
-        bottomAnimationViewModel.groupToolbarColor.getOrAwaitValue(expectedResult = 0)
-        bottomAnimationViewModel.groupNameColor.getOrAwaitValue(expectedResult = 0)
-        bottomAnimationViewModel.slideTopPosition.getOrAwaitValue(expectedResult = Pair(0f, 1f))
+    fun updateBottomAnimation() = runBlockingUnit {
+        val actionJob = bottomAnimationViewModel.action.subscribeAndCompareFirstValue(
+            MenuAction.ChangeMenuState(STATE_COLLAPSED)
+        )
+        bottomAnimationViewModel.dispatchIntentAsync(
+            MenuIntent.ChangeStateOfBottomBar(STATE_COLLAPSED)
+        ).joinWithTimeout()
+        actionJob.joinWithTimeout()
     }
 
     /**
-     * Update ui by offset - swipe state # N.
+     * Update ui by offset start.
      */
     @Test
-    fun updateUiByOffset() {
-        bottomAnimationViewModel.updateUiByOffset(slideOffset = 0.67f)
-        bottomAnimationViewModel.groupToolbarColor.getOrAwaitValue(expectedResult = 0)
-        bottomAnimationViewModel.groupNameColor.getOrAwaitValue(expectedResult = 0)
-        bottomAnimationViewModel.slideMiddlePosition.getOrAwaitValue(expectedResult = Pair(0.67f, 0.029999971f))
+    fun updateUiByOffset_start() = runBlockingUnit {
+        val slideOffset = 0.32f
+        bottomAnimationViewModel.dispatchIntentAsync(MenuIntent.UpdateUiByOffset(offset = slideOffset))
+            .joinWithTimeout()
+        bottomAnimationViewModel.state.getOrAwaitValue().apply {
+            assertEquals(slideOffset, colorMixCoefficient)
+            assertEquals(1f - 3f * slideOffset, moreBtnAlpha)
+            assertEquals(R.drawable.ic_more_vertical_grey_24dp, moreBtnChevron)
+            assertEquals(slideOffset, bottomNavigationViewShift)
+            assertEquals(View.VISIBLE, bottomNavigationViewVisibility)
+            assertEquals(1f - 3f * slideOffset, bottomNavigationViewAlpha)
+        }
     }
 
     /**
-     * Update ui by offset 2 - swipe state # N + 1.
+     * Update UI by offset (middle of swiping).
      */
     @Test
-    fun updateUiByOffset2() {
-        bottomAnimationViewModel.updateUiByOffset(slideOffset = 0.5f)
-        bottomAnimationViewModel.groupToolbarColor.getOrAwaitValue(expectedResult = 0)
-        bottomAnimationViewModel.groupNameColor.getOrAwaitValue(expectedResult = 0)
-        bottomAnimationViewModel.slideBottomPosition.getOrAwaitValue(expectedResult = Pair(0.5f, 1f))
+    fun updateUiByOffset_middle() = runBlockingUnit {
+        bottomAnimationViewModel.dispatchIntentAsync(MenuIntent.UpdateUiByOffset(offset = 0.5f)).joinWithTimeout()
+        bottomAnimationViewModel.state.getOrAwaitValue().apply {
+            assertEquals(0f, moreBtnAlpha)
+            assertEquals(0.5f, colorMixCoefficient)
+            assertEquals(View.INVISIBLE, bottomNavigationViewVisibility)
+            assertEquals(0f, bottomNavigationViewAlpha)
+        }
+    }
+
+    /**
+     * Update UI by offset (end of swiping).
+     */
+    @Test
+    fun updateUiByOffset_end() = runBlockingUnit {
+        bottomAnimationViewModel.dispatchIntentAsync(MenuIntent.UpdateUiByOffset(offset = 0.67f)).joinWithTimeout()
+        bottomAnimationViewModel.state.getOrAwaitValue().apply {
+            assertEquals(0.029999971f, moreBtnAlpha)
+            assertEquals(0.67f, colorMixCoefficient)
+            assertEquals(R.drawable.ic_keyboard_arrow_down_white_24dp, moreBtnChevron)
+        }
     }
 
     /**
      * Get george ribbon chevron for victory day.
      */
     @Test
-    fun getChevron_georgeRibbon() {
+    fun updateUiByOffset_georgeRibbon() = runBlockingUnit {
         val victoryDay = Calendar.getInstance().apply {
             set(Calendar.MONTH, Calendar.MAY)
             set(Calendar.DATE, 9)
         }.time
         coEvery { dateFactory.getToday() } returns victoryDay
-        assertEquals(R.drawable.ribbon_of_saint_george, bottomAnimationViewModel.getChevron())
-    }
+        // Re-init viewModel for specific test.
+        bottomAnimationViewModel = BottomAnimationViewModel(
+            application = application,
+            dateFactory = dateFactory,
+            savedItemsRoomRepository = savedItemsRoomRepository
+        )
 
-    /**
-     * Get dotes chevron for usual day.
-     */
-    @Test
-    fun getChevron_dotes() {
-        val usualDay = Calendar.getInstance().apply {
-            set(Calendar.MONTH, Calendar.JANUARY)
-            set(Calendar.DATE, 1)
-        }.time
-        coEvery { dateFactory.getToday() } returns usualDay
-        assertEquals(R.drawable.ic_more_vertical_grey_24dp, bottomAnimationViewModel.getChevron())
-    }
-
-    override fun afterTest() {
-        super.afterTest()
-        unmockkAll()
+        val slideOffset = 0.32f
+        bottomAnimationViewModel.dispatchIntentAsync(MenuIntent.UpdateUiByOffset(offset = slideOffset))
+            .joinWithTimeout()
+        assertEquals(R.drawable.ribbon_of_saint_george, bottomAnimationViewModel.state.getOrAwaitValue().moreBtnChevron)
     }
 }

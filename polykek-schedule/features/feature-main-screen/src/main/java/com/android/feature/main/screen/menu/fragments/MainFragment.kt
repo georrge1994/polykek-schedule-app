@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.core.ui.fragments.NavigationFragment
 import com.android.feature.main.screen.R
 import com.android.feature.main.screen.dagger.MainScreenComponentHolder
 import com.android.feature.main.screen.databinding.FragmentMainBinding
+import com.android.feature.main.screen.menu.mvi.MenuAction
+import com.android.feature.main.screen.menu.mvi.MenuIntent
+import com.android.feature.main.screen.menu.mvi.MenuState
 import com.android.feature.main.screen.menu.viewModels.BottomAnimationViewModel
 import com.android.module.injector.moduleMarkers.IModuleComponent
 import com.android.shared.code.utils.syntaxSugar.createViewModel
@@ -22,25 +24,11 @@ import com.google.android.material.navigation.NavigationBarView
  *
  * @constructor Create empty constructor for main fragment
  */
-internal class MainFragment : NavigationFragment() {
+internal class MainFragment : NavigationFragment<MenuIntent, MenuState, MenuAction, BottomAnimationViewModel>() {
     private val viewBinding by viewBinding(FragmentMainBinding::bind)
-    private lateinit var viewModel: BottomAnimationViewModel
 
     private val onItemSelectedListener = NavigationBarView.OnItemSelectedListener { item ->
         selectTab(item.itemId)
-    }
-
-    private val slideTopPositionObserver = Observer<Pair<Float, Float>> {
-        with(viewBinding) {
-            bottomNavigationView.translationY = it.first * bottomNavigationView.height
-            bottomNavigationView.visibility = View.VISIBLE
-            bottomNavigationView.alpha = it.second
-        }
-    }
-
-    private val slideBottomPositionObserver = Observer<Pair<Float, Float>> {
-        viewBinding.bottomNavigationView.alpha = 0f
-        viewBinding.bottomNavigationView.visibility = View.INVISIBLE
     }
 
     override fun getComponent(): IModuleComponent = MainScreenComponentHolder.getComponent()
@@ -55,19 +43,20 @@ internal class MainFragment : NavigationFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_main, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreatedBeforeRendering(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreatedBeforeRendering(view, savedInstanceState)
         viewBinding.bottomNavigationView.setOnItemSelectedListener(onItemSelectedListener)
         viewBinding.bottomNavigationView.selectedItemId = currentItemId
-        if (context.isPortraitMode()) {
-            viewModel.slideTopPosition.observe(viewLifecycleOwner, slideTopPositionObserver)
-            viewModel.slideBottomPosition.observe(viewLifecycleOwner, slideBottomPositionObserver)
-        }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.updateBottomAnimation(isOpen = false)
+    override fun invalidateUi(state: MenuState) {
+        super.invalidateUi(state)
+        if (context.isPortraitMode()) {
+            viewBinding.bottomNavigationView.translationY =
+                state.bottomNavigationViewShift * viewBinding.bottomNavigationView.height
+            viewBinding.bottomNavigationView.visibility = state.bottomNavigationViewVisibility
+            viewBinding.bottomNavigationView.alpha = state.bottomNavigationViewAlpha
+        }
     }
 
     /**

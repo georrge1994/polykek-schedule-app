@@ -7,6 +7,8 @@ import com.android.feature.groups.api.GroupsResponse
 import com.android.feature.groups.models.Group
 import com.android.feature.groups.models.GroupType
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -30,6 +32,7 @@ internal class GroupUseCase @Inject constructor(
     @Named(BACKGROUND_MESSAGE_BUS) backgroundMessageBus: MutableSharedFlow<String>
 ) : CatchResourceUseCase(backgroundMessageBus) {
     private val nameAndLevelComparator = compareBy<Group>({ it.level }, { it.nameMultiLines })
+    private val mutex = Mutex()
     private var cachedGroups: List<Group>? = null
     private var cachedSchoolId: String? = null
 
@@ -43,14 +46,26 @@ internal class GroupUseCase @Inject constructor(
     internal suspend fun getGroupsByTypes(
         schoolId: String?,
         keyWord: String
-    ): Map<GroupType, List<Any>>? = if (schoolId == cachedSchoolId || schoolId == null) {
-        groupSortUseCase.getSortedGroupsByTabs(cachedGroups, keyWord)
-    } else {
-        groupsApiRepository.getGroups(schoolId).catchRequestError {
-            cachedSchoolId = schoolId
-            cachedGroups = it.convertToCachedGroups()
+    ): Map<GroupType, List<Any>>? = mutex.withLock {
+        if (schoolId == cachedSchoolId || schoolId == null) {
             groupSortUseCase.getSortedGroupsByTabs(cachedGroups, keyWord)
+        } else {
+            groupsApiRepository.getGroups(schoolId).catchRequestError {
+                cachedSchoolId = schoolId
+                cachedGroups = it.convertToCachedGroups()
+                groupSortUseCase.getSortedGroupsByTabs(cachedGroups, keyWord)
+            }
         }
+    }
+
+    /**
+     * Get groups by types.
+     *
+     * @param keyWord Key word
+     * @return Data for recycler views (Lists of groups by [GroupType] with level titles).
+     */
+    internal suspend fun getGroupsByTypes(keyWord: String): Map<GroupType, List<Any>>? = mutex.withLock {
+        groupSortUseCase.getSortedGroupsByTabs(cachedGroups, keyWord)
     }
 
     /**

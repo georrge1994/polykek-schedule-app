@@ -3,7 +3,7 @@ package com.android.feature.welcome.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.android.core.ui.adapters.BaseFragmentStateAdapter
 import com.android.feature.welcome.fragments.ShootFragment
 
 private const val NUM_PAGES = 4
@@ -19,8 +19,10 @@ private const val NUM_PAGES = 4
 internal class WelcomeViewPagerAdapter(
     fragmentManager: FragmentManager,
     viewLifecycle: Lifecycle
-) : FragmentStateAdapter(fragmentManager, viewLifecycle) {
+) : BaseFragmentStateAdapter(fragmentManager, viewLifecycle) {
     override fun getItemCount() = NUM_PAGES
 
     override fun createFragment(position: Int): Fragment = ShootFragment.newInstance(position)
+
+    override fun shouldBeDetached(fragment: Fragment): Boolean = fragment is ShootFragment
 }

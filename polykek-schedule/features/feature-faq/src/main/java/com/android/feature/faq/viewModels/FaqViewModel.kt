@@ -1,8 +1,10 @@
 package com.android.feature.faq.viewModels
 
-import com.android.core.ui.viewModels.BaseViewModel
-import com.android.feature.faq.R
+import com.android.core.ui.mvi.MviViewModel
 import com.android.feature.faq.models.FAQ
+import com.android.feature.faq.mvi.FaqAction
+import com.android.feature.faq.mvi.FaqIntent
+import com.android.feature.faq.mvi.FaqState
 import javax.inject.Inject
 
 /**
@@ -10,18 +12,24 @@ import javax.inject.Inject
  *
  * @constructor Create empty constructor for faq view model
  */
-internal class FaqViewModel @Inject constructor() : BaseViewModel() {
+internal class FaqViewModel @Inject constructor() : MviViewModel<FaqIntent, FaqState, FaqAction>(FaqState.Default) {
+    override suspend fun dispatchIntent(intent: FaqIntent) {
+        when (intent) {
+            is FaqIntent.ClickByItem -> getNewItems(intent.position, intent.isOpened).emitState()
+            is FaqIntent.OpenFeedback -> FaqAction.OpenFeedback.emitAction()
+        }
+    }
+
     /**
-     * Get faq items.
+     * Get new items.
      *
+     * @param position Position
+     * @param isOpened Is [position] selected/opened
      * @return List of [FAQ]
      */
-    internal fun getFaqItems() = listOf(
-        FAQ(R.string.faq_fragment_question_1_title, R.string.faq_fragment_question_1_description),
-        FAQ(R.string.faq_fragment_question_2_title, R.string.faq_fragment_question_2_description),
-        FAQ(R.string.faq_fragment_question_3_title, R.string.faq_fragment_question_3_description),
-        FAQ(R.string.faq_fragment_question_4_title, R.string.faq_fragment_question_4_description),
-        FAQ(R.string.faq_fragment_question_5_title, R.string.faq_fragment_question_5_description),
-        FAQ(R.string.faq_fragment_question_6_title, R.string.faq_fragment_question_6_description)
-    )
+    private fun getNewItems(position: Int, isOpened: Boolean) = FaqState.Default.items.mapIndexed { index, faq ->
+        faq.copy(isOpened = index == position && isOpened)
+    }.let { newItems ->
+        FaqState.Update(newItems)
+    }
 }

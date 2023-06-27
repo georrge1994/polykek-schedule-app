@@ -5,6 +5,8 @@ import com.android.core.retrofit.api.common.CatchResourceUseCase
 import com.android.core.ui.dagger.BACKGROUND_MESSAGE_BUS
 import com.android.feature.buildings.api.BuildingApiRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
@@ -24,6 +26,7 @@ internal class BuildingUseCase @Inject constructor(
     @Named(BACKGROUND_MESSAGE_BUS) backgroundMessageBus: MutableSharedFlow<String>
 ) : CatchResourceUseCase(backgroundMessageBus) {
     private var buildings: List<Building> = Collections.emptyList()
+    private val mutex = Mutex()
 
     /**
      * Get buildings.
@@ -31,7 +34,7 @@ internal class BuildingUseCase @Inject constructor(
      * @param keyWord Key word
      * @return Filtered buildings
      */
-    internal suspend fun getBuildings(keyWord: String?): List<Building> {
+    internal suspend fun getBuildings(keyWord: String?): List<Building> = mutex.withLock {
         if (buildings.isEmpty()) {
             buildingApiRepository.getBuildings().catchRequestError {
                 buildings = buildingConvertUseCase.convertResponseToBuildings(it)

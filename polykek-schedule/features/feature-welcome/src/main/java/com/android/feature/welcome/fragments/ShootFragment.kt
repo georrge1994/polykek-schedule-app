@@ -23,7 +23,7 @@ private const val FRAGMENT_ID = "FRAGMENT_ID"
  */
 internal class ShootFragment : BaseFragment() {
     private val viewBinding by viewBinding(FragmentShootBinding::bind)
-    private lateinit var welcomeViewModel: WelcomeViewModel
+    private lateinit var viewModel: WelcomeViewModel
 
     override fun getComponent(): IModuleComponent = WelcomeComponentHolder.getComponent()
 
@@ -31,7 +31,7 @@ internal class ShootFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        welcomeViewModel = createSharedViewModelWithParentFragment(viewModelFactory)
+        viewModel = createSharedViewModelWithParentFragment(viewModelFactory)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -42,7 +42,7 @@ internal class ShootFragment : BaseFragment() {
         arguments?.let { bundle ->
             ContextCompat.getDrawable(
                 requireContext(),
-                welcomeViewModel.getDrawableId(bundle.getInt(FRAGMENT_ID))
+                viewModel.getDrawableId(bundle.getInt(FRAGMENT_ID))
             ).let { drawable ->
                 viewBinding.image.setImageDrawable(drawable)
             }

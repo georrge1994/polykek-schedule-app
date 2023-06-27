@@ -1,6 +1,10 @@
 package com.android.feature.notes.fragments
 
 import com.android.core.ui.fragments.ToolbarFragment
+import com.android.core.ui.mvi.MviAction
+import com.android.core.ui.mvi.MviIntent
+import com.android.core.ui.mvi.MviState
+import com.android.core.ui.mvi.MviViewModel
 
 //
 //private const val REQUEST_CAPTURE_IMAGE = 100
@@ -11,7 +15,8 @@ import com.android.core.ui.fragments.ToolbarFragment
 //        Manifest.permission.READ_EXTERNAL_STORAGE
 //)
 
-internal abstract class CameraFragment : ToolbarFragment() {
+internal abstract class CameraFragment<I : MviIntent, S : MviState, A : MviAction, VM : MviViewModel<I, S, A>> :
+    ToolbarFragment<I, S, A, VM>() {
 //
 //    protected val cameraClickListener = View.OnClickListener { openCameraIntent() }
 //
@@ -31,8 +36,8 @@ internal abstract class CameraFragment : ToolbarFragment() {
 //        }
 //    }
 //
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
+//    override fun onViewCreatedBeforeRendering(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreatedBeforeRendering(view, savedInstanceState)
 //        if (Build.VERSION.SDK_INT >= 23) {
 //            if (!hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 //                ActivityCompat.requestPermissions(this, PERMISSIONS, REQUEST)

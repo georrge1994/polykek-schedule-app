@@ -1,6 +1,5 @@
 package com.android.core.room.api.savedItems
 
-import androidx.lifecycle.LiveData
 import com.android.common.models.savedItems.SavedItem
 import kotlinx.coroutines.flow.Flow
 
@@ -16,12 +15,7 @@ interface ISavedItemsRoomRepository {
     /**
      * All saved items.
      */
-    val savedItems: LiveData<List<SavedItem>>
-
-    /**
-     * Current item.
-     */
-    val selectedItemLive2: LiveData<SavedItem?>
+    val savedItems: Flow<List<SavedItem>>
 
     /**
      * Get selected saved item like a flow.

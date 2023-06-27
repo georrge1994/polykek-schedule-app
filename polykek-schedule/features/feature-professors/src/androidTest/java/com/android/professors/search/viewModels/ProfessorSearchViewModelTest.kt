@@ -4,10 +4,11 @@ import com.android.common.models.professors.Professor
 import com.android.core.room.api.savedItems.ISavedItemsRoomRepository
 import com.android.core.ui.models.ScheduleMode
 import com.android.feature.professors.R
+import com.android.professors.search.mvi.ProfessorsSearchAction
+import com.android.professors.search.mvi.ProfessorsSearchIntent
+import com.android.professors.search.mvi.ProfessorsSearchState
 import com.android.professors.search.useCases.ProfessorsSearchUseCase
 import com.android.test.support.androidTest.base.BaseViewModelUnitTest
-import com.android.test.support.androidTest.utils.collectPost
-import com.android.test.support.androidTest.utils.getOrAwaitValue
 import com.android.test.support.testFixtures.TEST_STRING
 import com.android.test.support.testFixtures.joinWithTimeout
 import com.android.test.support.testFixtures.runBlockingUnit
@@ -41,66 +42,88 @@ class ProfessorSearchViewModelTest : BaseViewModelUnitTest() {
     )
 
     /**
-     * Complex test 1.
+     * Init content.
      */
     @Test
-    fun complexTest1() = runBlockingUnit {
-        professorSearchViewModel.scheduleMode = ScheduleMode.NEW_ITEM
-        professorSearchViewModel.asyncSubscribe().joinWithTimeout()
-        professorSearchViewModel.professors.getOrAwaitValue(emptyList())
-        professorSearchViewModel.listIsEmpty.getOrAwaitValue(true)
-        professorSearchViewModel.messageId.getOrAwaitValue(R.string.professors_search_fragment_no_professors)
-        professorSearchViewModel.unSubscribe()
-    }
-
-    /**
-     * Complex test 2.
-     */
-    @Test
-    fun complexTest2() = runBlockingUnit {
-        professorSearchViewModel.scheduleMode = ScheduleMode.SEARCH
-        professorSearchViewModel.asyncSubscribe().joinWithTimeout()
-        professorSearchViewModel.isLoading.collectPost {
-            professorSearchViewModel.searchProfessorsByKeyword("k").joinWithTimeout()
-            backgroundMessageBus.subscribeAndCompareFirstValue(TEST_STRING).joinWithTimeout()
-        }.apply {
-            assertEquals(2, this.size)
-            assertEquals(true, first())
-            assertEquals(false, last())
+    fun initContent() = runBlockingUnit {
+        professorSearchViewModel.dispatchIntentAsync(
+            ProfessorsSearchIntent.InitContent(ScheduleMode.NEW_ITEM)
+        ).joinWithTimeout()
+        professorSearchViewModel.state.getOrAwaitValue().apply {
+            assertEquals(ScheduleMode.NEW_ITEM, scheduleMode)
+            assertEquals(emptyList<Professor>(), professors)
         }
-        professorSearchViewModel.unSubscribe()
     }
 
     /**
-     * Complex test 3.
+     * Init content 2.
      */
     @Test
-    fun complexTest3() = runBlockingUnit {
-        professorSearchViewModel.scheduleMode = ScheduleMode.SEARCH
-        professorSearchViewModel.asyncSubscribe().joinWithTimeout()
-        professorSearchViewModel.isLoading.collectPost {
-            professorSearchViewModel.searchProfessorsByKeyword("Петр").joinWithTimeout()
-            coVerify(exactly = 1) { professorsSearchUseCase.getProfessors("Петр") }
-            professorSearchViewModel.professors.getOrAwaitValue(professors)
-            professorSearchViewModel.listIsEmpty.getOrAwaitValue(false)
-            professorSearchViewModel.messageId.getOrAwaitValue(R.string.professors_search_fragment_manual_text)
-        }.apply {
-            assertEquals(2, this.size)
-            assertEquals(true, first())
-            assertEquals(false, last())
+    fun initContent2() = runBlockingUnit {
+        professorSearchViewModel.dispatchIntentAsync(
+            ProfessorsSearchIntent.InitContent(ScheduleMode.SEARCH)
+        ).joinWithTimeout()
+        professorSearchViewModel.state.getOrAwaitValue().apply {
+            assertEquals(ScheduleMode.SEARCH, scheduleMode)
         }
-        professorSearchViewModel.unSubscribe()
     }
 
     /**
-     * Save selected item.
+     * Search professors by keyword.
      */
     @Test
-    fun saveSelectedItem() = runBlockingUnit {
+    fun searchProfessorsByKeyword_tooShortKeyword() = runBlockingUnit {
+        val keyWord = "ab"
+        professorSearchViewModel.dispatchIntentAsync(
+            ProfessorsSearchIntent.SearchProfessorsByKeyword(keyWord)
+        ).joinWithTimeout()
+        backgroundMessageBus.subscribeAndCompareFirstValue(TEST_STRING).joinWithTimeout()
+    }
+
+    /**
+     * Search professors by keyword 2.
+     */
+    @Test
+    fun searchProfessorsByKeyword_normalKeyword() = runBlockingUnit {
+        val keyWord = "Petr"
+        professorSearchViewModel.state.collectPost {
+            professorSearchViewModel.dispatchIntentAsync(
+                ProfessorsSearchIntent.SearchProfessorsByKeyword(keyWord)
+            ).joinWithTimeout()
+            coVerify(exactly = 1) { professorsSearchUseCase.getProfessors(keyWord) }
+        }.apply {
+            assertEquals(3, this.size)
+            assertEquals(ProfessorsSearchState.Default, this[0])
+            assertEquals(ProfessorsSearchState.Default.copyState(isLoading = true), this[1])
+            assertEquals(
+                ProfessorsSearchState.Default.copyState(
+                    isLoading = false,
+                    professors = professors,
+                    messageId = R.string.professors_search_fragment_no_professors
+                ),
+                this[2]
+            )
+        }
+    }
+
+    /**
+     * Select item and show the next screen.
+     */
+    @Test
+    fun selectProfessor() = runBlockingUnit {
         val professor = mockk<Professor> {
             coEvery { toSavedItem() } returns mockk()
         }
-        professorSearchViewModel.saveSelectedItem(professor).joinWithTimeout()
+        val actionJob = professorSearchViewModel.action.subscribeAndCompareFirstValue(
+            ProfessorsSearchAction.ShowNextScreen(ScheduleMode.WELCOME, professor)
+        )
+        professorSearchViewModel.dispatchIntentAsync(
+            ProfessorsSearchIntent.InitContent(ScheduleMode.WELCOME)
+        ).joinWithTimeout()
+        professorSearchViewModel.dispatchIntentAsync(
+            ProfessorsSearchIntent.SaveAndShowNextScreen(professor)
+        ).joinWithTimeout()
         coVerify(exactly = 1) { savedItemsRoomRepository.saveItemAndSelectIt(any()) }
+        actionJob.joinWithTimeout()
     }
 }
