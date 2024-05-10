@@ -3,6 +3,7 @@ package com.android.test.support.unitTest.base
 import com.android.test.support.testFixtures.subscribeAndCompareFirstValueWithScope
 import com.android.test.support.unitTest.BaseUnitTest
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,6 +18,7 @@ import kotlinx.coroutines.test.setMain
  *
  * @constructor Create empty constructor for base unit test for subscriptions
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseUnitTestForSubscriptions : BaseUnitTest() {
     protected val unconfinedTestDispatcher = UnconfinedTestDispatcher()
     protected val testScope = TestScope(unconfinedTestDispatcher)

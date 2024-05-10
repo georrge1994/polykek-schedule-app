@@ -52,7 +52,7 @@ internal class LessonConvertFormatUseCase @Inject constructor(private val lesson
         lessons: List<LessonResponse>?,
         noteIds: Set<String>,
         groupId: Int? = null
-    ) = ArrayList<Lesson>().apply {
+    ): List<Lesson> = ArrayList<Lesson>().apply {
         lessons?.let { checkedLessons ->
             checkedLessons.getCombinedLessons().forEach {
                 this.add(it.convertToLesson(noteIds, groupId))

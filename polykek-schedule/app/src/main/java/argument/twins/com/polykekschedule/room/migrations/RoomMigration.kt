@@ -20,11 +20,11 @@ abstract class RoomMigration : IRoomMigrationUseCase {
      * @return [Migration]
      */
     fun getMigration(): Migration = object : Migration(startVersion, endVersion) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.beginTransactionNonExclusive()
-            transactionMigration(database)
-            database.setTransactionSuccessful()
-            database.endTransaction()
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.beginTransactionNonExclusive()
+            transactionMigration(db)
+            db.setTransactionSuccessful()
+            db.endTransaction()
         }
     }
 }

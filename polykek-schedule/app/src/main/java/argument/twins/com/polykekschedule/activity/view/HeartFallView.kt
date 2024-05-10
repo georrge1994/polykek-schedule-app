@@ -36,7 +36,7 @@ class HeartFallView(
         elevation = resources.getDimensionPixelSize(R.dimen.app_elevation).toFloat()
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         heartsEffect.onDraw(this, canvas)
     }

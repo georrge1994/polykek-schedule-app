@@ -8,6 +8,7 @@ import com.android.test.support.testFixtures.ONE_SECOND
 import com.android.test.support.testFixtures.subscribeAndCompareFirstValueWithScope
 import com.android.test.support.testFixtures.subscribeAndCompareSecondValue
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeoutException
  *
  * @constructor Create empty constructor for base unit test for subscriptions
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseAndroidUnitTestForSubscriptions : BaseAndroidUnitTest() {
     protected val unconfinedTestDispatcher = UnconfinedTestDispatcher()
     protected val testScope = TestScope(unconfinedTestDispatcher)

@@ -22,7 +22,7 @@ private const val DECEMBER_20 = 355
 class PolytechToolbar(context: Context, attrs: AttributeSet? = null) : Toolbar(context, attrs) {
     private val snowflakesEffect by lazy { SnowflakesEffect(context) }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
         if (day <= JANUARY_19 || day > DECEMBER_20)

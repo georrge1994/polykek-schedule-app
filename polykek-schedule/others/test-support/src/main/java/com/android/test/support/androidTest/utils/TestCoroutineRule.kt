@@ -15,7 +15,7 @@ import org.junit.runners.model.Statement
  * @property testDispatcher Test dispatcher
  * @constructor Create [TestCoroutineRule]
  */
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 class TestCoroutineRule(private val testDispatcher: TestDispatcher) : TestRule {
     override fun apply(base: Statement, description: Description): Statement = object : Statement() {
         @Throws(Throwable::class)
