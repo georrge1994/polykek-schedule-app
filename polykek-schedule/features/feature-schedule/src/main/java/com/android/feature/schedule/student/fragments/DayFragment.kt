@@ -88,7 +88,7 @@ internal class DayFragment : NavigationFragment<StudentIntent, StudentState, Stu
         super.onDestroyView()
     }
 
-    companion object {
+    internal companion object {
         /**
          * New instance.
          *

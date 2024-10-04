@@ -11,5 +11,5 @@ sealed class ActivityState : MviState {
     /**
      * Default.
      */
-    object Default : ActivityState()
+    data object Default : ActivityState()
 }

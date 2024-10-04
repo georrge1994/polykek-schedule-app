@@ -49,7 +49,7 @@ internal class ShootFragment : BaseFragment() {
         }
     }
 
-    companion object {
+    internal companion object {
         /**
          * New instance.
          *

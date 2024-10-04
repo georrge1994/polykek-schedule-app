@@ -27,7 +27,7 @@ internal abstract class ScheduleComponent : IModuleComponent, IScheduleModuleApi
 
     override fun getScheduleWeekFragment(): Fragment = ScheduleWeekFragment()
 
-    companion object {
+    internal companion object {
         /**
          * Create [ScheduleComponent].
          *

@@ -8,7 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import com.android.core.ui.view.ext.setRandomViewId
 import com.android.feature.faq.R
-import com.codesgood.views.JustifiedTextView
+import com.android.core.ui.view.custom.getJustifiedTextView
 
 /**
  * FAQ item view. Used to avoid inflating process on the fly.
@@ -20,7 +20,7 @@ import com.codesgood.views.JustifiedTextView
 internal class FaqItemView(context: Context) : ConstraintLayout(context) {
     val parentLayout: ConstraintLayout = this.setRandomViewId()
     val question: TextView = TextView(ContextThemeWrapper(context, R.style.BaseTextStyle)).setRandomViewId()
-    val answer: TextView = JustifiedTextView(ContextThemeWrapper(context, R.style.Small_Label_Style)).setRandomViewId()
+    val answer: TextView = getJustifiedTextView(context, R.style.Small_Label_Style).setRandomViewId()
     val moreIcon: AppCompatImageView = AppCompatImageView(context).setRandomViewId()
 
     init {

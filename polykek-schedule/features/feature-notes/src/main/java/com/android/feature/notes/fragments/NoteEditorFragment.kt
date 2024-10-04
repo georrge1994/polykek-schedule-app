@@ -102,7 +102,7 @@ internal class NoteEditorFragment :
         }
     }
 
-    companion object {
+    internal companion object {
         /**
          * Get instance with [noteId] and [title].
          *

@@ -27,7 +27,7 @@ internal abstract class MainScreenComponent : IModuleComponent, IMainScreenModul
 
     override fun getMainFragment(): Fragment = MainFragment()
 
-    companion object {
+    internal companion object {
         /**
          * Create [MainScreenComponent].
          *

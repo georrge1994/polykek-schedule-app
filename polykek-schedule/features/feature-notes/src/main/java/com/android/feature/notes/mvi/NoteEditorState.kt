@@ -19,7 +19,7 @@ internal sealed class NoteEditorState : MviState, NoteEditorStateProperties {
     /**
      * Default.
      */
-    internal object Default : NoteEditorState() {
+    internal data object Default : NoteEditorState() {
         override val note: Note? = null
     }
 

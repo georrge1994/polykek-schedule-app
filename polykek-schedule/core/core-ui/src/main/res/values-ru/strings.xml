@@ -5,8 +5,9 @@
 
     <string name="welcome_screen_message_0">Быстрый доступ к расписанию</string>
     <string name="welcome_screen_message_1">Заметки к предметам</string>
-    <string name="welcome_screen_message_2">Навигация по кампусу</string>
-    <string name="welcome_screen_message_3">Расписание преподавателей</string>
+    <string name="welcome_screen_message_2">Актуальные новости</string>
+    <string name="welcome_screen_message_3">Навигация по кампусу</string>
+    <string name="welcome_screen_message_4">Расписание преподавателей</string>
     <string name="welcome_screen_student">Студент</string>
     <string name="welcome_screen_professor">Преподаватель</string>
 
@@ -28,6 +29,10 @@
     <string name="schedule_fragment_voldemort">Тот-кого-нельзя-называть</string>
     <string name="schedule_fragment_chamber_of_Secret">Тайная комната</string>
     <string name="schedule_choose_group">Выберите группу</string>
+
+    <string name="news_fragment_title">Актуальные новости</string>
+    <string name="news_fragment_empty_list">Нет новостей</string>
+    <string name="news_fragment_news">Новость # %1$d</string>
 
     <string name="notes_fragment_notes">Заметки</string>
     <string name="notes_fragment_tab_title_by_lessons">По предметам</string>
@@ -73,19 +78,11 @@
     <string name="faq_fragment_question_6_title">Кто разработал приложение и зачем?</string>
     <string name="faq_fragment_question_6_description">Авторы приложения \"Раписание СПбПУ\" - Георгий и Татьяна Чеботаревы. Данное приложение является pet-проектом для отработки приемов android-разработки.</string>
 
-    <string name="feedback_fragment_title">Отправить отзыв</string>
-    <string name="feedback_fragment_wrong_length_of_message">Короткое сообщение не информативно (введите более 20 знаков)</string>
-    <string name="feedback_fragment_message_sent_successfully">Отзыв успешно отправлен</string>
-    <string name="feedback_fragment_message_was_not_sent">Ошибка. Сообщение не было доставлено</string>
-    <string name="feedback_fragment_bug">Ошибка</string>
-    <string name="feedback_fragment_idea">Предложение</string>
-    <string name="feedback_fragment_other">Иное</string>
-    <string name="feedback_fragment_submit">Отправить</string>
-    <string name="feedback_fragment_describe_a_task">Подробно опишите вашу проблему, либо идею</string>
-    <string name="feedback_fragment_please_select_type">Пожалуйста, выберите тип сообщения:</string>
+    <string name="feedback_email_subject">Отзыв о приложении</string>
 
     <string name="navigation_menu_teachers">Преподы</string>
     <string name="navigation_menu_schedule">Расписание</string>
+    <string name="navigation_menu_news">Новости</string>
     <string name="navigation_menu_notes">Заметки</string>
     <string name="navigation_menu_map">Карта</string>
 

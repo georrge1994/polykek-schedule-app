@@ -28,15 +28,15 @@ internal sealed class SavedItemIntent : MviIntent {
     /**
      * Open school list screen.
      */
-    internal object OpenSchools : SavedItemIntent()
+    internal data object OpenSchools : SavedItemIntent()
 
     /**
      * Open professors search screen.
      */
-    internal object OpenProfessors : SavedItemIntent()
+    internal data object OpenProfessors : SavedItemIntent()
 
     /**
      * Open email chooser dialog.
      */
-    internal object OpenEmailChooser : SavedItemIntent()
+    internal data object OpenEmailChooser : SavedItemIntent()
 }

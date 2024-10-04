@@ -19,6 +19,7 @@ import com.android.module.injector.dependenciesHolders.DynamicProvider
 import com.android.module.injector.dependenciesHolders.IBaseDependencyHolder
 import com.android.module.injector.moduleMarkers.IModuleDependencies
 import com.android.professors.base.dagger.ProfessorsComponentHolder
+import com.example.news.dagger.NewsComponentHolder
 import javax.inject.Inject
 
 /**
@@ -40,6 +41,8 @@ class MainScreenDynamicProviderFactory @Inject constructor(
      */
     private val mainScreenNavigationActions = object : IMainScreenNavigationActions {
         override fun getScheduleFragment(): Fragment = ScheduleComponentHolder.getApi().getScheduleWeekFragment()
+
+        override fun getNewsFragment(): Fragment = NewsComponentHolder.getApi().getNewsFragment()
 
         override fun getNotesFragment(): Fragment = NotesComponentHolder.getApi().getNotesFragment()
 

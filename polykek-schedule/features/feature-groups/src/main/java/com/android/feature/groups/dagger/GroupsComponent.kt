@@ -27,7 +27,7 @@ internal abstract class GroupsComponent : IModuleComponent, IGroupsModuleApi {
     override fun getGroupsFragment(scheduleMode: ScheduleMode, schoolId: String, abbr: String) =
         GroupsFragment.newInstance(scheduleMode, schoolId, abbr)
 
-    companion object {
+    internal companion object {
         /**
          * Create [GroupsComponent].
          *

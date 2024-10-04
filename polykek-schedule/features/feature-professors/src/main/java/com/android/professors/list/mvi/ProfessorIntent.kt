@@ -12,12 +12,12 @@ internal sealed class ProfessorIntent : MviIntent {
     /**
      * Open professor search screen.
      */
-    internal object OpenProfessorSearchScreen : ProfessorIntent()
+    internal data object OpenProfessorSearchScreen : ProfessorIntent()
 
     /**
      * Open faq screen.
      */
-    internal object OpenFAQScreen : ProfessorIntent()
+    internal data object OpenFAQScreen : ProfessorIntent()
 
     /**
      * Open professor schedule screen.

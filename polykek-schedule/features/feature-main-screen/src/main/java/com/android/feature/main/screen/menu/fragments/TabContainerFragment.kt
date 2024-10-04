@@ -87,6 +87,10 @@ internal class TabContainerFragment : BaseFragment(), IRouterProvider {
             PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
                 mainScreenNavigationActions.getScheduleFragment()
             }
+        R.id.news_navigation ->
+            PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
+                mainScreenNavigationActions.getNewsFragment()
+            }
         R.id.notes_navigation ->
             PolytechFragmentScreen(addToBackStack = false, animationType = AnimationType.WITHOUT) {
                 mainScreenNavigationActions.getNotesFragment()
@@ -104,7 +108,7 @@ internal class TabContainerFragment : BaseFragment(), IRouterProvider {
         router.replaceScreen(this)
     }
 
-    companion object {
+    internal companion object {
         /**
          * Get new instance.
          *

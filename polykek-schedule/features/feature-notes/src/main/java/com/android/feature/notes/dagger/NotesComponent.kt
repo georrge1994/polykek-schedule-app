@@ -29,7 +29,7 @@ internal abstract class NotesComponent : IModuleComponent, INotesModuleApi {
     override fun getNoteEditorFragment(selectedItem: Int): Fragment = NoteEditorFragment.newInstance(selectedItem)
     override fun getNoteEditorFragment(ownNoteId: String): Fragment = NoteEditorFragment.newInstance(ownNoteId)
 
-    companion object {
+    internal companion object {
         /**
          * Create [NotesComponent].
          *

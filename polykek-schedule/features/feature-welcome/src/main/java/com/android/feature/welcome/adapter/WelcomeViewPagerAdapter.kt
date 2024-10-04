@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle
 import com.android.core.ui.adapters.BaseFragmentStateAdapter
 import com.android.feature.welcome.fragments.ShootFragment
 
-private const val NUM_PAGES = 4
+private const val NUM_PAGES = 5
 
 /**
  * Welcome view pager adapter.

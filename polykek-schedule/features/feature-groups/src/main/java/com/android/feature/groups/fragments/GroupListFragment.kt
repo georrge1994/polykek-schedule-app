@@ -108,7 +108,7 @@ internal class GroupListFragment : NavigationFragment<GroupsIntent, GroupsState,
         super.onDestroyView()
     }
 
-    companion object {
+    internal companion object {
         /**
          * New instance.
          *

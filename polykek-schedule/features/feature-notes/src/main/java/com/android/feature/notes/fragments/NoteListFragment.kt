@@ -96,7 +96,7 @@ internal class NoteListFragment : NavigationFragment<NotesIntent, NotesState, No
         super.onDestroyView()
     }
 
-    companion object {
+    internal companion object {
         /**
          * New instance.
          *

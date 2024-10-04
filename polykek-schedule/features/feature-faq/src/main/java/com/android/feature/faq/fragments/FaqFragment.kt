@@ -1,23 +1,27 @@
 package com.android.feature.faq.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionSet
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.core.ui.fragments.ToolbarFragment
-import com.android.core.ui.navigation.polytechCicirone.PolytechFragmentScreen
 import com.android.feature.faq.R
 import com.android.feature.faq.adapters.FaqRecyclerViewAdapter
 import com.android.feature.faq.adapters.ItemClickListener
 import com.android.feature.faq.dagger.FaqComponentHolder
-import com.android.feature.faq.dagger.IFaqNavigationActions
 import com.android.feature.faq.databinding.FragmentFAQBinding
 import com.android.feature.faq.mvi.FaqAction
 import com.android.feature.faq.mvi.FaqIntent
 import com.android.feature.faq.mvi.FaqState
 import com.android.feature.faq.viewModels.FaqViewModel
 import com.android.module.injector.moduleMarkers.IModuleComponent
+import com.android.shared.code.utils.email.OpenEmailChooserUseCase
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import javax.inject.Inject
 
@@ -31,14 +35,14 @@ internal class FaqFragment : ToolbarFragment<FaqIntent, FaqState, FaqAction, Faq
     private val transitionAnimation = TransitionSet().addTransition(ChangeBounds())
     private lateinit var adapter: FaqRecyclerViewAdapter
 
+    @Inject
+    lateinit var openEmailChooserUseCase: OpenEmailChooserUseCase
+
     private val itemClickListener = object : ItemClickListener {
         override fun onClick(position: Int, isOpen: Boolean) {
             FaqIntent.ClickByItem(position, isOpen).dispatchIntent()
         }
     }
-
-    @Inject
-    lateinit var faqInnerNavigation: IFaqNavigationActions
 
     override fun getComponent(): IModuleComponent = FaqComponentHolder.getComponent()
 
@@ -79,18 +83,14 @@ internal class FaqFragment : ToolbarFragment<FaqIntent, FaqState, FaqAction, Faq
     override fun executeSingleAction(action: FaqAction) {
         super.executeSingleAction(action)
         if (action is FaqAction.OpenFeedback) {
-            openFeedbackFragment()
+            openEmailChooserUseCase.openEmailChooser(
+                requireContext(),
+                getString(R.string.feedback_email_author),
+                getString(R.string.feedback_email_subject),
+                getString(R.string.error_in_the_schedule_selection_message)
+            )
         }
     }
-
-    /**
-     * Open feedback fragment.
-     */
-    private fun openFeedbackFragment() = mainRouter.navigateTo(
-        PolytechFragmentScreen {
-            faqInnerNavigation.getFeedbackScreen()
-        }
-    )
 
     override fun onDestroyView() {
         adapter.detachRecyclerView()

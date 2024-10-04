@@ -233,7 +233,7 @@ class HeartsEffect(private val context: Context) {
         return path
     }
 
-    companion object {
+    private companion object {
         private val accelerateInterpolator = AccelerateInterpolator()
         private val decelerateInterpolator = DecelerateInterpolator()
         private val random = Random()

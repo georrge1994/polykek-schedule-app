@@ -24,6 +24,7 @@ This application was developed specially for students and professors of St. Pete
 	</a>)
 + Clear and careful coding (median size of fragments, useCases and viewModels is 125 lines)
 + Obfuscation for prod-version (aggressive mode of R8)
++ Compose (for new screens)
 
 ## Used the follow frameworks
 + Dagger
@@ -33,26 +34,21 @@ This application was developed specially for students and professors of St. Pete
 + Mockito
 + Cicerone (powerful framework for navigation. Very helpful for multi-module-architecture)
 + Firebase messaging (used for "Spirit of Peter": time to time, I send to students some funny messages or congratulations ;)
-+ Crashlytics
-
++ Firebase crashlytics & analytics
++ Paparazzi (for new screens)
++ Coil
 
 ## Demonstrating some features
 <table>
     <tr>
         <td>
-			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/1_welcome_navigation.gif">
-				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/1_welcome_navigation.gif" width="256"/>
-			</a>
+			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/1_welcome_navigation.gif" width="256"/>
         </td>
         <td>
-			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/2_group_search.gif">
-				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/2_group_search.gif" width="256"/>
-			</a>
+			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/2_group_search.gif" width="256"/>
         </td>
         <td>
-			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/3_independed_tab_navigation.gif">
-				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/3_independed_tab_navigation.gif" width="256"/>
-			</a>
+			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/3_independed_tab_navigation.gif" width="256"/>
         </td>
     </tr>
     <tr>
@@ -68,19 +64,13 @@ This application was developed specially for students and professors of St. Pete
     </tr>
     <tr>
         <td>
-			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/4_yandex_map_kit.gif">
-				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/4_yandex_map_kit.gif" width="256"/>
-			</a>
+			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/4_yandex_map_kit.gif" width="256"/>
         </td>
         <td>
-			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/5_snow_animation.gif">
-				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/5_snow_animation.gif" width="256"/>
-			</a>
+			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/5_snow_animation.gif" width="256"/>
         </td>
         <td>
-			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/6_heartfall_animation.gif">
-				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/6_heartfall_animation.gif" width="256"/>
-			</a>
+			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/6_heartfall_animation.gif" width="256"/>
         </td>
     </tr>
     <tr>
@@ -96,24 +86,18 @@ This application was developed specially for students and professors of St. Pete
     </tr>
 	    <tr>
         <td>
-			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/7_harry_potter_feature.gif">
-				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/7_harry_potter_feature.gif" width="256"/>
-			</a>
+			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/7_news_block.gif width="256"/>
         </td>
         <td>
-			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/8_switching_between_selected_items.gif">
-				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/8_switching_between_selected_items.gif" width="256"/>
-			</a>
+			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/8_switching_between_selected_items.gif" width="256"/>
         </td>
         <td>
-			<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs/9_smooth_animation.gif">
-				<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/9_smooth_animation.gif" width="256"/>
-			</a>
+			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/9_smooth_animation.gif" width="256"/>
         </td>
     </tr>
     <tr>
         <td>
-            1-st April joke. Changes all items to items from Harry Potter universe
+            Block with actual news of the university
         </td>
         <td>
             Update all content by switching between groups
@@ -124,10 +108,6 @@ This application was developed specially for students and professors of St. Pete
     </tr>
 </table>
 
-## Links
-<a href="https://github.com/georrge1994/polykek-schedule-app/blob/main/high_quality_gifs">High quality gifs</a>
-
-
 ## 🚀 About Me
 I have been in Android since 2017. This is my pet project. You can judge me by this code. This application is not "dress app", I always use the same careful style for developing.
 
@@ -137,4 +117,20 @@ I have been in Android since 2017. This is my pet project. You can judge me by t
 [![telegram](https://img.shields.io/badge/-telegram-red?color=white&logo=telegram)](https://t.me/georrge1994)
 
 ## License
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) 
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+
+## Changes
+#v 2.3.3
+• Implemented news & web-content modules
+• Removed feedback module (changed to email intent)
+• Slightly updated design
+• Fixed crash for Samsungs
+• Updated libraries (also JDK -> 21, kotlin -> 2.0)
+• Replaced depreacated code
+• Fixed some minor UI bugs
+• Implemented Paparazzi and compose tests (for new screens)
+• Disabled ```android.enableJetifier=true```
+
+#v 2.3.0
+• Migrated to kts from groovy
+• Updated libraries

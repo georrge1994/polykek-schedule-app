@@ -21,7 +21,7 @@ internal abstract class SchoolsComponent : IModuleComponent, ISchoolsModuleApi {
 
     override fun getSchoolsFragment(): Fragment = SchoolsFragment()
 
-    companion object {
+    internal companion object {
         /**
          * Create [SchoolsComponent].
          *

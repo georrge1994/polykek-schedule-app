@@ -3,7 +3,18 @@ package argument.twins.com.polykekschedule.dagger.collector
 import argument.twins.com.polykekschedule.dagger.core.CoreRetrofitDynamicProviderFactory
 import argument.twins.com.polykekschedule.dagger.core.CoreUiDynamicProviderFactory
 import argument.twins.com.polykekschedule.dagger.core.ScheduleControllerDynamicProviderFactory
-import argument.twins.com.polykekschedule.dagger.features.*
+import argument.twins.com.polykekschedule.dagger.features.BuildingsDynamicProviderFactory
+import argument.twins.com.polykekschedule.dagger.features.FaqDynamicProviderFactory
+import argument.twins.com.polykekschedule.dagger.features.GroupsDynamicProviderFactory
+import argument.twins.com.polykekschedule.dagger.features.MainScreenDynamicProviderFactory
+import argument.twins.com.polykekschedule.dagger.features.MapDynamicProviderFactory
+import argument.twins.com.polykekschedule.dagger.features.NewsDynamicProviderFactory
+import argument.twins.com.polykekschedule.dagger.features.NotesDynamicProviderFactory
+import argument.twins.com.polykekschedule.dagger.features.ProfessorsDynamicProviderFactory
+import argument.twins.com.polykekschedule.dagger.features.ScheduleDynamicProviderFactory
+import argument.twins.com.polykekschedule.dagger.features.SchoolsDynamicProviderFactory
+import argument.twins.com.polykekschedule.dagger.features.WebContentDynamicProviderFactory
+import argument.twins.com.polykekschedule.dagger.features.WelcomeDynamicProviderFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoSet
@@ -39,10 +50,6 @@ abstract class DynamicDependenciesProviderFactoryBinder {
 
     @Binds
     @IntoSet
-    abstract fun bindFeedbackDynamicProviderFactory(factory: FeedbackDynamicProviderFactory): IDynamicDependenciesProviderFactory
-
-    @Binds
-    @IntoSet
     abstract fun bindGroupsDynamicProviderFactory(factory: GroupsDynamicProviderFactory): IDynamicDependenciesProviderFactory
 
     @Binds
@@ -72,4 +79,12 @@ abstract class DynamicDependenciesProviderFactoryBinder {
     @Binds
     @IntoSet
     abstract fun bindWelcomeDynamicProviderFactory(factory: WelcomeDynamicProviderFactory): IDynamicDependenciesProviderFactory
+
+    @Binds
+    @IntoSet
+    abstract fun bindNewsDynamicProviderFactory(factory: NewsDynamicProviderFactory): IDynamicDependenciesProviderFactory
+
+    @Binds
+    @IntoSet
+    abstract fun bindWebContentDynamicProviderFactory(factory: WebContentDynamicProviderFactory): IDynamicDependenciesProviderFactory
 }

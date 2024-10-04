@@ -22,6 +22,7 @@ dependencies {
 
     // Retrofit.
     implementation("com.squareup.retrofit2:converter-gson:$retrofit2Version")
+    implementation("com.squareup.retrofit2:converter-simplexml:$retrofit2Version")
 
     // JUnit test libs.
     addJUnitDependencies()

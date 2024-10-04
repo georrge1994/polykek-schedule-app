@@ -19,4 +19,7 @@ internal data class StudentWeekResponse(
     @SerializedName("week")     override val weekInfo: WeekInfoResponse = WeekInfoResponse(),
     @SerializedName("days")     override val days: MutableList<DayResponse> = Collections.emptyList(),
     @SerializedName("group")    val group: GroupResponse = GroupResponse()
-) : IWeekResponse
+) : IWeekResponse {
+    override val name: String
+        get() = group.name
+}

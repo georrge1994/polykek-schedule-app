@@ -22,7 +22,7 @@ internal sealed class SchoolState : MviState, SchoolStateProperties {
     /**
      * Default state.
      */
-    internal object Default : SchoolState() {
+    internal data object Default : SchoolState() {
         override val schools: List<School> = emptyList()
         override val scheduleMode: ScheduleMode = ScheduleMode.SEARCH
         override val isLoading: Boolean = false

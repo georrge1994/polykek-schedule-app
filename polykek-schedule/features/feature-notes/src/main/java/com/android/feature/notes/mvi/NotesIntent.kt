@@ -28,12 +28,12 @@ internal sealed class NotesIntent : SearchIntent {
     /**
      * Delete selected notes.
      */
-    internal object DeleteSelectedNotes : NotesIntent()
+    internal data object DeleteSelectedNotes : NotesIntent()
 
     /**
      * Open note editor new.
      */
-    internal object OpenNoteEditorNew : NotesIntent()
+    internal data object OpenNoteEditorNew : NotesIntent()
 
     /**
      * Click by note.

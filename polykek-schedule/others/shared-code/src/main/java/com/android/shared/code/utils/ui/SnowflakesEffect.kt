@@ -223,7 +223,7 @@ class SnowflakesEffect(private val context: Context) {
 
     private fun Float.toDpf(): Float = ceil(this * context.resources.displayMetrics.density)
 
-    companion object {
+    private companion object {
         private val accelerateInterpolator = AccelerateInterpolator()
         private val decelerateInterpolator = DecelerateInterpolator()
         private val random = Random()

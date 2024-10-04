@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.test.TestCoroutineScope
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -22,7 +21,7 @@ import java.util.concurrent.TimeoutException
  *
  * @receiver [Flow]
  * @param T Type
- * @param testScope [TestCoroutineScope]
+ * @param testScope [CoroutineScope]
  * @param time Time in milliseconds
  * @return [T]
  */
@@ -53,7 +52,7 @@ fun <T> Flow<T>.getOrAwaitValueScoped(
  *
  * @receiver [Flow]
  * @param T Type
- * @param testScope [TestCoroutineScope]
+ * @param testScope [CoroutineScope]
  * @param time Time in milliseconds
  * @return [T]
  */
@@ -68,7 +67,7 @@ suspend fun <T> Flow<T>.getOrAwaitValueScoped(testScope: CoroutineScope, time: L
  * @param T Type
  * @param count Count of values
  * @param action Action after observe
- * @param testScope [TestCoroutineScope]
+ * @param testScope [CoroutineScope]
  * @param time Time in milliseconds
  * @return [T]
  */
@@ -102,7 +101,7 @@ suspend fun <T> Flow<T>.getOrAwaitValuesScoped(
  * @receiver [Flow]
  * @param T T
  * @param count Count of expected values
- * @param testScope [TestCoroutineScope]
+ * @param testScope [CoroutineScope]
  * @param timeout Timeout before throw exception
  * @param action Action
  * @return List of caught items

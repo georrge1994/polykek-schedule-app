@@ -1,6 +1,6 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
@@ -16,8 +16,8 @@ android {
         applicationId = "argument.twins.com.polykekschedule"
         minSdk = MIN_SDK
         targetSdk = TARGET_SDK
-        versionCode = 44
-        versionName = "2.3.1"
+        versionCode = 46
+        versionName = "2.3.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -53,8 +53,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     // That excludes module duplicates during gradle builds.
@@ -66,7 +66,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "21"
         // Hide warnings.
         freeCompilerArgs = freeCompilerArgs + listOf(
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
@@ -83,6 +83,10 @@ android {
             assets.srcDirs("$projectDir/schemas")
         }
     }
+}
+
+kotlin {
+    configureKotlinOptions()
 }
 
 ksp {
@@ -126,7 +130,8 @@ dependencies {
     implementation("androidx.core:core-splashscreen:$splashscreenVersion")
     implementation("com.intuit.sdp:sdp-android:$sdpAndSspVersion")
     implementation("com.intuit.ssp:ssp-android:$sdpAndSspVersion")
-    implementation("com.google.android.play:core:$playCoreVersion")
+    implementation("com.google.android.play:review-ktx:$reviewKtxVersion")
+    implementation("com.google.android.play:app-update:$appUpdateKtxVersion")
 
     // Firebase.
     addFirebaseDependencies()
@@ -152,12 +157,13 @@ dependencies {
     implementation(project(featureGroupsModule))
     implementation(project(featureMainModule))
     implementation(project(featureScheduleModule))
+    implementation(project(featureNewsModule))
     implementation(project(featureNotesModule))
     implementation(project(featureMapModule))
     implementation(project(featureBuildingsModule))
     implementation(project(featureProfessorsModule))
     implementation(project(featureFaqModule))
-    implementation(project(featureFeedbackModule))
+    implementation(project(featureWebContentModule))
 
     // Shared modules.
     implementation(project(commonModelsModule))

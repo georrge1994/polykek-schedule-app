@@ -15,6 +15,13 @@
         android:title="@string/navigation_menu_notes" />
 
     <item
+        android:id="@+id/news_navigation"
+        android:enabled="true"
+        android:contentDescription="@string/navigation_menu_news"
+        android:icon="@drawable/baseline_newspaper_24"
+        android:title="@string/navigation_menu_news" />
+
+    <item
         android:id="@+id/map_navigation"
         android:enabled="true"
         android:contentDescription="@string/navigation_menu_map"

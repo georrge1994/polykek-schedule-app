@@ -11,15 +11,15 @@ internal sealed class WelcomeAction : MviAction {
     /**
      * Show role screen.
      */
-    internal object ShowRoleScreen : WelcomeAction()
+    internal data object ShowRoleScreen : WelcomeAction()
 
     /**
      * Show school screen.
      */
-    internal object ShowSchoolScreen : WelcomeAction()
+    internal data object ShowSchoolScreen : WelcomeAction()
 
     /**
      * Show professor screen.
      */
-    internal object ShowProfessorScreen : WelcomeAction()
+    internal data object ShowProfessorScreen : WelcomeAction()
 }

@@ -77,6 +77,15 @@
 -keep,allowobfuscation,allowshrinking interface retrofit2.Call
 -keep,allowobfuscation,allowshrinking class retrofit2.Response
 
+# Keep XmlResourceParser.
+-dontwarn org.xmlpull.v1.**
+-dontwarn org.kxml2.io.**
+-dontwarn android.content.res.**
+-dontwarn org.slf4j.impl.StaticLoggerBinder
+-keep class org.xmlpull.** { *; }
+-keepclassmembers class org.xmlpull.** { *; }
+-keep class org.simpleframework.xml.** { *; }
+
 # With R8 full mode generic signatures are stripped for classes that are not
 # kept. Suspend functions are wrapped in continuations where the type argument
 # is used.
@@ -90,6 +99,7 @@
 
 # Data classes and enums
 -keep class com.**.**Response { *; }
+-keep class com.**.Rss** { *; }
 -keepclassmembers enum * { *; }
 
 # Google view.

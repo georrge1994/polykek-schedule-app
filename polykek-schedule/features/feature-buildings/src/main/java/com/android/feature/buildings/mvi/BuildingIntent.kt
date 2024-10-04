@@ -12,7 +12,7 @@ internal sealed class BuildingIntent : SearchIntent {
     /**
      * Load content.
      */
-    internal object LoadContent : BuildingIntent()
+    internal data object LoadContent : BuildingIntent()
 
     /**
      * Key word changed.

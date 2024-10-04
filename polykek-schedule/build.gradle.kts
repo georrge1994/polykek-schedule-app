@@ -1,6 +1,8 @@
 // Apply KSP plugin at the project level but do not apply to the root project
 plugins {
-    id("com.google.devtools.ksp") version "1.9.22-1.0.17" apply false
+    id("com.google.devtools.ksp") version "2.0.20-1.0.25" apply false
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.20"
+    id("app.cash.paparazzi") version "1.3.4" apply false
 }
 
 buildscript {
@@ -10,10 +12,11 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.3.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
-        classpath("com.google.gms:google-services:4.4.1")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.9")
+        classpath("com.android.tools.build:gradle:8.6.1")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20")
+        classpath("com.google.gms:google-services:4.4.2")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.2")
+        classpath("app.cash.paparazzi:paparazzi-gradle-plugin:1.3.4")
     }
 }
 

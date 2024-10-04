@@ -12,12 +12,12 @@ internal sealed class ProfessorAction : MviAction {
     /**
      * Open professor search screen.
      */
-    internal object OpenProfessorSearchScreen : ProfessorAction()
+    internal data object OpenProfessorSearchScreen : ProfessorAction()
 
     /**
      * Open faq screen.
      */
-    internal object OpenFAQScreen : ProfessorAction()
+    internal data object OpenFAQScreen : ProfessorAction()
 
     /**
      * Open professor schedule screen.

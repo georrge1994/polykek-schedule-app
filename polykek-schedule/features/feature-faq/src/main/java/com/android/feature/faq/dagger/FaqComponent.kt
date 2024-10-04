@@ -21,7 +21,7 @@ internal abstract class FaqComponent : IModuleComponent, IFaqModuleApi {
 
     override fun getFaqFragment(): Fragment = FaqFragment()
 
-    companion object {
+    internal companion object {
         /**
          * Create [FaqComponent].
          *

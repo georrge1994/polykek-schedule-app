@@ -11,7 +11,7 @@ sealed class ActivityIntent : MviIntent {
     /**
      * Re init screen.
      */
-    object ReInitScreen : ActivityIntent()
+    data object ReInitScreen : ActivityIntent()
 
     /**
      * Show message.

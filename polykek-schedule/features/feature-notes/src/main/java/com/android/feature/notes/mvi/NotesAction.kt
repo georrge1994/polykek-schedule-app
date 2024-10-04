@@ -29,5 +29,5 @@ internal sealed class NotesAction : MviAction {
     /**
      * Update toolbar.
      */
-    internal object UpdateToolbar : NotesAction()
+    internal data object UpdateToolbar : NotesAction()
 }

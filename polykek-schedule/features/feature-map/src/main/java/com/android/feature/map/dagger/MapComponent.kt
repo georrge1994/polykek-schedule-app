@@ -23,7 +23,7 @@ internal abstract class MapComponent : IModuleComponent, IMapModuleApi {
 
     override fun getMapFragment(): Fragment = MapFragment()
 
-    companion object {
+    internal companion object {
         /**
          * Create [MapComponent].
          *

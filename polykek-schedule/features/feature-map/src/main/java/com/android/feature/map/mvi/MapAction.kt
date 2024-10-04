@@ -38,5 +38,5 @@ internal sealed class MapAction : MviAction {
     /**
      * Show building screen.
      */
-    internal object ShowBuildingScreen : MapAction()
+    internal data object ShowBuildingScreen : MapAction()
 }

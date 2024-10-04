@@ -21,7 +21,7 @@ internal sealed class GroupsState : SearchState, GroupsStateProperties {
     /**
      * Default.
      */
-    internal object Default : GroupsState() {
+    internal data object Default : GroupsState() {
         override val keyWord: String? = null
         override val items: Map<GroupType, List<Any>> = emptyMap()
         override val isLoading: Boolean = false

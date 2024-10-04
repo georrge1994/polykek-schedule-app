@@ -67,10 +67,4 @@ abstract class ToolbarFragment<I : MviIntent, S : MviState, A : MviAction, VM : 
             supportActionBar?.setDisplayHomeAsUpEnabled(showBackBtn)
         }
     }
-
-    override fun onDestroyView() {
-        activity?.removeMenuProvider(this)
-        (activity as AppCompatActivity).setSupportActionBar(null)
-        super.onDestroyView()
-    }
 }

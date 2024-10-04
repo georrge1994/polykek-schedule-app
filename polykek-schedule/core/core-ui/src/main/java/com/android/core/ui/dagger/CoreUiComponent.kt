@@ -10,7 +10,7 @@ import javax.inject.Singleton
     modules = [CoreUiForFeatureModules::class]
 )
 internal abstract class CoreUiComponent : IModuleComponent, ICoreUiModuleApi {
-    companion object {
+    internal companion object {
         /**
          * Create [CoreUiComponent].
          *

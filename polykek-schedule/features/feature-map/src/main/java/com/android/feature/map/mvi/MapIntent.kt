@@ -13,27 +13,27 @@ internal sealed class MapIntent : MviIntent {
     /**
      * Show default focus.
      */
-    internal object MakeDefaultFocus : MapIntent()
+    internal data object MakeDefaultFocus : MapIntent()
 
     /**
      * Show next day.
      */
-    internal object ShowNextDay : MapIntent()
+    internal data object ShowNextDay : MapIntent()
 
     /**
      * Show previous day.
      */
-    internal object ShowPreviousDay : MapIntent()
+    internal data object ShowPreviousDay : MapIntent()
 
     /**
      * Show building screen.
      */
-    internal object ShowBuildingScreen : MapIntent()
+    internal data object ShowBuildingScreen : MapIntent()
 
     /**
      * Deselect map object.
      */
-    internal object DeselectMapObject : MapIntent()
+    internal data object DeselectMapObject : MapIntent()
 
     /**
      * Save camera position before UI-destroying.

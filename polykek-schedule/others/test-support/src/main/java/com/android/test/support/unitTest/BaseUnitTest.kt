@@ -3,8 +3,6 @@ package com.android.test.support.unitTest
 import org.junit.After
 import org.junit.Before
 
-const val ASSERT_DELTA = 0.001
-
 /**
  * Base unit test.
  *

@@ -20,7 +20,7 @@ internal sealed class WelcomeState : MviState, WelcomeStateProperties {
     /**
      * Default state with first title.
      */
-    internal object Default : WelcomeState() {
+    internal data object Default : WelcomeState() {
         @StringRes
         override val titleResId: Int = R.string.welcome_screen_message_0
     }

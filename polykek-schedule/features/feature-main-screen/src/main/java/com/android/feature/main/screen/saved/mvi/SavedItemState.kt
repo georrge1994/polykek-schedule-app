@@ -18,7 +18,7 @@ internal sealed class SavedItemState : MviState, SavedItemStateProperties {
     /**
      * Default state.
      */
-    internal object Default : SavedItemState() {
+    internal data object Default : SavedItemState() {
         override val menuItems: List<Any> = emptyList()
     }
 

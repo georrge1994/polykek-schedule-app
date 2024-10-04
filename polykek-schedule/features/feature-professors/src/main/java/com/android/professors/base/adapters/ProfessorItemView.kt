@@ -7,9 +7,9 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import com.android.core.ui.view.custom.getJustifiedTextView
 import com.android.core.ui.view.ext.setRandomViewId
 import com.android.feature.professors.R
-import com.codesgood.views.JustifiedTextView
 
 /**
  * Professor item view. Used to avoid inflating process on the fly.
@@ -21,7 +21,7 @@ import com.codesgood.views.JustifiedTextView
 internal class ProfessorItemView(context: Context) : ConstraintLayout(context) {
     val parentLayout: ConstraintLayout = this.setRandomViewId()
     val name: TextView = TextView(ContextThemeWrapper(context, R.style.BaseTextStyle)).setRandomViewId()
-    val chair: TextView = JustifiedTextView(ContextThemeWrapper(context, R.style.Small_Label_Style)).setRandomViewId()
+    val chair: TextView = getJustifiedTextView(context, R.style.Small_Label_Style).setRandomViewId()
     val enterArrow: ImageView = ImageView(context).setRandomViewId()
 
     init {

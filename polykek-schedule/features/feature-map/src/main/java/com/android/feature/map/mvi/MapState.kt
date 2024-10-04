@@ -24,7 +24,7 @@ internal sealed class MapState : MviState, MapStateProperties {
     /**
      * Default state for map screen.
      */
-    internal object Default : MapState() {
+    internal data object Default : MapState() {
         override val content: Content? = null
         override val yandexMapItems: List<YandexMapItem> = emptyList()
         override val dayControls: DayControls? = null

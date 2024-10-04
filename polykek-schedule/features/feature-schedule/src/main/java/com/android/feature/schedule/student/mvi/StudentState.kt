@@ -25,7 +25,7 @@ internal sealed class StudentState : MviState, StudentProperties {
     /**
      * Default student state.
      */
-    internal object Default : StudentState() {
+    internal data object Default : StudentState() {
         override val weekTitle: String = stubWeek.title
         override val dayTitle: String = ""
         override val days: Map<Int, Day> = stubWeek.days

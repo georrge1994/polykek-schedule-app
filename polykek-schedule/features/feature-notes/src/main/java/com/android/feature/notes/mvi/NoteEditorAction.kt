@@ -11,5 +11,5 @@ internal sealed class NoteEditorAction : MviAction {
     /**
      * Edit after deleting note.
      */
-    internal object Exit : NoteEditorAction()
+    internal data object Exit : NoteEditorAction()
 }

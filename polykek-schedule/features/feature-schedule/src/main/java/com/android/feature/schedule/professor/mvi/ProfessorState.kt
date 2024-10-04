@@ -20,7 +20,7 @@ internal sealed class ProfessorState : MviState, ProfessorProperties {
     /**
      * Default professor state.
      */
-    internal object Default : ProfessorState() {
+    internal data object Default : ProfessorState() {
         override val weekTitle: String = ""
         override val lessonsAndHeaders: List<Any> = emptyList()
         override val isLoading: Boolean = false

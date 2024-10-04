@@ -11,12 +11,12 @@ internal sealed class SavedItemAction : MviAction {
     /**
      * Open schools.
      */
-    internal object OpenSchools : SavedItemAction()
+    internal data object OpenSchools : SavedItemAction()
 
     /**
      * Open professors.
      */
-    internal object OpenProfessors : SavedItemAction()
+    internal data object OpenProfessors : SavedItemAction()
 
     /**
      * Open email chooser.

@@ -16,7 +16,7 @@
           </compositeBuild>
         </compositeConfiguration>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+        <option name="gradleJvm" value="corretto-21" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -32,14 +32,15 @@
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/feature-buildings" />
             <option value="$PROJECT_DIR$/features/feature-faq" />
-            <option value="$PROJECT_DIR$/features/feature-feedback" />
             <option value="$PROJECT_DIR$/features/feature-groups" />
             <option value="$PROJECT_DIR$/features/feature-main-screen" />
             <option value="$PROJECT_DIR$/features/feature-map" />
+            <option value="$PROJECT_DIR$/features/feature-news" />
             <option value="$PROJECT_DIR$/features/feature-notes" />
             <option value="$PROJECT_DIR$/features/feature-professors" />
             <option value="$PROJECT_DIR$/features/feature-schedule" />
             <option value="$PROJECT_DIR$/features/feature-schools" />
+            <option value="$PROJECT_DIR$/features/feature-web-content" />
             <option value="$PROJECT_DIR$/features/feature-welcome" />
             <option value="$PROJECT_DIR$/others" />
             <option value="$PROJECT_DIR$/others/common-models" />

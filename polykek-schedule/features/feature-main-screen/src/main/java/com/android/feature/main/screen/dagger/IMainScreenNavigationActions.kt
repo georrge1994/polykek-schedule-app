@@ -14,6 +14,13 @@ interface IMainScreenNavigationActions {
     fun getScheduleFragment(): Fragment
 
     /**
+     * Get news fragment.
+     *
+     * @return [Fragment]
+     */
+    fun getNewsFragment(): Fragment
+
+    /**
      * Get notes fragment.
      *
      * @return [Fragment]

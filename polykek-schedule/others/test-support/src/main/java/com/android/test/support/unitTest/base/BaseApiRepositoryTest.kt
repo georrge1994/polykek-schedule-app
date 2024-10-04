@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
-private const val BASE_TEST_URL = "/"
+const val BASE_TEST_URL = "/"
 
 /**
  * Base api repository test.
@@ -20,7 +20,7 @@ private const val BASE_TEST_URL = "/"
  * @constructor Create empty Base api repository test
  */
 abstract class BaseApiRepositoryTest : BaseUnitTestForSubscriptions() {
-    private val mockWebServer = MockWebServer()
+    protected val mockWebServer = MockWebServer()
 
     protected open val defaultClient = OkHttpClient.Builder()
         .connectTimeout(1, TimeUnit.SECONDS)
@@ -35,7 +35,7 @@ abstract class BaseApiRepositoryTest : BaseUnitTestForSubscriptions() {
      * @param apiServiceClass Api service java class
      * @return Api for service
      */
-    protected fun <T> getApi(apiServiceClass: Class<T>): T = Retrofit.Builder()
+    protected open fun <T> getApi(apiServiceClass: Class<T>): T = Retrofit.Builder()
         .baseUrl(mockWebServer.url(BASE_TEST_URL))
         .client(defaultClient)
         .addConverterFactory(GsonConverterFactory.create(Gson()))

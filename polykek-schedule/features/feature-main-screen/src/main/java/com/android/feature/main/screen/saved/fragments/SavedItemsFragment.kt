@@ -27,6 +27,7 @@ import com.android.feature.main.screen.saved.mvi.SavedItemIntent
 import com.android.feature.main.screen.saved.mvi.SavedItemState
 import com.android.feature.main.screen.saved.viewModels.SavedItemsViewModel
 import com.android.module.injector.moduleMarkers.IModuleComponent
+import com.android.shared.code.utils.email.OpenEmailChooserUseCase
 import com.android.shared.code.utils.syntaxSugar.createViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import javax.inject.Inject
@@ -46,6 +47,9 @@ internal class SavedItemsFragment :
 
     @Inject
     lateinit var mainScreenNavigationActions: IMainScreenNavigationActions
+
+    @Inject
+    lateinit var openEmailChooserUseCase: OpenEmailChooserUseCase
 
     private val savedItemActions = object : ISaveItemMenuActions {
         override fun onClick(item: SavedItem) {
@@ -134,12 +138,12 @@ internal class SavedItemsFragment :
         (activity as AppCompatActivity).createViewModel<BottomAnimationViewModel>(viewModelFactory)
             .dispatchIntentAsync(MenuIntent.ChangeStateOfBottomBar(BottomSheetBehavior.STATE_COLLAPSED))
         // Open email chooser.
-        val emailIntent = Intent(Intent.ACTION_SEND)
-        emailIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        emailIntent.type = VND_ANDROID_CURSOR_ITEM_EMAIL
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.error_in_the_schedule_email)))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.error_in_the_schedule_subject, groupName))
-        startActivity(Intent.createChooser(emailIntent, getString(R.string.error_in_the_schedule_selection_message)))
+        openEmailChooserUseCase.openEmailChooser(
+            requireContext(),
+            getString(R.string.error_in_the_schedule_email),
+            getString(R.string.error_in_the_schedule_subject, groupName),
+            getString(R.string.error_in_the_schedule_selection_message)
+        )
     }
 
     override fun onDestroyView() {

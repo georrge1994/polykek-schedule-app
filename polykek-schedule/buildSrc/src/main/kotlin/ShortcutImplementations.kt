@@ -4,6 +4,7 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.kotlin.dsl.exclude
 import org.gradle.kotlin.dsl.invoke
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 /**
@@ -11,7 +12,8 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
  */
 fun LibraryExtension.generalConfigurationForLibs(
     project: org.gradle.api.Project,
-    withViewBinding: Boolean? = null
+    withViewBinding: Boolean? = null,
+    withCompose: Boolean? = null
 ) {
     compileSdk = COMPILE_SDK
     ndkVersion = NDK_VERSION
@@ -24,17 +26,16 @@ fun LibraryExtension.generalConfigurationForLibs(
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
+    buildFeatures {
+        viewBinding = withViewBinding ?: false
+        compose = withCompose ?: false
     }
-    buildFeatures.viewBinding = withViewBinding
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
+    }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     packaging {
         resources.excludes.add("META-INF/*")
@@ -52,16 +53,34 @@ fun LibraryExtension.generalConfigurationForLibs(
  * Configures the Kotlin options for the given Kotlin Android project extension.
  */
 fun KotlinAndroidProjectExtension.configureKotlinOptions() {
-    target.compilations.forEach { compilation ->
-        compilation.kotlinOptions {
-            jvmTarget = "17"
-            freeCompilerArgs += listOf(
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+        freeCompilerArgs.addAll(
+            listOf(
+                "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                 "-opt-in=kotlinx.coroutines.ObsoleteCoroutinesApi",
                 "-opt-in=kotlinx.coroutines.FlowPreview"
             )
-        }
+        )
     }
+}
+
+/**
+ * Adds the Compose dependencies.
+ */
+fun DependencyHandler.addComposeDependencies() {
+    val composeBom = platform("androidx.compose:compose-bom:$composeBomVersion")
+    add("implementation", composeBom)
+    add("implementation", "androidx.compose.ui:ui")
+    add("implementation", "androidx.compose.material:material")
+    add("implementation", "androidx.compose.ui:ui-tooling-preview")
+    add("implementation", "androidx.lifecycle:lifecycle-runtime-compose")
+    add("debugImplementation", "androidx.compose.ui:ui-tooling")
+    add("implementation", "androidx.compose.material:material-icons-core")
+
+    add("implementation", "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleKtxVersion")
+    add("implementation", "io.coil-kt:coil-compose:$coilVersion")
 }
 
 /**
@@ -91,7 +110,6 @@ fun DependencyHandler.addRoomDependencies() {
 fun DependencyHandler.addFirebaseDependencies() {
     add("implementation", platform("com.google.firebase:firebase-bom:$firebaseBom"))
     add("implementation", "com.google.firebase:firebase-analytics-ktx")
-    add("implementation", "com.google.firebase:firebase-database-ktx")
     add("implementation", "com.google.firebase:firebase-crashlytics")
     add("implementation", "com.google.firebase:firebase-messaging")
 }
@@ -129,6 +147,17 @@ fun DependencyHandler.addAndroidJUnitDependencies() {
     add("androidTestImplementation", "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
     add("androidTestImplementation", "io.mockk:mockk-android:$mockkVersion")
     add("androidTestImplementation", "androidx.work:work-testing:$workRuntimeKtxVersion")
+}
+
+/**
+ * Adds the UI unit dependencies to the given dependency handler.
+ */
+fun DependencyHandler.addUiUnitDependencies() {
+    val composeBom = platform("androidx.compose:compose-bom:$composeBomVersion")
+    add("androidTestImplementation", composeBom)
+    add("androidTestImplementation", "androidx.compose.ui:ui-test-junit4")
+    add("debugImplementation", "androidx.compose.ui:ui-test-manifest")
+    add("testImplementation", "app.cash.paparazzi:paparazzi:$paparazziVersion")
 }
 
 /**

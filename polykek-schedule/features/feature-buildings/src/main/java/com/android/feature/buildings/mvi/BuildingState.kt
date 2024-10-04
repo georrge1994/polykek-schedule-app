@@ -20,7 +20,7 @@ internal sealed class BuildingState : SearchState, BuildingStateProperties {
     /**
      * Default state.
      */
-    internal object Default : BuildingState() {
+    internal data object Default : BuildingState() {
         override val keyWord: String? = null
         override val buildings: List<Building> = emptyList()
         override val isLoading: Boolean = false

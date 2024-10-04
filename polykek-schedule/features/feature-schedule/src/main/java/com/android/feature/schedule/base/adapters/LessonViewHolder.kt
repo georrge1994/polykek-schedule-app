@@ -23,7 +23,7 @@ internal class LessonViewHolder private constructor(
      */
     internal fun bindTo(lesson: Lesson) = lessonItemView.bindData(lesson, listener)
 
-    companion object {
+    internal companion object {
         /**
          * On create.
          *

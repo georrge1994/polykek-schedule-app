@@ -6,6 +6,7 @@ import com.android.feature.map.utils.DrawableImageProvider
 import com.android.shared.code.utils.markers.IUseCase
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.geometry.BoundingBox
+import com.yandex.mapkit.geometry.Geometry
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.Map
@@ -30,7 +31,9 @@ internal class MapActionsUiUseCase @Inject constructor() : IUseCase {
     internal fun move(yandexMap: Map?, boundingBox: BoundingBox?) {
         if (yandexMap != null && boundingBox != null) {
             yandexMap.move(
-                yandexMap.cameraPosition(boundingBox),
+                yandexMap.cameraPosition(
+                    Geometry.fromBoundingBox(boundingBox),
+                ),
                 Animation(Animation.Type.SMOOTH, DEFAULT_DURATION),
                 null
             )
@@ -78,10 +81,10 @@ internal class MapActionsUiUseCase @Inject constructor() : IUseCase {
         circleMapObjectTapListener: MapObjectTapListener
     ) {
         yandexMap ?: return
-        val mapObject = yandexMap.mapObjects.addPlacemark(
-            yandexMapItem.point,
-            DrawableImageProvider(context?.applicationContext, yandexMapItem.imageId)
-        )
+        val mapObject = yandexMap.mapObjects.addPlacemark().apply {
+            geometry = yandexMapItem.point
+            setIcon(DrawableImageProvider(context?.applicationContext, yandexMapItem.imageId))
+        }
         mapObject.userData = yandexMapItem.userData
         mapObject.addTapListener(circleMapObjectTapListener)
     }

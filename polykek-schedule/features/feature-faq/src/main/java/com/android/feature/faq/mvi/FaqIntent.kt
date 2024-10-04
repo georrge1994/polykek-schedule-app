@@ -20,5 +20,5 @@ internal sealed class FaqIntent : MviIntent {
     /**
      * Open feedback.
      */
-    internal object OpenFeedback : FaqIntent()
+    internal data object OpenFeedback : FaqIntent()
 }

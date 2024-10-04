@@ -25,7 +25,7 @@ internal sealed class ProfessorsSearchState : MviState, ProfessorsSearchProperti
     /**
      * Default state.
      */
-    internal object Default : ProfessorsSearchState() {
+    internal data object Default : ProfessorsSearchState() {
         override val scheduleMode: ScheduleMode = ScheduleMode.SEARCH
         override val professors: List<Professor> = emptyList()
 

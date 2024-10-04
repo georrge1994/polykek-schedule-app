@@ -2,11 +2,17 @@ plugins {
     id("com.android.library")
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.20"
+    id("app.cash.paparazzi") version "1.3.4"
 }
 
 android {
     namespace = "com.android.core.ui"
-    generalConfigurationForLibs(getProject(), withViewBinding = true)
+    generalConfigurationForLibs(
+        getProject(),
+        withViewBinding = true,
+        withCompose = true,
+    )
 }
 
 kotlin {
@@ -27,6 +33,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleKtxVersion")
     implementation("androidx.recyclerview:recyclerview:$recyclerViewVersion")
 
+    // Compose.
+    addComposeDependencies()
+
     // Dagger.
     addDaggerDependencies()
 
@@ -38,12 +47,14 @@ dependencies {
     implementation("com.github.terrakok:cicerone:$ciceroneVersion")
 
     // Other helpful libs.
+    implementation("com.codesgood:justifiedtextview:$justifiedTextviewVersion")
     implementation("com.intuit.sdp:sdp-android:$sdpAndSspVersion")
     implementation("com.intuit.ssp:ssp-android:$sdpAndSspVersion")
 
     // Unit tests.
     addJUnitDependencies()
     addAndroidJUnitDependencies()
+    addUiUnitDependencies()
 
     // Shared modules.
     implementation(project(sharedCodeModule))

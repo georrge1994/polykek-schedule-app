@@ -41,10 +41,10 @@ internal sealed class NoteEditorIntent : MviIntent {
     /**
      * Delete note.
      */
-    internal object DeleteNote : NoteEditorIntent()
+    internal data object DeleteNote : NoteEditorIntent()
 
     /**
      * Update note.
      */
-    internal object UpdateNote : NoteEditorIntent()
+    internal data object UpdateNote : NoteEditorIntent()
 }

@@ -21,7 +21,7 @@ internal abstract class BuildingsComponent : IModuleComponent, IBuildingsModuleA
 
     override fun getBuildingsFragment(): Fragment = BuildingsFragment()
 
-    companion object {
+    internal companion object {
         /**
          * Create [BuildingsComponent].
          *

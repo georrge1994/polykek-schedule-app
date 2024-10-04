@@ -90,7 +90,7 @@ internal class ProfessorScheduleFragment :
         super.onDestroyView()
     }
 
-    companion object {
+    internal companion object {
         /**
          * Get bundle.
          *

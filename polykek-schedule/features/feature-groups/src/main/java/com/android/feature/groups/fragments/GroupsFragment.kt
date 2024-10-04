@@ -107,7 +107,7 @@ internal class GroupsFragment : SearchToolbarFragment<GroupsIntent, GroupsState,
         super.onDestroyView()
     }
 
-    companion object {
+    internal companion object {
         /**
          * Get new instance.
          *

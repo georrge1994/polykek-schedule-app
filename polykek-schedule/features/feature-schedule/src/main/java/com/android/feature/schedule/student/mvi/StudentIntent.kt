@@ -19,12 +19,12 @@ internal sealed class StudentIntent : MviIntent {
     /**
      * Show next week.
      */
-    internal object ShowNextWeek : StudentIntent()
+    internal data object ShowNextWeek : StudentIntent()
 
     /**
      * Show previous week.
      */
-    internal object ShowPreviousWeek : StudentIntent()
+    internal data object ShowPreviousWeek : StudentIntent()
 
     /**
      * Show specific date.
@@ -43,7 +43,7 @@ internal sealed class StudentIntent : MviIntent {
     /**
      * Show data picker.
      */
-    internal object ShowDataPicker : StudentIntent()
+    internal data object ShowDataPicker : StudentIntent()
 
     /**
      * Open note editor.

@@ -14,7 +14,7 @@ import javax.inject.Singleton
     ]
 )
 internal abstract class CoreRetrofitComponent : IModuleComponent, ICoreRetrofitModuleApi {
-    companion object {
+    internal companion object {
         /**
          * Create [CoreRetrofitComponent].
          *

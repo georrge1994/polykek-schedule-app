@@ -10,9 +10,9 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import com.android.core.ui.view.custom.getJustifiedTextView
 import com.android.core.ui.view.ext.setRandomViewId
 import com.android.feature.notes.R
-import com.codesgood.views.JustifiedTextView
 
 /**
  * Note item view. Used to avoid inflating process on the fly.
@@ -24,8 +24,8 @@ import com.codesgood.views.JustifiedTextView
 internal class NoteItemView(context: Context) : ConstraintLayout(context) {
     val parentLayout: ConstraintLayout = this.setRandomViewId()
     val name: TextView = TextView(ContextThemeWrapper(context, R.style.Bold_Label_Style)).setRandomViewId()
-    val title: TextView = JustifiedTextView(ContextThemeWrapper(context, R.style.Bold_Label_Style)).setRandomViewId()
-    val body: TextView = JustifiedTextView(ContextThemeWrapper(context, R.style.Small_Label_Style)).setRandomViewId()
+    val title: TextView = getJustifiedTextView(context, R.style.Bold_Label_Style).setRandomViewId()
+    val body: TextView = getJustifiedTextView(context, R.style.Small_Label_Style).setRandomViewId()
     val checkBox: CheckBox = CheckBox(context).setRandomViewId()
 
     init {

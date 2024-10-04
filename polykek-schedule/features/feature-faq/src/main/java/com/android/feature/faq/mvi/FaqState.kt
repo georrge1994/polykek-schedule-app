@@ -21,7 +21,7 @@ internal sealed class FaqState : MviState, FaqStateProperties {
     /**
      * Default state - all items are closed.
      */
-    internal object Default : FaqState() {
+    internal data object Default : FaqState() {
         override val items: List<FAQ> = listOf(
             FAQ(R.string.faq_fragment_question_1_title, R.string.faq_fragment_question_1_description),
             FAQ(R.string.faq_fragment_question_2_title, R.string.faq_fragment_question_2_description),

@@ -100,7 +100,7 @@ internal class MainFragment : NavigationFragment<MenuIntent, MenuState, MenuActi
         super.onDestroyView()
     }
 
-    companion object {
+    private companion object {
         private var currentItemId: Int = R.id.schedule_navigation
     }
 }

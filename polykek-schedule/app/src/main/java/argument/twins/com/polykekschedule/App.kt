@@ -42,7 +42,7 @@ class App : Application(), HasAndroidInjector {
         ViewBindingPropertyDelegate.strictMode = false
     }
 
-    companion object {
+    internal companion object {
         lateinit var appComponent: AppComponent
     }
 }

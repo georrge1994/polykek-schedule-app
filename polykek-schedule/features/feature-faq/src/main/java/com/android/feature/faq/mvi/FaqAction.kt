@@ -11,5 +11,5 @@ internal sealed class FaqAction : MviAction {
     /**
      * Open feedback.
      */
-    internal object OpenFeedback : FaqAction()
+    internal data object OpenFeedback : FaqAction()
 }

@@ -11,12 +11,12 @@ internal sealed class ProfessorIntent : MviIntent {
     /**
      * Show next week.
      */
-    internal object ShowNextWeek : ProfessorIntent()
+    internal data object ShowNextWeek : ProfessorIntent()
 
     /**
      * Show previous week.
      */
-    internal object ShowPreviousWeek : ProfessorIntent()
+    internal data object ShowPreviousWeek : ProfessorIntent()
 
     /**
      * Show specific date.
@@ -43,10 +43,10 @@ internal sealed class ProfessorIntent : MviIntent {
     /**
      * Check period and refresh.
      */
-    internal object CheckPeriodAndRefresh : ProfessorIntent()
+    internal data object CheckPeriodAndRefresh : ProfessorIntent()
 
     /**
      * Show data picker.
      */
-    internal object ShowDataPicker : ProfessorIntent()
+    internal data object ShowDataPicker : ProfessorIntent()
 }

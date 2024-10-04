@@ -11,9 +11,9 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/image"
         android:layout_width="@dimen/welcome_shoot_width"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_item_small"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_item_small"
         app:shapeAppearance="@style/RoundedImageView"
         app:strokeColor="@color/grey_100"
         app:strokeWidth="@dimen/stroke_width"

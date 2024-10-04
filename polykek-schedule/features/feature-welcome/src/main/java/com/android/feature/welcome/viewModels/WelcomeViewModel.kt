@@ -34,7 +34,8 @@ internal class WelcomeViewModel @Inject constructor() : MviViewModel<WelcomeInte
             0 -> R.string.welcome_screen_message_0
             1 -> R.string.welcome_screen_message_1
             2 -> R.string.welcome_screen_message_2
-            else -> R.string.welcome_screen_message_3
+            3 -> R.string.welcome_screen_message_3
+            else -> R.string.welcome_screen_message_4
         }
         if (titleResId != currentState.titleResId) {
             currentState.copyState(titleResId).emitState()
@@ -51,6 +52,7 @@ internal class WelcomeViewModel @Inject constructor() : MviViewModel<WelcomeInte
         0 -> R.drawable.welcome_0
         1 -> R.drawable.welcome_1
         2 -> R.drawable.welcome_2
-        else -> R.drawable.welcome_3
+        3 -> R.drawable.welcome_3
+        else -> R.drawable.welcome_4
     }
 }

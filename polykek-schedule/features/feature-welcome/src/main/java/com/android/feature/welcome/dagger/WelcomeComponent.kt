@@ -25,7 +25,7 @@ internal abstract class WelcomeComponent : IModuleComponent, IWelcomeModuleApi {
 
     override fun getWelcomeFragment(): Fragment = WelcomeFragment()
 
-    companion object {
+    internal companion object {
         /**
          * Create [WelcomeComponent].
          *

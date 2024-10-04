@@ -15,7 +15,7 @@ import javax.inject.Singleton
     ]
 )
 internal abstract class ScheduleControllerComponent : IModuleComponent, IScheduleControllerModuleApi {
-    companion object {
+    internal companion object {
         /**
          * Create [ScheduleControllerComponent].
          *

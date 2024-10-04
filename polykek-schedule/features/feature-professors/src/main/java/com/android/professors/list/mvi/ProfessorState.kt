@@ -19,7 +19,7 @@ internal sealed class ProfessorState : MviState, ProfessorStateProperties {
     /**
      * Default professor state.
      */
-    internal object Default : ProfessorState() {
+    internal data object Default : ProfessorState() {
         override val professors: List<Professor> = emptyList()
     }
 

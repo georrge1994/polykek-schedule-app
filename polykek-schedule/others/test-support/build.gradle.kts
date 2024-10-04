@@ -1,6 +1,6 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
 }
 
@@ -39,6 +39,13 @@ dependencies {
     implementation("androidx.test.ext:junit:$androidJunitVersion")
     implementation("androidx.test.espresso:espresso-core:$espressoCoreVersion")
     implementation("androidx.work:work-testing:$workRuntimeKtxVersion")
+
+    // Compose UI tests.
+    implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
+    implementation("androidx.compose.ui:ui-test-junit4")
+    implementation("androidx.compose.ui:ui-test")
+    // TODO: try to fix it. It ruins the build, cannot create BasePaparazziTest.
+//    implementation("app.cash.paparazzi:paparazzi:$paparazziVersion")
 
     implementation(project(commonModelsModule))
 }

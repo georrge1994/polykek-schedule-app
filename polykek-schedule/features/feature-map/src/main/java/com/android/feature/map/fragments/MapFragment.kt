@@ -75,7 +75,7 @@ internal class MapFragment : MviFragment<MapIntent, MapState, MapAction, MapView
     override fun onViewCreatedBeforeRendering(view: View, savedInstanceState: Bundle?) {
         super.onViewCreatedBeforeRendering(view, savedInstanceState)
         viewModel.asyncSubscribe()
-        viewBinding.mapView.map.addCameraListener(cameraListener)
+        viewBinding.mapView.mapWindow.map.addCameraListener(cameraListener)
         viewBinding.nextBtn.setOnClickListener(nextDayListener)
         viewBinding.previousBtn.setOnClickListener(previousDayListener)
     }
@@ -83,14 +83,14 @@ internal class MapFragment : MviFragment<MapIntent, MapState, MapAction, MapView
     override fun invalidateUi(state: MapState) {
         super.invalidateUi(state)
         // Remove previous map objects and add new.
-        viewBinding.mapView.map.mapObjects.clear()
+        viewBinding.mapView.mapWindow.map.mapObjects.clear()
         state.yandexMapItems.forEach {
-            mapActionsUiUseCase.addPlaceMark(context, viewBinding.mapView.map, it, circleMapObjectTapListener)
+            mapActionsUiUseCase.addPlaceMark(context, viewBinding.mapView.mapWindow.map, it, circleMapObjectTapListener)
         }
         state.searchResultMapItem?.let { yandexMapItem ->
             mapActionsUiUseCase.addPlaceMark(
                 context,
-                viewBinding.mapView.map,
+                viewBinding.mapView.mapWindow.map,
                 yandexMapItem,
                 circleMapObjectTapListener
             )
@@ -103,7 +103,7 @@ internal class MapFragment : MviFragment<MapIntent, MapState, MapAction, MapView
 
     override fun executeSingleAction(action: MapAction) {
         super.executeSingleAction(action)
-        with(viewBinding.mapView.map) {
+        with(viewBinding.mapView.mapWindow.map) {
             when (action) {
                 is MapAction.DefaultFocus -> mapActionsUiUseCase.move(this, action.boundingBox)
                 is MapAction.ShowBuildingSearchOnTheMap -> mapActionsUiUseCase.move(this, action.point)
@@ -127,8 +127,8 @@ internal class MapFragment : MviFragment<MapIntent, MapState, MapAction, MapView
 
     override fun onDestroyView() {
         // Save camera position.
-        MapIntent.SaveCameraPosition(viewBinding.mapView.map.cameraPosition).dispatchIntent()
-        viewBinding.mapView.map?.removeCameraListener(cameraListener)
+        MapIntent.SaveCameraPosition(viewBinding.mapView.mapWindow.map.cameraPosition).dispatchIntent()
+        viewBinding.mapView.mapWindow.map.removeCameraListener(cameraListener)
         super.onDestroyView()
         viewModel.unSubscribe()
     }

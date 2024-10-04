@@ -22,7 +22,7 @@ internal sealed class NotesState : SearchState, NotesStateProperties {
     /**
      * Default state.
      */
-    internal object DefaultState : NotesState() {
+    internal data object DefaultState : NotesState() {
         override val keyWord: String? = null
         override val isSelectionModeEnabled: Boolean = false
         override val tabPosition: Int = 0

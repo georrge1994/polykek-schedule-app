@@ -27,7 +27,7 @@ internal sealed class MenuState : MviState, MenuStateProperties {
     /**
      * Default menu state.
      */
-    internal object Default : MenuState() {
+    internal data object Default : MenuState() {
         override val title: String = ""
         override val moreBtnAlpha: Float = 1f
 

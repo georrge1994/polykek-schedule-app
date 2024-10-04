@@ -19,4 +19,7 @@ internal data class ProfessorWeekResponse(
     @SerializedName("week")         override val weekInfo: WeekInfoResponse = WeekInfoResponse(),
     @SerializedName("days")         override val days: List<DayResponse> = Collections.emptyList(),
     @SerializedName("teacher")      val teacher: TeacherResponse = TeacherResponse()
-) : IWeekResponse
+) : IWeekResponse {
+    override val name: String
+        get() = teacher.fullName ?: ""
+}

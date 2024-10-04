@@ -27,7 +27,8 @@ class WelcomeViewModelTest : BaseViewModelUnitTest() {
         assertEquals(R.drawable.welcome_1, welcomeViewModel.getDrawableId(1))
         assertEquals(R.drawable.welcome_2, welcomeViewModel.getDrawableId(2))
         assertEquals(R.drawable.welcome_3, welcomeViewModel.getDrawableId(3))
-        assertEquals(R.drawable.welcome_3, welcomeViewModel.getDrawableId(4))
+        assertEquals(R.drawable.welcome_4, welcomeViewModel.getDrawableId(4))
+        assertEquals(R.drawable.welcome_4, welcomeViewModel.getDrawableId(5))
     }
 
     /**
@@ -66,7 +67,8 @@ class WelcomeViewModelTest : BaseViewModelUnitTest() {
         checkTitle(1, R.string.welcome_screen_message_1)
         checkTitle(2, R.string.welcome_screen_message_2)
         checkTitle(3, R.string.welcome_screen_message_3)
-        checkTitle(4, R.string.welcome_screen_message_3)
+        checkTitle(4, R.string.welcome_screen_message_4)
+        checkTitle(5, R.string.welcome_screen_message_4)
     }
 
     /**

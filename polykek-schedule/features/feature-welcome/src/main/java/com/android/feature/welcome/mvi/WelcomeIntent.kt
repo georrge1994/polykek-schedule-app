@@ -20,15 +20,15 @@ internal sealed class WelcomeIntent : MviIntent {
     /**
      * Show role screen.
      */
-    internal object ShowRoleScreen : WelcomeIntent()
+    internal data object ShowRoleScreen : WelcomeIntent()
 
     /**
      * Show school screen.
      */
-    internal object ShowSchoolScreen : WelcomeIntent()
+    internal data object ShowSchoolScreen : WelcomeIntent()
 
     /**
      * Show professor screen.
      */
-    internal object ShowProfessorScreen : WelcomeIntent()
+    internal data object ShowProfessorScreen : WelcomeIntent()
 }

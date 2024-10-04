@@ -25,7 +25,7 @@ internal abstract class ProfessorsComponent : IModuleComponent, IProfessorsModul
 
     override fun getProfessorSearchFragment(): Fragment = ProfessorSearchFragment()
 
-    companion object {
+    internal companion object {
         /**
          * Create [ProfessorsComponent].
          *

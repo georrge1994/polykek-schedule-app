@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">Schedule Polytech</string>
-    <!--    <string name="provider_path" translatable="false">argument.twins.com.polykekschedule.provider</string>-->
 
     <string name="general_word_searching">Searching…</string>
 
     <string name="welcome_screen_message_0">Quick access to schedule</string>
     <string name="welcome_screen_message_1">Notes for subjects</string>
-    <string name="welcome_screen_message_2">Campus navigation</string>
-    <string name="welcome_screen_message_3">Professor schedule</string>
+    <string name="welcome_screen_message_2">Actual news</string>
+    <string name="welcome_screen_message_3">Campus navigation</string>
+    <string name="welcome_screen_message_4">Professor schedule</string>
     <string name="welcome_screen_student">Student</string>
     <string name="welcome_screen_professor">Professor</string>
 
@@ -29,6 +29,10 @@
     <string name="schedule_fragment_voldemort">He-Who-Must-Not-Be-Named</string>
     <string name="schedule_fragment_chamber_of_Secret">Chamber of Secret</string>
     <string name="schedule_choose_group">Choose group</string>
+
+    <string name="news_fragment_title">Last news</string>
+    <string name="news_fragment_empty_list">Not a single actual news story</string>
+    <string name="news_fragment_news">News # %1$d</string>
 
     <string name="notes_fragment_notes">Notes</string>
     <string name="notes_fragment_tab_title_by_lessons">By subject</string>
@@ -75,19 +79,12 @@
     <string name="faq_fragment_question_6_title">Who has developed this app and why?</string>
     <string name="faq_fragment_question_6_description">The authors of application are Georgiy and Tatiana Chebotarev. This is a pet-project for training android skills.</string>
 
-    <string name="feedback_fragment_title">FeedBack</string>
-    <string name="feedback_fragment_wrong_length_of_message">A short message is not informative (enter more than 20 characters)</string>
-    <string name="feedback_fragment_message_sent_successfully">Feedback message is sent successfully</string>
-    <string name="feedback_fragment_message_was_not_sent">Error. Feedback message wasn\'t sent</string>
-    <string name="feedback_fragment_bug">Bug/Error</string>
-    <string name="feedback_fragment_idea">Idea/Suggestion</string>
-    <string name="feedback_fragment_other">Other</string>
-    <string name="feedback_fragment_submit">Submit</string>
-    <string name="feedback_fragment_describe_a_task">Describe your problem or idea</string>
-    <string name="feedback_fragment_please_select_type">Please select a type of message:</string>
+    <string name="feedback_email_subject">FeedBack about app</string>
+    <string name="feedback_email_author" translatable="false">darktugrenok@gmail.com</string>
 
     <string name="navigation_menu_teachers">Teachers</string>
     <string name="navigation_menu_schedule">Schedule</string>
+    <string name="navigation_menu_news">News</string>
     <string name="navigation_menu_notes">Notes</string>
     <string name="navigation_menu_map">Map</string>
 
