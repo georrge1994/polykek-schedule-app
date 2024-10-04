@@ -86,7 +86,7 @@ This application was developed specially for students and professors of St. Pete
     </tr>
 	    <tr>
         <td>
-			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/7_news_block.gif width="256"/>
+			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/7_news_block.gif" width="256"/>
         </td>
         <td>
 			<img src="https://github.com/georrge1994/polykek-schedule-app/blob/main/gifs/8_switching_between_selected_items.gif" width="256"/>
@@ -119,18 +119,18 @@ I have been in Android since 2017. This is my pet project. You can judge me by t
 ## License
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
-## Changes
-#v 2.3.3
-• Implemented news & web-content modules
-• Removed feedback module (changed to email intent)
-• Slightly updated design
-• Fixed crash for Samsungs
-• Updated libraries (also JDK -> 21, kotlin -> 2.0)
-• Replaced depreacated code
-• Fixed some minor UI bugs
-• Implemented Paparazzi and compose tests (for new screens)
-• Disabled ```android.enableJetifier=true```
+## Versions
+### v 2.3.3
++ Implemented news & web-content modules
++ Removed feedback module (changed to email intent)
++ Slightly updated design
++ Fixed crash for Samsungs
++  Updated libraries (also JDK -> 21, kotlin -> 2.0)
++  Replaced depreacated code
++  Fixed some minor UI bugs
++  Implemented Paparazzi and compose tests (for new screens)
++  Disabled ```android.enableJetifier=true```
 
-#v 2.3.0
-• Migrated to kts from groovy
-• Updated libraries
+### v 2.3.0
++  Migrated to kts from groovy
++  Updated libraries
